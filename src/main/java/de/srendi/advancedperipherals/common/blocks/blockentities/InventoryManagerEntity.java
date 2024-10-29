@@ -52,9 +52,6 @@ public class InventoryManagerEntity extends PeripheralBlockEntity<InventoryManag
 
     @Override
     public void setItem(int index, @NotNull ItemStack stack) {
-        if (index != 0) {
-            throw new IndexOutOfBoundsException("Inventory manager's index can only be zero");
-        }
         if (stack.getItem() instanceof MemoryCardItem) {
             if (stack.hasTag() && stack.getTag().contains("ownerId")) {
                 UUID owner = stack.getTag().getUUID("ownerId");
