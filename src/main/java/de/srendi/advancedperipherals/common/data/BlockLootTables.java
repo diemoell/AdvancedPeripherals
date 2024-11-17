@@ -4,10 +4,11 @@ import de.srendi.advancedperipherals.common.setup.Registration;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.level.block.Block;
-import net.neoforged.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class BlockLootTables extends BlockLootSubProvider {
 
@@ -17,12 +18,14 @@ public class BlockLootTables extends BlockLootSubProvider {
 
     @Override
     protected void generate() {
-        Registration.BLOCKS.getEntries().stream().map(RegistryObject::get).forEach(this::dropSelf);
+        Registration.BLOCKS.getEntries().stream().map(DeferredHolder::get).forEach(this::dropSelf);
     }
 
     @NotNull
     @Override
     protected Iterable<Block> getKnownBlocks() {
-        return Registration.BLOCKS.getEntries().stream().map(RegistryObject::get)::iterator;
+        return Registration.BLOCKS.getEntries().stream()
+                .map(DeferredHolder::get)
+                .collect(Collectors.toList());
     }
 }

@@ -1,7 +1,7 @@
 package de.srendi.advancedperipherals.common.util.inventory;
 
-import net.neoforged.fluids.FluidStack;
-import net.neoforged.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.NotNull;
 
 public interface IStorageSystemFluidHandler extends IFluidHandler {

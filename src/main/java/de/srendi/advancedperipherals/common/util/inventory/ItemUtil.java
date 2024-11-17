@@ -5,12 +5,12 @@ import de.srendi.advancedperipherals.AdvancedPeripherals;
 import de.srendi.advancedperipherals.common.util.StringUtil;
 import net.minecraft.ResourceLocationException;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.items.IItemHandler;
-import net.neoforged.registries.ForgeRegistries;
-import net.neoforged.registries.IForgeRegistry;
+import net.neoforged.neoforge.items.IItemHandler;
 import org.apache.logging.log4j.Level;
 
 import java.nio.charset.StandardCharsets;
@@ -30,7 +30,7 @@ public class ItemUtil {
     private ItemUtil() {
     }
 
-    public static <T> T getRegistryEntry(String name, IForgeRegistry<T> forgeRegistry) {
+    public static <T> T getRegistryEntry(String name, Registry<T> forgeRegistry) {
         ResourceLocation location;
         try {
             location = new ResourceLocation(name);
@@ -39,7 +39,7 @@ public class ItemUtil {
         }
 
         T value;
-        if (location != null && forgeRegistry.containsKey(location) && (value = forgeRegistry.getValue(location)) != null) {
+        if (location != null && forgeRegistry.containsKey(location) && (value = forgeRegistry.get(location)) != null) {
             return value;
         } else {
             return null;
@@ -99,10 +99,10 @@ public class ItemUtil {
     }
 
     public static ResourceLocation getRegistryKey(Item item) {
-        return ForgeRegistries.ITEMS.getKey(item);
+        return BuiltInRegistries.ITEM.getKey(item);
     }
 
     public static ResourceLocation getRegistryKey(ItemStack item) {
-        return ForgeRegistries.ITEMS.getKey(item.copy().getItem());
+        return BuiltInRegistries.ITEM.getKey(item.copy().getItem());
     }
 }

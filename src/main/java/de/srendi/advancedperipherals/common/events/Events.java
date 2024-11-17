@@ -6,23 +6,29 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import de.srendi.advancedperipherals.AdvancedPeripherals;
 import de.srendi.advancedperipherals.common.configuration.APConfig;
 import de.srendi.advancedperipherals.common.util.Pair;
+import de.srendi.advancedperipherals.network.APNetworking;
+import de.srendi.advancedperipherals.network.toclient.ToastToClientPacket;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.arguments.MessageArgument;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.event.CommandEvent;
-import net.neoforged.event.ServerChatEvent;
-import net.neoforged.event.entity.player.PlayerEvent;
-import net.neoforged.eventbus.api.EventPriority;
-import net.neoforged.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.CommandEvent;
+import net.neoforged.neoforge.event.ServerChatEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.registries.ForgeRegistries;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+import net.neoforged.neoforge.network.handling.DirectionalPayloadHandler;
+import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 import java.util.function.Consumer;
 
-@Mod.EventBusSubscriber(modid = AdvancedPeripherals.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+@EventBusSubscriber(modid = AdvancedPeripherals.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 public class Events {
 
     private static final String PLAYED_BEFORE = "ap_played_before";
@@ -42,7 +48,7 @@ public class Events {
         // See https://vazkiimods.github.io/Patchouli/docs/patchouli-basics/giving-new
         if (APConfig.WORLD_CONFIG.givePlayerBookOnJoin.get()) {
             if (!hasPlayedBefore(player)) {
-                ItemStack book = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation("patchouli", "guide_book")));
+                ItemStack book = new ItemStack(BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("patchouli", "guide_book")));
                 CompoundTag nbt = new CompoundTag();
                 nbt.putString("patchouli:book", "advancedperipherals:manual");
                 book.setTag(nbt);
@@ -108,6 +114,19 @@ public class Events {
             }
             putChatMessage(Pair.of(getLastChatMessageID(), new ChatMessageObject(event.getUsername(), message, event.getPlayer().getUUID().toString(), isHidden)));
         }
+    }
+
+    @SubscribeEvent
+    public static void registerServerToClient(final RegisterPayloadHandlersEvent event) {
+        final PayloadRegistrar registrar = event.registrar("1");
+        registrar.playBidirectional(
+                ToastToClientPacket.ID,
+                ToastToClientPacket.CODEC,
+                new DirectionalPayloadHandler<>(
+                        ToastToClientPacket::handle,
+                        ToastToClientPacket::handle
+                )
+        );
     }
 
     public static synchronized void putChatMessage(Pair<Long, ChatMessageObject> message) {

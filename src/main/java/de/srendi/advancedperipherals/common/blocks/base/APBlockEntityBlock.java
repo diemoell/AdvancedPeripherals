@@ -8,20 +8,21 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.Supplier;
+
 public class APBlockEntityBlock<T extends BlockEntity> extends BaseBlockEntityBlock {
 
-    private final RegistryObject<BlockEntityType<T>> tileEntity;
+    private final Supplier<BlockEntityType<T>> tileEntity;
 
-    public APBlockEntityBlock(RegistryObject<BlockEntityType<T>> tileEntity, Properties properties, boolean belongToTickingEntity) {
+    public APBlockEntityBlock(Supplier<BlockEntityType<T>> tileEntity, Properties properties, boolean belongToTickingEntity) {
         super(belongToTickingEntity, properties);
         this.tileEntity = tileEntity;
     }
 
-    public APBlockEntityBlock(RegistryObject<BlockEntityType<T>> tileEntity, boolean belongToTickingEntity) {
+    public APBlockEntityBlock(Supplier<BlockEntityType<T>> tileEntity, boolean belongToTickingEntity) {
         this(tileEntity, Properties.of().sound(SoundType.METAL).mapColor(DyeColor.GRAY), belongToTickingEntity);
     }
 

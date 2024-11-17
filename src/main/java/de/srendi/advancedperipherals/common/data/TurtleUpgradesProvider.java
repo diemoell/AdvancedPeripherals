@@ -1,7 +1,8 @@
 package de.srendi.advancedperipherals.common.data;
 
+import dan200.computercraft.api.turtle.ITurtleUpgrade;
 import dan200.computercraft.api.turtle.TurtleUpgradeDataProvider;
-import dan200.computercraft.api.turtle.TurtleUpgradeSerialiser;
+import dan200.computercraft.api.upgrades.UpgradeSerialiser;
 import de.srendi.advancedperipherals.common.setup.Blocks;
 import de.srendi.advancedperipherals.common.setup.CCRegistration;
 import de.srendi.advancedperipherals.common.setup.Items;
@@ -17,7 +18,7 @@ public class TurtleUpgradesProvider extends TurtleUpgradeDataProvider {
     }
 
     @Override
-    protected void addUpgrades(@NotNull Consumer<Upgrade<TurtleUpgradeSerialiser<?>>> addUpgrade) {
+    protected void addUpgrades(Consumer<Upgrade<UpgradeSerialiser<? extends ITurtleUpgrade>>> addUpgrade) {
         simpleWithCustomItem(CCRegistration.ID.CHATTY_TURTLE, CCRegistration.CHAT_BOX_TURTLE.get(), Blocks.CHAT_BOX.get().asItem()).add(addUpgrade);
         simpleWithCustomItem(CCRegistration.ID.PLAYER_TURTLE, CCRegistration.PLAYER_DETECTOR_TURTLE.get(), Blocks.PLAYER_DETECTOR.get().asItem()).add(addUpgrade);
         simpleWithCustomItem(CCRegistration.ID.ENVIRONMENT_TURTLE, CCRegistration.ENVIRONMENT_TURTLE.get(), Blocks.ENVIRONMENT_DETECTOR.get().asItem()).add(addUpgrade);
@@ -32,4 +33,5 @@ public class TurtleUpgradesProvider extends TurtleUpgradeDataProvider {
         simpleWithCustomItem(CCRegistration.ID.OP_HUSBANDRY_AUTOMATA, CCRegistration.OP_HUSBANDRY_TURTLE.get(), Items.OVERPOWERED_HUSBANDRY_AUTOMATA_CORE.get()).add(addUpgrade);
 
     }
+
 }

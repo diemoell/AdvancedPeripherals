@@ -8,10 +8,10 @@ import net.minecraft.data.tags.PoiTypeTagsProvider;
 import net.minecraft.data.tags.TagsProvider;
 import net.minecraft.tags.PoiTypeTags;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
-import net.neoforged.common.data.ExistingFileHelper;
-import net.neoforged.registries.RegistryObject;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
@@ -26,7 +26,7 @@ public class PoiTypeProvider extends PoiTypeTagsProvider {
     @Override
     protected void addTags(HolderLookup.@NotNull Provider provider) {
         TagsProvider.TagAppender<PoiType> appender = tag(PoiTypeTags.ACQUIRABLE_JOB_SITE);
-        Registration.POI_TYPES.getEntries().stream().map(RegistryObject::getKey).filter(Objects::nonNull).forEach(appender::add);
+        Registration.POI_TYPES.getEntries().stream().map(DeferredHolder::getKey).filter(Objects::nonNull).forEach(appender::add);
     }
 
     @NotNull

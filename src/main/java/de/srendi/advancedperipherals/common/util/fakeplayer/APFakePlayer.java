@@ -19,6 +19,7 @@ import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DiggerItem;
@@ -34,12 +35,11 @@ import net.minecraft.world.level.block.CommandBlock;
 import net.minecraft.world.level.block.StructureBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.*;
-import net.neoforged.common.ForgeHooks;
-import net.neoforged.common.ForgeMod;
-import net.neoforged.common.util.FakePlayer;
-import net.neoforged.event.ForgeEventFactory;
-import net.neoforged.event.entity.player.PlayerInteractEvent;
-import net.neoforged.eventbus.api.Event;
+import net.neoforged.neoforge.common.CommonHooks;
+import net.neoforged.neoforge.common.util.FakePlayer;
+import net.neoforged.neoforge.common.util.TriState;
+import net.neoforged.neoforge.event.EventHooks;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -63,8 +63,8 @@ public class APFakePlayer extends FakePlayer {
 
     private float currentDamage = 0;
 
-    public APFakePlayer(ServerLevel world, Entity owner, GameProfile profile) {
-        super(world, profile != null && profile.isComplete() ? profile : PROFILE);
+    public APFakePlayer(ServerLevel world, Entity owner, @Nullable GameProfile profile) {
+        super(world, profile != null ? profile : PROFILE);
         if (owner != null) {
             setCustomName(owner.getName());
             this.owner = new WeakReference<>(owner);
@@ -108,11 +108,6 @@ public class APFakePlayer extends FakePlayer {
         currentDamage = 0;
     }
 
-    @Override
-    public float getEyeHeight(@NotNull Pose pose) {
-        return 0;
-    }
-
     public Pair<Boolean, String> digBlock(Direction direction) {
         Level world = level();
         HitResult hit = findHit(true, false);
@@ -141,7 +136,7 @@ public class APFakePlayer extends FakePlayer {
             if (tool.getItem() instanceof DiggerItem toolItem && !toolItem.isCorrectToolForDrops(tool, state))
                 return Pair.of(false, "Tool cannot mine this block");
 
-            if (tool.getItem() instanceof ShearsItem shearsItem && shearsItem.isCorrectToolForDrops(state))
+            if (tool.getItem() instanceof ShearsItem shearsItem && shearsItem.isCorrectToolForDrops(tool, state))
                 return Pair.of(false, "Shear cannot mine this block");
 
             ServerPlayerGameMode manager = gameMode;
@@ -182,7 +177,7 @@ public class APFakePlayer extends FakePlayer {
     public InteractionResult useOnSpecificEntity(@NotNull Entity entity, HitResult result) {
         InteractionResult simpleInteraction = interactOn(entity, InteractionHand.MAIN_HAND);
         if (simpleInteraction == InteractionResult.SUCCESS) return simpleInteraction;
-        if (ForgeHooks.onInteractEntityAt(this, entity, result.getLocation(), InteractionHand.MAIN_HAND) != null)
+        if (CommonHooks.onInteractEntityAt(this, entity, result.getLocation(), InteractionHand.MAIN_HAND) != null)
             return InteractionResult.FAIL;
 
         return entity.interactAt(this, result.getLocation(), InteractionHand.MAIN_HAND);
@@ -199,20 +194,20 @@ public class APFakePlayer extends FakePlayer {
 
             ItemStack stack = getMainHandItem();
             BlockPos pos = blockHit.getBlockPos();
-            PlayerInteractEvent.RightClickBlock event = ForgeHooks.onRightClickBlock(this, InteractionHand.MAIN_HAND, pos, blockHit);
+            PlayerInteractEvent.RightClickBlock event = CommonHooks.onRightClickBlock(this, InteractionHand.MAIN_HAND, pos, blockHit);
             if (event.isCanceled())
                 return event.getCancellationResult();
 
-            if (event.getUseItem() != Event.Result.DENY) {
+            if (event.getUseItem() != TriState.FALSE) {
                 InteractionResult result = stack.onItemUseFirst(new UseOnContext(level(), this, InteractionHand.MAIN_HAND, stack, blockHit));
                 if (result != InteractionResult.PASS)
                     return result;
             }
 
             boolean bypass = getMainHandItem().doesSneakBypassUse(level(), pos, this);
-            if (getPose() != Pose.CROUCHING || bypass || event.getUseBlock() == Event.Result.ALLOW) {
+            if (getPose() != Pose.CROUCHING || bypass || event.getUseBlock() == TriState.TRUE) {
                 InteractionResult useType = gameMode.useItemOn(this, level(), stack, InteractionHand.MAIN_HAND, blockHit);
-                if (event.getUseBlock() != Event.Result.DENY && useType == InteractionResult.SUCCESS)
+                if (event.getUseBlock() != TriState.FALSE && useType == InteractionResult.SUCCESS)
                     return InteractionResult.SUCCESS;
 
             }
@@ -227,13 +222,13 @@ public class APFakePlayer extends FakePlayer {
                     return InteractionResult.FAIL;
             }
 
-            if (event.getUseItem() == Event.Result.DENY)
+            if (event.getUseItem() == TriState.FALSE)
                 return InteractionResult.PASS;
 
             ItemStack copyBeforeUse = stack.copy();
             InteractionResult result = stack.useOn(new UseOnContext(level(), this, InteractionHand.MAIN_HAND, copyBeforeUse, blockHit));
             if (stack.isEmpty())
-                ForgeEventFactory.onPlayerDestroyItem(this, copyBeforeUse, InteractionHand.MAIN_HAND);
+                EventHooks.onPlayerDestroyItem(this, copyBeforeUse, InteractionHand.MAIN_HAND);
             return result;
         } else if (hit instanceof EntityHitResult entityHit) {
             return useOnSpecificEntity(entityHit.getEntity(), entityHit);
@@ -247,7 +242,7 @@ public class APFakePlayer extends FakePlayer {
 
     @NotNull
     public HitResult findHit(boolean skipEntity, boolean skipBlock, @Nullable Predicate<Entity> entityFilter) {
-        AttributeInstance reachAttribute = getAttribute(ForgeMod.BLOCK_REACH.get());
+        AttributeInstance reachAttribute = getAttribute(Attributes.BLOCK_INTERACTION_RANGE);
         if (reachAttribute == null)
             throw new IllegalArgumentException("How did this happened?");
 

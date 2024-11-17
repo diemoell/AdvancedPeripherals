@@ -3,7 +3,6 @@ package de.srendi.advancedperipherals.common.addons.computercraft.owner;
 import de.srendi.advancedperipherals.common.configuration.APConfig;
 import de.srendi.advancedperipherals.lib.peripherals.IPeripheralTileEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.common.capabilities.ForgeCapabilities;
 import org.jetbrains.annotations.NotNull;
 
 public class TileEntityFuelAbility<T extends BlockEntity & IPeripheralTileEntity> extends FuelAbility<BlockEntityPeripheralOwner<T>> {

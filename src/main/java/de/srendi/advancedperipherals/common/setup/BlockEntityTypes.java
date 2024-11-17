@@ -5,7 +5,6 @@ import de.srendi.advancedperipherals.common.blocks.blockentities.*;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.registries.RegistryObject;
 
 public class BlockEntityTypes {
 

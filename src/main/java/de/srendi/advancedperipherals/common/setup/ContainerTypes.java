@@ -4,9 +4,7 @@ import de.srendi.advancedperipherals.common.container.InventoryManagerContainer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.level.Level;
-import net.neoforged.common.extensions.IForgeMenuType;
 import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.registries.RegistryObject;
 
 public class ContainerTypes {
 

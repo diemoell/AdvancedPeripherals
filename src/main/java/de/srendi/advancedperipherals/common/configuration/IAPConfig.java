@@ -1,7 +1,6 @@
 package de.srendi.advancedperipherals.common.configuration;
 
 import de.srendi.advancedperipherals.lib.misc.IConfigHandler;
-import net.neoforged.common.ForgeConfigSpec;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
