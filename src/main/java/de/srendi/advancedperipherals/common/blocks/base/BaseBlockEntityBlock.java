@@ -35,7 +35,6 @@ public abstract class BaseBlockEntityBlock extends BaseBlock implements EntityBl
     }
 
     @NotNull
-    @Override
     public InteractionResult use(@NotNull BlockState state, Level levelIn, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand handIn, @NotNull BlockHitResult hit) {
         if (levelIn.isClientSide) return InteractionResult.SUCCESS;
         BlockEntity tileEntity = levelIn.getBlockEntity(pos);

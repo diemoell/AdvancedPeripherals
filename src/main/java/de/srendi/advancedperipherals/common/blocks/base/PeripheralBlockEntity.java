@@ -1,13 +1,11 @@
 package de.srendi.advancedperipherals.common.blocks.base;
 
 import dan200.computercraft.api.peripheral.IComputerAccess;
-import dan200.computercraft.api.peripheral.IPeripheral;
-import dan200.computercraft.shared.Capabilities;
-import de.srendi.advancedperipherals.AdvancedPeripherals;
 import de.srendi.advancedperipherals.lib.peripherals.BasePeripheral;
 import de.srendi.advancedperipherals.lib.peripherals.IPeripheralTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -21,13 +19,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.common.capabilities.Capability;
-import net.neoforged.neoforge.common.capabilities.ForgeCapabilities;
-import net.neoforged.neoforge.common.util.LazyOptional;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.wrapper.SidedInvWrapper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -40,9 +31,7 @@ public abstract class PeripheralBlockEntity<T extends BasePeripheral<?>> extends
     protected NonNullList<ItemStack> items;
     @Nullable
     protected T peripheral = null;
-    private LazyOptional<? extends IItemHandler> handler;
-    private LazyOptional<? extends IFluidHandler> fluidHandler;
-    private LazyOptional<IPeripheral> peripheralCap;
+
 
     public PeripheralBlockEntity(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
         super(tileEntityTypeIn, pos, state);
@@ -52,56 +41,6 @@ public abstract class PeripheralBlockEntity<T extends BasePeripheral<?>> extends
             items = NonNullList.withSize(0, ItemStack.EMPTY);
         }
         peripheralSettings = new CompoundTag();
-    }
-
-    @NotNull
-    @Override
-    public <T1> LazyOptional<T1> getCapability(@NotNull Capability<T1> cap, @Nullable Direction direction) {
-        if (cap == Capabilities.CAPABILITY_PERIPHERAL) {
-            if (peripheral == null)
-                // Perform later peripheral creation, because creating peripheral
-                // on init of tile entity cause some infinity loop, if peripheral
-                // are depend on tile entity data
-                this.peripheral = createPeripheral();
-            if (peripheral.isEnabled()) {
-                if (peripheralCap == null) {
-                    peripheralCap = LazyOptional.of(() -> peripheral);
-                } else if (!peripheralCap.isPresent()) {
-                    // Recreate peripheral to allow CC: Tweaked correctly handle
-                    // peripheral update logic, so new peripheral and old one will be
-                    // different
-                    peripheral = createPeripheral();
-                    peripheralCap = LazyOptional.of(() -> peripheral);
-                }
-                return peripheralCap.cast();
-            } else {
-                AdvancedPeripherals.debug(peripheral.getType() + " is disabled, you can enable it in the Configuration.");
-            }
-        }
-
-        if (cap == ForgeCapabilities.ITEM_HANDLER && !remove && direction != null && this instanceof IInventoryBlock) {
-            if (handler == null || !handler.isPresent())
-                handler = LazyOptional.of(() -> new SidedInvWrapper(this, Direction.NORTH));
-            return handler.cast();
-        }
-
-        if (cap == ForgeCapabilities.FLUID_HANDLER && !remove && direction != null) {
-            if (fluidHandler == null || !fluidHandler.isPresent())
-                fluidHandler = LazyOptional.of(() -> new FluidTank(0));
-            return fluidHandler.cast();
-        }
-        return super.getCapability(cap, direction);
-    }
-
-    @Override
-    public void invalidateCaps() {
-        super.invalidateCaps();
-        if (peripheralCap != null)
-            peripheralCap.invalidate();
-        if (handler != null)
-            handler.invalidate();
-        if (fluidHandler != null)
-            fluidHandler.invalidate();
     }
 
     @NotNull
@@ -119,17 +58,17 @@ public abstract class PeripheralBlockEntity<T extends BasePeripheral<?>> extends
     }*/
 
     @Override
-    public void saveAdditional(@NotNull CompoundTag compound) {
-        super.saveAdditional(compound);
-        ContainerHelper.saveAllItems(compound, items);
+    public void saveAdditional(@NotNull CompoundTag compound, HolderLookup.@NotNull Provider registries) {
+        super.saveAdditional(compound, registries);
+        ContainerHelper.saveAllItems(compound, items, registries);
         if (!peripheralSettings.isEmpty()) compound.put(PERIPHERAL_SETTINGS_KEY, peripheralSettings);
     }
 
     @Override
-    public void load(@NotNull CompoundTag compound) {
-        ContainerHelper.loadAllItems(compound, items);
+    public void loadAdditional(@NotNull CompoundTag compound, HolderLookup.@NotNull Provider registries) {
+        ContainerHelper.loadAllItems(compound, items, registries);
         peripheralSettings = compound.getCompound(PERIPHERAL_SETTINGS_KEY);
-        super.load(compound);
+        super.loadAdditional(compound, registries);
     }
 
     @Override

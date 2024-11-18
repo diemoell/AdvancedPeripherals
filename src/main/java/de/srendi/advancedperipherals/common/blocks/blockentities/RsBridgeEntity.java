@@ -12,6 +12,7 @@ import de.srendi.advancedperipherals.common.setup.BlockEntityTypes;
 import de.srendi.advancedperipherals.lib.peripherals.IPeripheralTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -56,8 +57,8 @@ public class RsBridgeEntity extends NetworkNodeBlockEntity<RefinedStorageNode> i
     }
 
     @Override
-    public void saveAdditional(@NotNull CompoundTag compound) {
-        super.saveAdditional(compound);
+    public void saveAdditional(@NotNull CompoundTag compound, HolderLookup.@NotNull Provider registries) {
+        super.saveAdditional(compound, registries);
         if (!peripheralSettings.isEmpty()) compound.put(PERIPHERAL_SETTINGS, peripheralSettings);
     }
 

@@ -6,6 +6,8 @@ import de.srendi.advancedperipherals.common.util.StringUtil;
 import net.minecraft.ResourceLocationException;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.Registry;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -33,7 +35,7 @@ public class ItemUtil {
     public static <T> T getRegistryEntry(String name, Registry<T> forgeRegistry) {
         ResourceLocation location;
         try {
-            location = new ResourceLocation(name);
+            location = ResourceLocation.parse(name);
         } catch (ResourceLocationException ex) {
             location = null;
         }
@@ -53,7 +55,8 @@ public class ItemUtil {
      * @return A generated MD5 hash from the item stack
      */
     public static String getFingerprint(ItemStack stack) {
-        String fingerprint = stack.getOrCreateTag() + getRegistryKey(stack).toString() + stack.getDisplayName().getString();
+        // now we use hoverName
+        String fingerprint = stack.getHoverName() + getRegistryKey(stack).toString() + stack.getDisplayName().getString();
         try {
             byte[] bytesOfHash = fingerprint.getBytes(StandardCharsets.UTF_8);
             MessageDigest md = MessageDigest.getInstance("MD5");
@@ -67,13 +70,15 @@ public class ItemUtil {
 
     public static ItemStack makeTurtle(Item turtle, String upgrade) {
         ItemStack stack = new ItemStack(turtle);
-        stack.getOrCreateTag().putString("RightUpgrade", upgrade);
+        stack.getOrDefault(DataComponents.CUSTOM_DATA, upgrade);
+        // stack.getOrCreateTag().putString("RightUpgrade", upgrade);
         return stack;
     }
 
     public static ItemStack makePocket(Item turtle, String upgrade) {
         ItemStack stack = new ItemStack(turtle);
-        stack.getOrCreateTag().putString("Upgrade", upgrade);
+        stack.getOrDefault(DataComponents.CUSTOM_DATA, upgrade);
+        // stack.getOrCreateTag().putString("Upgrade", upgrade);
         return stack;
     }
 

@@ -3,6 +3,7 @@ package de.srendi.advancedperipherals.common.util.inventory;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
+import dan200.computercraft.shared.util.CapabilityUtil;
 import de.srendi.advancedperipherals.AdvancedPeripherals;
 import de.srendi.advancedperipherals.common.addons.computercraft.owner.IPeripheralOwner;
 import de.srendi.advancedperipherals.common.util.CoordUtil;
@@ -10,12 +11,11 @@ import de.srendi.advancedperipherals.common.util.StringUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.material.Fluid;
-import net.neoforged.neoforge.neoforge.common.capabilities.ForgeCapabilities;
-import net.neoforged.neoforge.common.capabilities.ICapabilityProvider;
-import net.neoforged.neoforge.common.util.LazyOptional;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.NotNull;
@@ -32,15 +32,21 @@ public class FluidUtil {
     }
 
     @Nullable
-    public static IFluidHandler extractHandler(@Nullable Object object) {
-        if (object instanceof IFluidHandler fluidHandler)
-            return fluidHandler;
+    private static IFluidHandler extractHandler(IPeripheral peripheral) {
+        var object = peripheral.getTarget();
+        var direction = peripheral instanceof dan200.computercraft.shared.peripheral.generic.GenericPeripheral sided ? sided.side() : null;
 
-        if (object instanceof ICapabilityProvider capabilityProvider) {
-            LazyOptional<IFluidHandler> cap = capabilityProvider.getCapability(ForgeCapabilities.FLUID_HANDLER);
-            if (cap.isPresent())
-                return cap.orElseThrow(NullPointerException::new);
+        if (object instanceof BlockEntity blockEntity) {
+            if (blockEntity.isRemoved()) return null;
+
+            var level = blockEntity.getLevel();
+            if (!(level instanceof ServerLevel serverLevel)) return null;
+
+            var result = CapabilityUtil.getCapability(serverLevel, Capabilities.FluidHandler.BLOCK, blockEntity.getBlockPos(), blockEntity.getBlockState(), blockEntity, direction);
+            if (result != null) return result;
         }
+
+        if (object instanceof IFluidHandler handler) return handler;
         return null;
     }
 
@@ -53,7 +59,8 @@ public class FluidUtil {
         if (target == null)
             throw new LuaException("Target '" + direction + "' is empty or not a fluid handler");
 
-        IFluidHandler handler = extractHandler(target);
+        IFluidHandler handler = extractHandler((IPeripheral) target);
+        // IFluidHandler handler = level.getCapability(Capabilities.FluidHandler.BLOCK, target.getBlockPos(), Direction.byName(direction));
         if (handler == null)
             throw new LuaException("Target '" + direction + "' is not a fluid handler");
         return handler;
@@ -68,7 +75,7 @@ public class FluidUtil {
         if (location == null)
             return null;
 
-        IFluidHandler handler = extractHandler(location.getTarget());
+        IFluidHandler handler = extractHandler((IPeripheral) location.getTarget());
         if (handler == null)
             throw new LuaException("Target '" + name + "' is not a fluid handler");
         return handler;
@@ -76,7 +83,7 @@ public class FluidUtil {
 
     @NotNull
     public static String getFingerprint(@NotNull FluidStack stack) {
-        String fingerprint = stack.getOrCreateTag() + getRegistryKey(stack).toString() + stack.getDisplayName().getString();
+        String fingerprint = stack.getFluid() + getRegistryKey(stack).toString() + stack.getHoverName().getString();
         try {
             byte[] bytesOfHash = fingerprint.getBytes(StandardCharsets.UTF_8);
             MessageDigest md = MessageDigest.getInstance("MD5");

@@ -7,6 +7,7 @@ import de.srendi.advancedperipherals.common.setup.BlockEntityTypes;
 import de.srendi.advancedperipherals.common.util.EnergyStorageProxy;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.JigsawBlock;
@@ -63,8 +64,8 @@ public class EnergyDetectorEntity extends PeripheralBlockEntity<EnergyDetectorPe
     }
 
     @Override
-    public void saveAdditional(@NotNull CompoundTag compound) {
-        super.saveAdditional(compound);
+    public void saveAdditional(@NotNull CompoundTag compound, HolderLookup.@NotNull Provider registries) {
+        super.saveAdditional(compound, registries);
         compound.putInt("rateLimit", storageProxy.getMaxTransferRate());
     }
 
