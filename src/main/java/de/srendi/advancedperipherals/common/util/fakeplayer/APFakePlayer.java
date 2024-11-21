@@ -33,12 +33,10 @@ import net.minecraft.world.level.block.CommandBlock;
 import net.minecraft.world.level.block.StructureBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.*;
-import net.neoforged.common.ForgeHooks;
-import net.neoforged.common.ForgeMod;
-import net.neoforged.common.util.FakePlayer;
-import net.neoforged.event.ForgeEventFactory;
-import net.neoforged.event.entity.player.PlayerInteractEvent;
-import net.neoforged.eventbus.api.Event;
+import net.neoforged.bus.api.Event;
+import net.neoforged.neoforge.common.CommonHooks;
+import net.neoforged.neoforge.common.util.FakePlayer;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -63,7 +61,7 @@ public class APFakePlayer extends FakePlayer {
     private float currentDamage = 0;
 
     public APFakePlayer(ServerLevel world, Entity owner, GameProfile profile) {
-        super(world, profile != null && profile.isComplete() ? profile : PROFILE);
+        super(world, PROFILE);
         if (owner != null) {
             setCustomName(owner.getName());
             this.owner = new WeakReference<>(owner);
@@ -220,7 +218,7 @@ public class APFakePlayer extends FakePlayer {
     public InteractionResult useOnSpecificEntity(@NotNull Entity entity, HitResult result) {
         InteractionResult simpleInteraction = interactOn(entity, InteractionHand.MAIN_HAND);
         if (simpleInteraction == InteractionResult.SUCCESS) return simpleInteraction;
-        if (ForgeHooks.onInteractEntityAt(this, entity, result.getLocation(), InteractionHand.MAIN_HAND) != null) {
+        if (CommonHooks.onInteractEntityAt(this, entity, result.getLocation(), InteractionHand.MAIN_HAND) == InteractionResult.FAIL) {
             return InteractionResult.FAIL;
         }
 
@@ -276,7 +274,7 @@ public class APFakePlayer extends FakePlayer {
             ItemStack copyBeforeUse = stack.copy();
             InteractionResult result = stack.useOn(new UseOnContext(level(), this, InteractionHand.MAIN_HAND, stack, blockHit));
             if (stack.isEmpty()) {
-                ForgeEventFactory.onPlayerDestroyItem(this, copyBeforeUse, InteractionHand.MAIN_HAND);
+                CommonHooks.onPlayerDestroyItem(this, copyBeforeUse, InteractionHand.MAIN_HAND);
             }
             return result;
         } else if (hit instanceof EntityHitResult entityHit) {

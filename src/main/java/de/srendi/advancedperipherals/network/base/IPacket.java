@@ -1,19 +1,14 @@
 package de.srendi.advancedperipherals.network.base;
 
 import net.minecraft.network.FriendlyByteBuf;
-import net.neoforged.network.NetworkEvent;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
+import net.neoforged.neoforge.network.handling.IPayloadHandler;
 
-import java.util.function.Supplier;
+public interface IPacket<T extends IPacket<?> & CustomPacketPayload> extends IPayloadHandler<T> {
 
-public interface IPacket {
-
-    static <MSG extends IPacket> void handle(MSG message, Supplier<NetworkEvent.Context> context) {
-        NetworkEvent.Context ctx = context.get();
-        ctx.enqueueWork(() -> message.handle(ctx));
-        ctx.setPacketHandled(true);
+    static <MSG extends IPacket<?>> void handlePacket(MSG message) {
     }
-
-    void handle(NetworkEvent.Context context);
 
     void encode(FriendlyByteBuf buffer);
 

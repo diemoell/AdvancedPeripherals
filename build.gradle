@@ -238,7 +238,7 @@ dependencies {
     runtimeOnly "top.theillusivec4.curios:curios-forge:${curios_version}"
 
     // Refined Storage
-    implementation "com.refinedmods:refinedstorage:${refinedstorage_version}"
+    //implementation "com.refinedmods:refinedstorage:${refinedstorage_version}"
 
     // AE2 Things
     compileOnly "curse.maven:ae2things-609977:${ae2things_version}-sources"

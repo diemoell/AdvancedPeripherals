@@ -3,6 +3,7 @@ package de.srendi.advancedperipherals.network;
 import de.srendi.advancedperipherals.AdvancedPeripherals;
 import de.srendi.advancedperipherals.network.base.IPacket;
 import de.srendi.advancedperipherals.network.toclient.ToastToClientPacket;
+import net.minecraft.client.gui.components.toasts.Toast;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -12,8 +13,12 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.common.util.FakePlayer;
 import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.neoforge.network.connection.ConnectionUtils;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlerEvent;
+import net.neoforged.neoforge.network.registration.IPayloadRegistrar;
 import net.neoforged.network.NetworkDirection;
 import net.neoforged.network.NetworkRegistry;
 import net.neoforged.network.PacketDistributor;
@@ -24,27 +29,20 @@ import java.util.function.Function;
 
 public class APNetworking {
     private static final String PROTOCOL_VERSION = ModLoadingContext.get().getActiveContainer().getModInfo().getVersion().toString();
-    private static final SimpleChannel NETWORK_CHANNEL = NetworkRegistry.newSimpleChannel(new ResourceLocation(AdvancedPeripherals.MOD_ID, "main_channel"), () -> PROTOCOL_VERSION, PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
     private static int id = 0;
 
     public static void init() {
         registerServerToClient(ToastToClientPacket.class, ToastToClientPacket::decode);
     }
 
-    public static <MSG extends IPacket> void registerServerToClient(Class<MSG> packet, Function<FriendlyByteBuf, MSG> decode) {
-        NETWORK_CHANNEL.registerMessage(id++, packet, IPacket::encode, decode, IPacket::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
-    }
+    @SubscribeEvent
+    public static void register(final RegisterPayloadHandlerEvent event) {
+        final IPayloadRegistrar registrar = event.registrar(AdvancedPeripherals.MOD_ID)
+                .versioned(PROTOCOL_VERSION)
+                .common(AdvancedPeripherals.getRL("toasttoclient"), ToastToClientPacket::decode, IPacket::handlePacket)
+                .optional();
 
-    public static <MSG extends IPacket> void registerClientToServer(Class<MSG> packet, Function<FriendlyByteBuf, MSG> decode) {
-        NETWORK_CHANNEL.registerMessage(id++, packet, IPacket::encode, decode, IPacket::handle, Optional.of(NetworkDirection.PLAY_TO_SERVER));
-    }
 
-    /**
-     * Sends a packet to the server.<p>
-     * Must be called Client side.
-     */
-    public static void sendToServer(Object msg) {
-        NETWORK_CHANNEL.sendToServer(msg);
     }
 
     /**
