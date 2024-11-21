@@ -21,15 +21,14 @@ import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.DiggerItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ShearsItem;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.CommandBlock;
 import net.minecraft.world.level.block.StructureBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -45,8 +44,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class APFakePlayer extends FakePlayer {
@@ -94,6 +93,11 @@ public class APFakePlayer extends FakePlayer {
     }
 
     @Override
+    public void setLevel(@NotNull Level level) {
+        super.setLevel(level);
+    }
+
+    @Override
     public void playSound(@NotNull SoundEvent soundIn, float volume, float pitch) {
     }
 
@@ -113,58 +117,92 @@ public class APFakePlayer extends FakePlayer {
         return 0;
     }
 
+    public static <T> Function<APFakePlayer, T> wrapActionWithRot(float yaw, float pitch, Function<APFakePlayer, T> action) {
+        return player -> player.<T>doActionWithRot(yaw, pitch, action);
+    }
+
+    public <T> T doActionWithRot(float yaw, float pitch, Function<APFakePlayer, T> action) {
+        final float oldRot = this.getYRot();
+        this.setRot(oldRot + yaw, pitch);
+        try {
+            return action.apply(this);
+        } finally {
+            this.setRot(oldRot, 0);
+        }
+    }
+
+    public static <T> Function<APFakePlayer, T> wrapActionWithShiftKey(boolean shift, Function<APFakePlayer, T> action) {
+        return player -> player.<T>doActionWithShiftKey(shift, action);
+    }
+
+    public <T> T doActionWithShiftKey(boolean shift, Function<APFakePlayer, T> action) {
+        boolean old = this.isShiftKeyDown();
+        this.setShiftKeyDown(shift);
+        try {
+            return action.apply(this);
+        } finally {
+            this.setShiftKeyDown(old);
+        }
+    }
+
+    @Deprecated(forRemoval = true)
     public Pair<Boolean, String> digBlock(Direction direction) {
+        return doActionWithRot(direction.toYRot() - this.getYRot(), direction == Direction.DOWN ? 90 : direction == Direction.UP ? -90 : 0, APFakePlayer::digBlock);
+    }
+
+    public Pair<Boolean, String> digBlock() {
         Level world = level();
         HitResult hit = findHit(true, false);
-        if (hit.getType() == HitResult.Type.MISS)
+        if (hit.getType() == HitResult.Type.MISS) {
             return Pair.of(false, "Nothing to break");
-        BlockPos pos = new BlockPos((int) hit.getLocation().x, (int) hit.getLocation().y, (int) hit.getLocation().z);
+        }
+        BlockPos pos = ((BlockHitResult) hit).getBlockPos();
         BlockState state = world.getBlockState(pos);
         Block block = state.getBlock();
 
         ItemStack tool = getInventory().getSelected();
-
-        if (tool.isEmpty())
+        if (tool.isEmpty()) {
             return Pair.of(false, "Cannot dig without tool");
-
-
-        if (block != digBlock || !pos.equals(digPosition))
-            setState(block, pos);
-
-        if (!world.isEmptyBlock(pos)) {
-            if (block == Blocks.BEDROCK || state.getDestroySpeed(world, pos) <= -1)
-                return Pair.of(false, "Unbreakable block detected");
-
-            if (!(tool.getItem() instanceof DiggerItem) && !(tool.getItem() instanceof ShearsItem))
-                return Pair.of(false, "Item should be digger tool");
-
-            if (tool.getItem() instanceof DiggerItem toolItem && !toolItem.isCorrectToolForDrops(tool, state))
-                return Pair.of(false, "Tool cannot mine this block");
-
-            if (tool.getItem() instanceof ShearsItem shearsItem && shearsItem.isCorrectToolForDrops(state))
-                return Pair.of(false, "Shear cannot mine this block");
-
-            ServerPlayerGameMode manager = gameMode;
-            float breakSpeed = 0.5f * tool.getDestroySpeed(state) / state.getDestroySpeed(level(), pos) - 0.1f;
-            for (int i = 0; i < 10; i++) {
-                currentDamage += breakSpeed;
-
-                world.destroyBlockProgress(getId(), pos, i);
-
-                if (currentDamage > 9) {
-                    world.playSound(null, pos, state.getSoundType().getHitSound(), SoundSource.NEUTRAL, .25f, 1);
-                    manager.handleBlockBreakAction(pos, ServerboundPlayerActionPacket.Action.STOP_DESTROY_BLOCK, direction.getOpposite(), 320, 1);
-                    manager.destroyBlock(pos);
-                    world.destroyBlockProgress(getId(), pos, -1);
-                    setState(null, null);
-                    break;
-                }
-            }
-
-            return Pair.of(true, "block");
         }
 
-        return Pair.of(false, "Nothing to dig here");
+        if (block != digBlock || !pos.equals(digPosition)) {
+            setState(block, pos);
+        }
+
+        Vec3 look = getLookAngle();
+        Direction direction = Direction.getNearest(look.x, look.y, look.z).getOpposite();
+
+        if (world.isEmptyBlock(pos) || state.getBlock() instanceof LiquidBlock) {
+            return Pair.of(false, "Nothing to dig here");
+        }
+
+        if (block == Blocks.BEDROCK || state.getDestroySpeed(world, pos) <= -1) {
+            return Pair.of(false, "Unbreakable block detected");
+        }
+
+        if (!tool.isCorrectToolForDrops(state)) {
+            return Pair.of(false, "Tool cannot mine this block");
+        }
+
+        ServerPlayerGameMode manager = gameMode;
+        float breakSpeed = 0.5f * tool.getDestroySpeed(state) / state.getDestroySpeed(world, pos) - 0.1f;
+        for (int i = 0; i < 10; i++) {
+            currentDamage += breakSpeed;
+
+            world.destroyBlockProgress(getId(), pos, i);
+
+            if (currentDamage > 9) {
+                world.playSound(null, pos, state.getSoundType().getHitSound(), SoundSource.NEUTRAL, .25f, 1);
+                manager.handleBlockBreakAction(pos, ServerboundPlayerActionPacket.Action.STOP_DESTROY_BLOCK, direction, 320, 1);
+                manager.destroyBlock(pos);
+                world.destroyBlockProgress(getId(), pos, -1);
+                setState(null, null);
+                break;
+            }
+        }
+
+        return Pair.of(true, "block");
+
     }
 
     public InteractionResult useOnBlock() {
@@ -182,8 +220,9 @@ public class APFakePlayer extends FakePlayer {
     public InteractionResult useOnSpecificEntity(@NotNull Entity entity, HitResult result) {
         InteractionResult simpleInteraction = interactOn(entity, InteractionHand.MAIN_HAND);
         if (simpleInteraction == InteractionResult.SUCCESS) return simpleInteraction;
-        if (ForgeHooks.onInteractEntityAt(this, entity, result.getLocation(), InteractionHand.MAIN_HAND) != null)
+        if (ForgeHooks.onInteractEntityAt(this, entity, result.getLocation(), InteractionHand.MAIN_HAND) != null) {
             return InteractionResult.FAIL;
+        }
 
         return entity.interactAt(this, result.getLocation(), InteractionHand.MAIN_HAND);
     }
@@ -196,44 +235,49 @@ public class APFakePlayer extends FakePlayer {
         HitResult hit = findHit(skipEntity, skipBlock, entityFilter);
 
         if (hit instanceof BlockHitResult blockHit) {
-
             ItemStack stack = getMainHandItem();
             BlockPos pos = blockHit.getBlockPos();
             PlayerInteractEvent.RightClickBlock event = ForgeHooks.onRightClickBlock(this, InteractionHand.MAIN_HAND, pos, blockHit);
-            if (event.isCanceled())
+            if (event.isCanceled()) {
                 return event.getCancellationResult();
-
-            if (event.getUseItem() != Event.Result.DENY) {
+            }
+            boolean usedItem = event.getUseItem() != Event.Result.DENY;
+            boolean usedOnBlock = event.getUseBlock() != Event.Result.DENY;
+            if (usedItem) {
                 InteractionResult result = stack.onItemUseFirst(new UseOnContext(level(), this, InteractionHand.MAIN_HAND, stack, blockHit));
-                if (result != InteractionResult.PASS)
+                if (result != InteractionResult.PASS) {
                     return result;
+                }
+
+                boolean bypass = getMainHandItem().doesSneakBypassUse(level(), pos, this);
+                if (isShiftKeyDown() || bypass || usedOnBlock) {
+                    InteractionResult useType = gameMode.useItemOn(this, level(), stack, InteractionHand.MAIN_HAND, blockHit);
+                    if (useType.consumesAction()) {
+                        return useType;
+                    }
+                }
             }
 
-            boolean bypass = getMainHandItem().doesSneakBypassUse(level(), pos, this);
-            if (getPose() != Pose.CROUCHING || bypass || event.getUseBlock() == Event.Result.ALLOW) {
-                InteractionResult useType = gameMode.useItemOn(this, level(), stack, InteractionHand.MAIN_HAND, blockHit);
-                if (event.getUseBlock() != Event.Result.DENY && useType == InteractionResult.SUCCESS)
-                    return InteractionResult.SUCCESS;
-
-            }
-
-            if (stack.isEmpty() || getCooldowns().isOnCooldown(stack.getItem()))
+            if (!stack.isEmpty() && getCooldowns().isOnCooldown(stack.getItem())) {
                 return InteractionResult.PASS;
-
+            }
 
             if (stack.getItem() instanceof BlockItem blockItem) {
                 Block block = blockItem.getBlock();
-                if (block instanceof CommandBlock || block instanceof StructureBlock)
+                if (block instanceof CommandBlock || block instanceof StructureBlock) {
                     return InteractionResult.FAIL;
+                }
             }
 
-            if (event.getUseItem() == Event.Result.DENY)
+            if (!usedItem && !usedOnBlock) {
                 return InteractionResult.PASS;
+            }
 
             ItemStack copyBeforeUse = stack.copy();
-            InteractionResult result = stack.useOn(new UseOnContext(level(), this, InteractionHand.MAIN_HAND, copyBeforeUse, blockHit));
-            if (stack.isEmpty())
+            InteractionResult result = stack.useOn(new UseOnContext(level(), this, InteractionHand.MAIN_HAND, stack, blockHit));
+            if (stack.isEmpty()) {
                 ForgeEventFactory.onPlayerDestroyItem(this, copyBeforeUse, InteractionHand.MAIN_HAND);
+            }
             return result;
         } else if (hit instanceof EntityHitResult entityHit) {
             return useOnSpecificEntity(entityHit.getEntity(), entityHit);
@@ -263,9 +307,9 @@ public class APFakePlayer extends FakePlayer {
             blockHit = BlockHitResult.miss(traceContext.getTo(), traceDirection, new BlockPos((int) traceContext.getTo().x, (int) traceContext.getTo().y, (int) traceContext.getTo().z));
         } else {
             blockHit = BlockGetter.traverseBlocks(traceContext.getFrom(), traceContext.getTo(), traceContext, (rayTraceContext, blockPos) -> {
-                if (level().isEmptyBlock(blockPos))
+                if (level().isEmptyBlock(blockPos) || blockPos.equals(blockPosition())) {
                     return null;
-
+                }
                 return new BlockHitResult(new Vec3(blockPos.getX(), blockPos.getY(), blockPos.getZ()), traceDirection, blockPos, false);
             }, rayTraceContext -> BlockHitResult.miss(rayTraceContext.getTo(), traceDirection, new BlockPos((int) rayTraceContext.getTo().x, (int) rayTraceContext.getTo().y, (int) rayTraceContext.getTo().z)));
         }
@@ -273,46 +317,59 @@ public class APFakePlayer extends FakePlayer {
         if (skipEntity)
             return blockHit;
 
-        List<Entity> entities = level().getEntities(this, getBoundingBox().expandTowards(look.x * range, look.y * range, look.z * range).inflate(1, 1, 1), collidablePredicate);
+        List<Entity> entities = level().getEntities(this, getBoundingBox().expandTowards(look.x * range, look.y * range, look.z * range).inflate(1), collidablePredicate);
 
         LivingEntity closestEntity = null;
         Vec3 closestVec = null;
-        double closestDistance = range;
+        double closestDistance = blockHit.getType() == HitResult.Type.MISS ? range * range : distanceToSqr(blockHit.getLocation());
         for (Entity entityHit : entities) {
-            if (!(entityHit instanceof LivingEntity) || entityFilter != null && !entityFilter.test(entityHit))
+            if (!(entityHit instanceof LivingEntity entity)) {
                 continue;
-            // Add litter bigger that just pick radius
-            AABB box = entityHit.getBoundingBox().inflate(entityHit.getPickRadius() + 0.5);
-            Optional<Vec3> clipResult = box.clip(origin, target);
+            }
+            // TODO: maybe let entityFilter returns the priority of the entity, instead of only returns the closest one.
+            if (entityFilter != null && !entityFilter.test(entity)) {
+                continue;
+            }
 
+            // Removed a lot logic here to make Automata cores interact like a player.
+            // However, the results for some edge cases may change. Need more review and tests.
+
+            // Hit vehicle before passenger
+            if (entity.isPassenger()) {
+                continue;
+            }
+
+            AABB box = entity.getBoundingBox();
+            Vec3 clipVec;
             if (box.contains(origin)) {
-                if (closestDistance >= 0.0D) {
-                    closestEntity = (LivingEntity) entityHit;
-                    closestVec = clipResult.orElse(origin);
-                    closestDistance = 0.0D;
-                }
-            } else if (clipResult.isPresent()) {
-                Vec3 clipVec = clipResult.get();
-                double distance = origin.distanceTo(clipVec);
-
-                if (distance < closestDistance || closestDistance == 0.0D) {
-                    if (entityHit == entityHit.getRootVehicle() && !entityHit.canRiderInteract()) {
-                        if (closestDistance == 0.0D) {
-                            closestEntity = (LivingEntity) entityHit;
-                            closestVec = clipVec;
-                        }
-                    } else {
-                        closestEntity = (LivingEntity) entityHit;
-                        closestVec = clipVec;
-                        closestDistance = distance;
-                    }
+                clipVec = origin;
+            } else {
+                clipVec = box.clip(origin, target).orElse(null);
+                if (clipVec == null) {
+                    continue;
                 }
             }
+            double distance = origin.distanceToSqr(clipVec);
+            // Ignore small enough distance
+            if (distance <= 1e-6) {
+                distance = 0;
+            }
+            if (distance > closestDistance) {
+                continue;
+            }
+            if (distance == closestDistance && closestEntity != null) {
+                // Hit larger entity before smaller
+                if (closestEntity.getBoundingBox().getSize() >= box.getSize()) {
+                    continue;
+                }
+            }
+            closestEntity = entity;
+            closestVec = clipVec;
+            closestDistance = distance;
         }
-        if (closestEntity != null && closestDistance <= range && (blockHit.getType() == HitResult.Type.MISS || distanceToSqr(blockHit.getLocation()) > closestDistance * closestDistance)) {
+        if (closestEntity != null) {
             return new EntityHitResult(closestEntity, closestVec);
-        } else {
-            return blockHit;
         }
+        return blockHit;
     }
 }

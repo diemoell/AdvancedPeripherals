@@ -14,7 +14,12 @@ plugins {
     id 'java'
 }
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+    withSourcesJar()
+}
 
 wrapper {
     gradleVersion = '8.7'
@@ -251,10 +256,10 @@ dependencies {
 
     // Minecolonies
     // Remove/Comment this section if you want to use runData.
-    //runtimeOnly "com.ldtteam:minecolonies:${minecolonies_version}"
-    //runtimeOnly "com.ldtteam:structurize:${structurize_version}"
-    //runtimeOnly "com.ldtteam:domum_ornamentum:${domumornamentum_version}:universal"
-    //runtimeOnly "com.ldtteam:blockui:${blockui_version}"
+    runtimeOnly "com.ldtteam:minecolonies:${minecolonies_version}"
+    runtimeOnly "com.ldtteam:structurize:${structurize_version}"
+    runtimeOnly "com.ldtteam:domum_ornamentum:${domumornamentum_version}:universal"
+    runtimeOnly "com.ldtteam:blockui:${blockui_version}"
 
     compileOnly "com.ldtteam:minecolonies:${minecolonies_version}"
     compileOnly "com.ldtteam:structurize:${structurize_version}"
@@ -444,7 +449,7 @@ publishing {
             publication.groupId = project.group
             publication.version = isSnapshotVersion ? "${minecraft_version}-${version}-${project.teamcityBuild}" : "${minecraft_version}-${version}"
             publication.artifactId =  isSnapshotVersion ? "advancedperipherals-snapshots" : "advancedperipherals"
-            publication.artifacts = [jar]
+            publication.artifacts = [jar, sourcesJar]
             publication.pom {
                 name.set("AdvancedPeripherals")
                 packaging = 'jar'

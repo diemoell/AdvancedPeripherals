@@ -355,6 +355,8 @@ public class AppEngApi {
             net.minecraft.world.level.Level level = bus.getLevel();
             BlockPos connectedInventoryPos = bus.getHost().getBlockEntity().getBlockPos().relative(bus.getSide());
             BlockEntity connectedInventoryEntity = level.getBlockEntity(connectedInventoryPos);
+            if (connectedInventoryEntity == null)
+                continue;
 
             LazyOptional<IItemHandler> itemHandler = connectedInventoryEntity.getCapability(ForgeCapabilities.ITEM_HANDLER);
             if (itemHandler.isPresent()) {
@@ -410,6 +412,8 @@ public class AppEngApi {
             net.minecraft.world.level.Level level = bus.getLevel();
             BlockPos connectedInventoryPos = bus.getHost().getBlockEntity().getBlockPos().relative(bus.getSide());
             BlockEntity connectedInventoryEntity = level.getBlockEntity(connectedInventoryPos);
+            if (connectedInventoryEntity == null)
+                continue;
 
             LazyOptional<IFluidHandler> fluidHandler = connectedInventoryEntity.getCapability(ForgeCapabilities.FLUID_HANDLER);
             if (fluidHandler.isPresent()) {
@@ -562,15 +566,15 @@ public class AppEngApi {
     public static List<Object> listCells(IGridNode node) {
         List<Object> items = new ArrayList<>();
 
-        Iterator<IGridNode> iterator = node.getGrid().getMachineNodes(DriveBlockEntity.class).iterator();
+        Iterator<IGridNode> iterator = node.getGrid().getNodes().iterator();
 
         if (!iterator.hasNext()) return items;
         while (iterator.hasNext()) {
-            DriveBlockEntity entity = (DriveBlockEntity) iterator.next().getService(IStorageProvider.class);
-            if (entity == null)
+            IStorageProvider entity = iterator.next().getService(IStorageProvider.class);
+            if (!(entity instanceof DriveBlockEntity driveEntity))
                 continue;
 
-            InternalInventory inventory = entity.getInternalInventory();
+            InternalInventory inventory = driveEntity.getInternalInventory();
 
             for (int i = 0; i < inventory.size(); i++) {
                 ItemStack stack = inventory.getStackInSlot(i);

@@ -2,6 +2,7 @@ package de.srendi.advancedperipherals.common.addons.powah;
 
 import dan200.computercraft.api.lua.LuaFunction;
 import de.srendi.advancedperipherals.lib.peripherals.APGenericPeripheral;
+import de.srendi.advancedperipherals.common.util.LuaConverter;
 import net.minecraft.world.item.ItemStack;
 import owmii.powah.block.reactor.ReactorPartTile;
 
@@ -10,6 +11,11 @@ public class ReactorIntegration implements APGenericPeripheral {
     @Override
     public String getPeripheralType() {
         return "uraniniteReactor";
+    }
+
+    @LuaFunction(mainThread = true)
+    public final String getName() {
+        return "Uraninite Reactor";
     }
 
     @LuaFunction(mainThread = true)
@@ -40,8 +46,17 @@ public class ReactorIntegration implements APGenericPeripheral {
         return blockEntity.core().get().redstone.perCent();
     }
 
+    // TODO: remove in the next major version
+    @Deprecated(forRemoval = true, since = "1.20.1-0.7.41r")
     @LuaFunction(mainThread = true)
     public final double getEnergy(ReactorPartTile blockEntity) {
+        if (blockEntity.core().isEmpty())
+            return 0.0d;
+        return blockEntity.core().get().getEnergy().getEnergyStored();
+    }
+
+    @LuaFunction(mainThread = true)
+    public final double getStoredEnergy(ReactorPartTile blockEntity) {
         if (blockEntity.core().isEmpty())
             return 0.0d;
         return blockEntity.core().get().getEnergy().getEnergyStored();
@@ -62,23 +77,38 @@ public class ReactorIntegration implements APGenericPeripheral {
     }
 
     @LuaFunction(mainThread = true)
-    public final ItemStack getInventoryUraninite(ReactorPartTile blockEntity) {
-        if (blockEntity.core().isEmpty())
-            return ItemStack.EMPTY;
-        return blockEntity.core().get().getInventory().getStackInSlot(1);
+    public final Object getInventoryUraninite(ReactorPartTile blockEntity) {
+        if (blockEntity.core().isEmpty()) {
+            return null;
+        }
+        ItemStack stack = blockEntity.core().get().getStack(1);
+        if (stack.isEmpty()) {
+            return null;
+        }
+        return LuaConverter.stackToObject(stack);
     }
 
     @LuaFunction(mainThread = true)
-    public final ItemStack getInventoryRedstone(ReactorPartTile blockEntity) {
-        if (blockEntity.core().isEmpty())
-            return ItemStack.EMPTY;
-        return blockEntity.core().get().getInventory().getStackInSlot(3);
+    public final Object getInventoryRedstone(ReactorPartTile blockEntity) {
+        if (blockEntity.core().isEmpty()) {
+            return null;
+        }
+        ItemStack stack = blockEntity.core().get().getStack(3);
+        if (stack.isEmpty()) {
+            return null;
+        }
+        return LuaConverter.stackToObject(stack);
     }
 
     @LuaFunction(mainThread = true)
-    public final ItemStack getInventoryCarbon(ReactorPartTile blockEntity) {
-        if (blockEntity.core().isEmpty())
-            return ItemStack.EMPTY;
-        return blockEntity.core().get().getInventory().getStackInSlot(2);
+    public final Object getInventoryCarbon(ReactorPartTile blockEntity) {
+        if (blockEntity.core().isEmpty()) {
+            return null;
+        }
+        ItemStack stack = blockEntity.core().get().getStack(2);
+        if (stack.isEmpty()) {
+            return null;
+        }
+        return LuaConverter.stackToObject(stack);
     }
 }

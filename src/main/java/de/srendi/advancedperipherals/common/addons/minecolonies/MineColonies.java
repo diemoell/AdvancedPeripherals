@@ -15,6 +15,7 @@ import com.minecolonies.api.research.effects.IResearchEffect;
 import com.minecolonies.api.research.util.ResearchState;
 import com.minecolonies.core.colony.buildings.AbstractBuildingStructureBuilder;
 import com.minecolonies.core.colony.buildings.utils.BuildingBuilderResource;
+import com.minecolonies.core.entity.citizen.citizenhandlers.CitizenSkillHandler;
 import com.minecolonies.core.research.BuildingResearchRequirement;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import de.srendi.advancedperipherals.common.util.LuaConverter;
@@ -23,7 +24,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
@@ -151,12 +151,12 @@ public class MineColonies {
      * @param skills skills as list. Can be obtained via {@link ICitizenData#getCitizenSkillHandler}
      * @return a map with information about the skill
      */
-    public static Object skillsToObject(Map<Skill, Tuple<Integer, Double>> skills) {
+    public static Object skillsToObject(Map<Skill, CitizenSkillHandler.SkillData> skills) {
         Map<String, Object> map = new HashMap<>();
         for (Skill skill : skills.keySet()) {
             Map<String, Object> skillData = new HashMap<>();
-            skillData.put("level", skills.get(skill).getA());
-            skillData.put("xp", skills.get(skill).getB());
+            skillData.put("level", skills.get(skill).getLevel());
+            skillData.put("xp", skills.get(skill).getExperience());
             map.put(skill.name(), skillData);
         }
 
