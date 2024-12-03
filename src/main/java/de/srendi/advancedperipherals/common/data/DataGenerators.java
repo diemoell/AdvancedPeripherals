@@ -14,7 +14,7 @@ import net.neoforged.fml.common.Mod;
 
 import java.util.concurrent.CompletableFuture;
 
-@Mod.EventBusSubscriber(modid = AdvancedPeripherals.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = AdvancedPeripherals.MOD_ID)
 public class DataGenerators {
 
     private DataGenerators() {

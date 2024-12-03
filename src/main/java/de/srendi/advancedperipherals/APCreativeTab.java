@@ -17,7 +17,8 @@ public class APCreativeTab {
 
     public static void populateCreativeTabBuilder(CreativeModeTab.Builder builder) {
         builder.displayItems((set, out) -> {
-            Registration.ITEMS.().stream().map(RegistryObject::get).forEach(out::accept);
+            Registration.ITEMS.getEntries().stream().map(DeferredHolder::get).forEach(out::accept);
+            // Registration.ITEMS.().stream().map(RegistryObject::get).forEach(out::accept);
             out.acceptAll(pocketUpgrade(CCRegistration.ID.COLONY_POCKET));
             out.acceptAll(pocketUpgrade(CCRegistration.ID.CHATTY_POCKET));
             out.acceptAll(pocketUpgrade(CCRegistration.ID.PLAYER_POCKET));

@@ -13,7 +13,7 @@ import net.neoforged.fml.common.Mod;
 
 import java.util.function.Supplier;
 
-@Mod.EventBusSubscriber(modid = AdvancedPeripherals.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = AdvancedPeripherals.MOD_ID)
 public class CCRegistration {
 
     public static final Supplier<UpgradeSerialiser<TurtleChatBoxUpgrade>> CHAT_BOX_TURTLE = Registration.TURTLE_SERIALIZER.register(ID.CHATTY_TURTLE.getPath(), () -> UpgradeSerialiser.simpleWithCustomItem(TurtleChatBoxUpgrade::new));

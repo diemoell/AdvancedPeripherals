@@ -3,16 +3,16 @@ package de.srendi.advancedperipherals.common.util.inventory;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
+import dan200.computercraft.shared.util.CapabilityUtil;
 import de.srendi.advancedperipherals.common.addons.computercraft.owner.IPeripheralOwner;
 import de.srendi.advancedperipherals.common.util.CoordUtil;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.neoforge.common.capabilities.ForgeCapabilities;
-import net.neoforged.neoforge.common.capabilities.ICapabilityProvider;
-import net.neoforged.neoforge.common.util.LazyOptional;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandler;
@@ -28,16 +28,25 @@ public class InventoryUtil {
     private InventoryUtil() {
     }
 
-    public static IItemHandler extractHandler(@Nullable Object object) {
-        if (object instanceof ICapabilityProvider capabilityProvider) {
-            LazyOptional<IItemHandler> cap = capabilityProvider.getCapability(ForgeCapabilities.ITEM_HANDLER);
-            if (cap.isPresent())
-                return cap.orElseThrow(NullPointerException::new);
+
+    // from dan200.computercraft
+    @Nullable
+    private static IItemHandler extractHandler(IPeripheral peripheral) {
+        var object = peripheral.getTarget();
+        var direction = peripheral instanceof dan200.computercraft.shared.peripheral.generic.GenericPeripheral sided ? sided.side() : null;
+
+        if (object instanceof BlockEntity blockEntity) {
+            if (blockEntity.isRemoved()) return null;
+
+            var level = blockEntity.getLevel();
+            if (!(level instanceof ServerLevel serverLevel)) return null;
+
+            var result = CapabilityUtil.getCapability(serverLevel, Capabilities.ItemHandler.BLOCK, blockEntity.getBlockPos(), blockEntity.getBlockState(), blockEntity, direction);
+            if (result != null) return result;
         }
-        if (object instanceof IItemHandler itemHandler)
-            return itemHandler;
-        if (object instanceof Container container)
-            return new InvWrapper(container);
+
+        if (object instanceof IItemHandler handler) return handler;
+        if (object instanceof Container container) return new InvWrapper(container);
         return null;
     }
 
@@ -149,7 +158,7 @@ public class InventoryUtil {
         if (location == null)
             return null;
 
-        return extractHandler(location.getTarget());
+        return extractHandler((IPeripheral) location.getTarget());
     }
 
     @Nullable
@@ -161,6 +170,6 @@ public class InventoryUtil {
         if (target == null)
             return null;
 
-        return extractHandler(target);
+        return extractHandler((IPeripheral) target);
     }
 }

@@ -32,7 +32,7 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.common.capabilities.ForgeCapabilities;
 import net.neoforged.common.util.LazyOptional;
 import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.server.command.TextComponentHelper;
+import net.neoforged.neoforge.server.command.CommandHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;

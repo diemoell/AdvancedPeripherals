@@ -2,6 +2,7 @@ package de.srendi.advancedperipherals.common.commands;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
+import dan200.computercraft.core.apis.IAPIEnvironment;
 import dan200.computercraft.core.computer.ComputerSide;
 import dan200.computercraft.core.computer.Environment;
 import dan200.computercraft.shared.ModRegistry;
@@ -25,6 +26,10 @@ import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 
 @EventBusSubscriber(modid = AdvancedPeripherals.MOD_ID)
@@ -79,10 +84,36 @@ public class APCommands {
         TableBuilder table = new TableBuilder("ChunkyTurtles", "Computer", "Position");
 
         ServerComputer[] computers = ServerContext.get(source.getServer()).registry().getComputers().stream().filter((computer) -> {
-            Environment env = computer.getComputer().getEnvironment();
-            for (ComputerSide side : ComputerSide.values()) {
-                if (env.getPeripheral(side) instanceof ChunkyPeripheral) {
-                    return true;
+
+            // ServerComputer API stuff isnt exposed anymore, so we use reflect
+            Environment env = null;
+            try {
+                // Access the private field "computer"
+                Field computerField = computer.getClass().getDeclaredField("computer");
+                computerField.setAccessible(true);
+                Object trueComputer = computerField.get(computer);
+
+                // Get the class of the trueComputer object
+                Class<?> computerClass = trueComputer.getClass();
+
+                // Access the private method "getAPIEnvironment"
+                Method getAPIEnvironmentMethod = computerClass.getDeclaredMethod("getAPIEnvironment");
+                getAPIEnvironmentMethod.setAccessible(true);
+                env = (Environment) getAPIEnvironmentMethod.invoke(trueComputer);
+
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                throw new RuntimeException(e);
+            } catch (NoSuchMethodException e) {
+                throw new RuntimeException(e);
+            }
+
+            if (env != null){
+                for (ComputerSide side : ComputerSide.values()) {
+                    if (env.getPeripheral(side) instanceof ChunkyPeripheral) {
+                        return true;
+                    }
                 }
             }
             return false;

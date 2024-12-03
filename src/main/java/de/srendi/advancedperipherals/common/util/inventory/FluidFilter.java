@@ -3,20 +3,20 @@ package de.srendi.advancedperipherals.common.util.inventory;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.core.apis.TableHelper;
 import de.srendi.advancedperipherals.AdvancedPeripherals;
+import de.srendi.advancedperipherals.common.util.NBTConverter;
 import de.srendi.advancedperipherals.common.util.NBTUtil;
 import de.srendi.advancedperipherals.common.util.Pair;
-import net.minecraft.core.component.DataComponentType;
-import net.minecraft.core.component.DataComponents;
+import de.srendi.advancedperipherals.common.util.component.APDComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
 
 import java.util.Map;
@@ -78,7 +78,8 @@ public class FluidFilter {
     public static FluidFilter fromStack(FluidStack stack) {
         FluidFilter filter = empty();
         filter.fluid = stack.getFluid();
-        filter.nbt = stack.hasTag() ? stack.getTag() : null;
+        filter.nbt = stack.isEmpty() ? stack.get(APDComponents.Tag) : null;
+        // filter.nbt = stack.isEmpty() ? NBTConverter.fluidStackConver(stack) : null;
         return filter;
     }
 
@@ -92,7 +93,8 @@ public class FluidFilter {
 
     public FluidStack toFluidStack() {
         var result = new FluidStack(fluid, count);
-        result.setTag(nbt != null ? nbt.copy() : null);
+        result.set(APDComponents.Tag, nbt != null ? nbt.copy() : null);
+        // result.setTag(nbt != null ? nbt.copy() : null);
         return result;
     }
 
@@ -114,7 +116,8 @@ public class FluidFilter {
         }
         if (tag != null && !stack.getFluid().is(tag))
             return false;
-        if (nbt != null && !stack.getOrCreateTag().equals(nbt) && (fluid == Fluids.EMPTY || stack.getFluid().isSame(fluid)))
+        if (nbt != null && !stack.getOrDefault(APDComponents.Tag, null).equals(nbt) && (fluid == Fluids.EMPTY || stack.getFluid().isSame(fluid)))
+        // if (nbt != null && !stack.getOrCreateTag().equals(nbt) && (fluid == Fluids.EMPTY || stack.getFluid().isSame(fluid)))
             return false;
 
         return true;
