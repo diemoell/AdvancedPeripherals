@@ -7,10 +7,12 @@ import dan200.computercraft.shared.util.WorldUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 
@@ -64,7 +66,13 @@ public final class FakePlayerProviderTurtle {
         // Add properties
         ItemStack activeStack = player.getItemInHand(InteractionHand.MAIN_HAND);
         if (!activeStack.isEmpty()) {
-            player.getAttributes().addTransientAttributeModifiers(activeStack.getAttributeModifiers(EquipmentSlot.MAINHAND));
+            activeStack.forEachModifier(EquipmentSlot.MAINHAND, (attributeHolder, modifier) -> {
+                        AttributeInstance attributeinstance = player.getAttributes().getInstance(attributeHolder);
+                        if (attributeinstance != null) {
+                            attributeinstance.addTransientModifier(modifier);
+                        }
+                    });
+            // player.getAttributes().addTransientAttributeModifiers(activeStack.getAttributeModifiers(EquipmentSlot.MAINHAND));
         }
     }
 
@@ -75,7 +83,13 @@ public final class FakePlayerProviderTurtle {
         // Remove properties
         ItemStack activeStack = player.getItemInHand(InteractionHand.MAIN_HAND);
         if (!activeStack.isEmpty()) {
-            player.getAttributes().removeAttributeModifiers(activeStack.getAttributeModifiers(EquipmentSlot.MAINHAND));
+            activeStack.forEachModifier(EquipmentSlot.MAINHAND, (attributeHolder, modifier) -> {
+                AttributeInstance attributeinstance = player.getAttributes().getInstance(attributeHolder);
+                if (attributeinstance != null) {
+                    attributeinstance.addTransientModifier(modifier);
+                }
+            });
+            // player.getAttributes().addTransientAttributeModifiers(activeStack.getAttributeModifiers(EquipmentSlot.MAINHAND));
         }
 
         // Copy primary items into turtle inventory and then insert/drop the rest

@@ -1,5 +1,6 @@
 package de.srendi.advancedperipherals.common.util.component;
 
+import com.mojang.serialization.Codec;
 import de.srendi.advancedperipherals.AdvancedPeripherals;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponentType;
@@ -16,6 +17,9 @@ public class APDComponents {
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<CompoundTag>> Tag = register("Tag",
             builder -> builder.persistent(CompoundTag.CODEC));
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> ROTATION_CHARGE_SETTING = register("rotationCharge",
+            builder -> builder.persistent(Codec.intRange(Integer.MIN_VALUE, Integer.MAX_VALUE)));
 
     private static <T>DeferredHolder<DataComponentType<?>, DataComponentType<T>> register(String name,
                                                                                           UnaryOperator<DataComponentType.Builder<T>> builderOperator) {

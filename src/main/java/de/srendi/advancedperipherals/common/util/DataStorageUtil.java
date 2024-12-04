@@ -4,22 +4,27 @@ import dan200.computercraft.api.pocket.IPocketAccess;
 import dan200.computercraft.api.turtle.ITurtleAccess;
 import dan200.computercraft.api.turtle.TurtleSide;
 import de.srendi.advancedperipherals.common.addons.computercraft.owner.IPeripheralOwner;
+import de.srendi.advancedperipherals.common.util.component.APDComponents;
 import de.srendi.advancedperipherals.lib.peripherals.IPeripheralTileEntity;
+import net.minecraft.core.component.DataComponentPatch;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
+
 public class DataStorageUtil {
 
-    public static CompoundTag getDataStorage(@NotNull ITurtleAccess access, @NotNull TurtleSide side) {
-        return access.getUpgradeNBTData(side);
+    public static DataComponentPatch getDataStorage(@NotNull ITurtleAccess access, @NotNull TurtleSide side) {
+        return access.getUpgradeData(side);
     }
 
     public static CompoundTag getDataStorage(@NotNull IPeripheralTileEntity tileEntity) {
         return tileEntity.getPeripheralSettings();
     }
 
-    public static CompoundTag getDataStorage(@NotNull IPocketAccess pocket) {
-        return pocket.getUpgradeNBTData();
+    public static DataComponentPatch getDataStorage(@NotNull IPocketAccess pocket) {
+        return pocket.getUpgradeData();
     }
 
     /**
@@ -33,14 +38,14 @@ public class DataStorageUtil {
         /**
          * Used for gear rotation animation
          */
-        private static final String ROTATION_CHARGE_SETTING = "rotationCharge";
+        // private static final String ROTATION_CHARGE_SETTING = "rotationCharge";
 
         public static int get(@NotNull ITurtleAccess access, @NotNull TurtleSide side) {
             return getDataStorage(access, side).getInt(ROTATION_CHARGE_SETTING);
         }
 
         public static boolean consume(@NotNull ITurtleAccess access, @NotNull TurtleSide side) {
-            CompoundTag data = getDataStorage(access, side);
+            DataComponentPatch data = getDataStorage(access, side);
             int currentCharge = data.getInt(ROTATION_CHARGE_SETTING);
             if (currentCharge > 0) {
                 data.putInt(ROTATION_CHARGE_SETTING, Math.max(0, data.getInt(ROTATION_CHARGE_SETTING) - 1));

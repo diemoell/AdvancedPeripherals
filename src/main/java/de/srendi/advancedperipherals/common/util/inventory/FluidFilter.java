@@ -116,7 +116,7 @@ public class FluidFilter {
         }
         if (tag != null && !stack.getFluid().is(tag))
             return false;
-        if (nbt != null && !stack.getOrDefault(APDComponents.Tag, null).equals(nbt) && (fluid == Fluids.EMPTY || stack.getFluid().isSame(fluid)))
+        if (nbt != null && !stack.getOrDefault(APDComponents.Tag, new CompoundTag()).equals(nbt) && (fluid == Fluids.EMPTY || stack.getFluid().isSame(fluid)))
         // if (nbt != null && !stack.getOrCreateTag().equals(nbt) && (fluid == Fluids.EMPTY || stack.getFluid().isSame(fluid)))
             return false;
 
