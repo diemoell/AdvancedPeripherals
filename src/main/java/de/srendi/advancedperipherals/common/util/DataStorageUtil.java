@@ -9,8 +9,11 @@ import de.srendi.advancedperipherals.lib.peripherals.IPeripheralTileEntity;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+import javax.xml.crypto.Data;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 public class DataStorageUtil {
@@ -38,18 +41,20 @@ public class DataStorageUtil {
         /**
          * Used for gear rotation animation
          */
-        // private static final String ROTATION_CHARGE_SETTING = "rotationCharge";
+        
+        private static final String ROTATION_CHARGE_SETTING = "rotationCharge";
 
         public static int get(@NotNull ITurtleAccess access, @NotNull TurtleSide side) {
-            return getDataStorage(access, side).getInt(ROTATION_CHARGE_SETTING);
+            return getDataStorage(access, side).get(APDComponents.ROTATION_CHARGE_SETTING.get()).orElseThrow(() -> new NoSuchElementException("Optional is empty"));
         }
 
         public static boolean consume(@NotNull ITurtleAccess access, @NotNull TurtleSide side) {
             DataComponentPatch data = getDataStorage(access, side);
-            int currentCharge = data.getInt(ROTATION_CHARGE_SETTING);
+            int currentCharge = data.get(APDComponents.ROTATION_CHARGE_SETTING.get()).orElseThrow(() -> new NoSuchElementException("Optional is empty"));
             if (currentCharge > 0) {
-                data.putInt(ROTATION_CHARGE_SETTING, Math.max(0, data.getInt(ROTATION_CHARGE_SETTING) - 1));
-                access.updateUpgradeNBTData(side);
+                DataComponentPatch.Builder builder = DataComponentPatch.builder();
+                builder.set(APDComponents.ROTATION_CHARGE_SETTING.get(), Math.max(0, currentCharge - 1));
+                access.setUpgradeData(side, builder.build());
                 return true;
             }
             return false;

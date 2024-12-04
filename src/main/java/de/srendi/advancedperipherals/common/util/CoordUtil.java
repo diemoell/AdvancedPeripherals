@@ -9,6 +9,7 @@ import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -79,7 +80,7 @@ public class CoordUtil {
         // Use manhattan distance, not euclidean distance to keep same behavior than other `isInRange` functions
         if (i + j > (maxRange != -1 ? maxRange : Integer.MAX_VALUE))
             return false;
-        return world.getNearbyPlayers(TargetingConditions.forNonCombat(), null, new AABB(firstPos, secondPos)).contains(player);
+        return world.getNearbyPlayers(TargetingConditions.forNonCombat(), null, new AABB(new Vec3(firstPos.getX(),firstPos.getY(), firstPos.getZ()), new Vec3(secondPos.getX(),secondPos.getY(),secondPos.getZ()))).contains(player);
     }
 
     public static Direction getDirection(FrontAndTop orientation, String computerSide) throws LuaException {
