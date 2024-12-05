@@ -1,28 +1,25 @@
 package de.srendi.advancedperipherals.common.data;
 
 import appeng.core.definitions.AEBlocks;
-import com.refinedmods.refinedstorage.RSBlocks;
-import com.refinedmods.refinedstorage.RSItems;
 import dan200.computercraft.shared.ModRegistry;
 import de.srendi.advancedperipherals.AdvancedPeripherals;
 import de.srendi.advancedperipherals.common.setup.Blocks;
 import de.srendi.advancedperipherals.common.util.RawValue;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.conditions.IConditionBuilder;
-import net.neoforged.neoforge.common.crafting.StrictNBTIngredient;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.function.Consumer;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 
 public class RecipesProvider extends RecipeProvider implements IConditionBuilder {
@@ -30,12 +27,12 @@ public class RecipesProvider extends RecipeProvider implements IConditionBuilder
     private static final Block CASING = Blocks.PERIPHERAL_CASING.get();
     private static final String HAS_ITEM = "has_item";
 
-    public RecipesProvider(PackOutput pGenerator) {
-        super(pGenerator);
+    public RecipesProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider) {
+        super(output, lookupProvider);
     }
 
     @Override
-    protected void buildRecipes(@NotNull Consumer<FinishedRecipe> consumer) {
+    protected void buildRecipes(@NotNull RecipeOutput consumer) {
 
 
         ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, Blocks.CHAT_BOX.get()).define('P', ItemTags.LOGS).define('A', CASING).define('G', Tags.Items.INGOTS_GOLD).pattern("PPP").pattern("PAP").pattern("PGP").unlockedBy(HAS_ITEM, has(CASING)).save(consumer);

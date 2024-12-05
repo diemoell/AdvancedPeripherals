@@ -7,6 +7,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.registries.VanillaRegistries;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -24,11 +25,12 @@ public class DataGenerators {
     public static void genData(GatherDataEvent event) {
         DataGenerator generator = event.getGenerator();
         PackOutput packOutput = event.getGenerator().getPackOutput();
+        CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
         ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
 
         CompletableFuture<HolderLookup.Provider> completablefuture = CompletableFuture.supplyAsync(VanillaRegistries::createLookup, Util.backgroundExecutor());
         generator.addProvider(event.includeServer(), new BlockTagsProvider(packOutput, completablefuture, existingFileHelper, Registration.BLOCKS));
-        generator.addProvider(event.includeServer(), new RecipesProvider(packOutput));
+        generator.addProvider(event.includeServer(), new RecipesProvider(packOutput, lookupProvider));
         generator.addProvider(event.includeServer(), new BlockLootTablesProvider(packOutput));
         generator.addProvider(event.includeServer(), new TurtleUpgradesProvider(packOutput));
         generator.addProvider(event.includeServer(), new PocketUpgradesProvider(packOutput));

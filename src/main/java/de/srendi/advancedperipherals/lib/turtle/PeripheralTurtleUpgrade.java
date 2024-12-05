@@ -18,7 +18,7 @@ public abstract class PeripheralTurtleUpgrade<T extends IBasePeripheral<?>> exte
     protected int tick;
 
     protected PeripheralTurtleUpgrade(ResourceLocation id, ItemStack item) {
-        super(id, TurtleUpgradeType.PERIPHERAL, TranslationUtil.turtle(id.getPath()), item);
+        super(TurtleUpgradeType.PERIPHERAL, TranslationUtil.turtle(id.getPath()), item);
     }
 
     //TODO: Do we still need this with the new modeller system?

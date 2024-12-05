@@ -9,6 +9,7 @@ import de.srendi.advancedperipherals.common.addons.computercraft.pocket.*;
 import de.srendi.advancedperipherals.common.addons.computercraft.turtles.*;
 import de.srendi.advancedperipherals.common.addons.computercraft.turtles.metaphysics.*;
 import net.minecraft.resources.ResourceLocation;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 
 import java.util.function.Supplier;
