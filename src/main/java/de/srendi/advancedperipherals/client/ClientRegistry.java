@@ -60,6 +60,6 @@ public class ClientRegistry {
     //TODO change the icon of the curio icon
     /*@SubscribeEvent
     public static void onTextureStitching(TextureStitchEvent.Pre event) {
-        event.addSprite(new ResourceLocation(AdvancedPeripherals.MOD_ID, "item/empty_glasses_slot"));
+        event.addSprite(ResourceLocation.fromNamespaceAndPath(AdvancedPeripherals.MOD_ID, "item/empty_glasses_slot"));
     }*/
 }

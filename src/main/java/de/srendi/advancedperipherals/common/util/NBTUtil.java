@@ -4,7 +4,10 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import de.srendi.advancedperipherals.AdvancedPeripherals;
 import de.srendi.advancedperipherals.common.configuration.APConfig;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.*;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.ChunkPos;
 import org.apache.logging.log4j.Level;
 
@@ -74,5 +77,31 @@ public class NBTUtil {
 
     public static ChunkPos chunkPosFromNBT(CompoundTag nbt) {
         return new ChunkPos(nbt.getInt("x"), nbt.getInt("z"));
+    }
+
+    @Deprecated
+    // In future versions we may use Data Components instead of the
+    public static CompoundTag getUnsafeNbt(ItemStack item){
+        if (item.get(DataComponents.CUSTOM_DATA) != null){
+            return item.get(DataComponents.CUSTOM_DATA).getUnsafe();
+        }
+        else {
+            CustomData.set(DataComponents.CUSTOM_DATA, item, new CompoundTag());
+            return item.get(DataComponents.CUSTOM_DATA).getUnsafe();
+        }
+    }
+
+    @Deprecated
+    // In future versions we may use Data Components instead of the
+    public static CompoundTag getUnsafeNbtOrDefault(ItemStack item, String key, String value){
+        CompoundTag tag = new CompoundTag();
+        if (item.get(DataComponents.CUSTOM_DATA) != null){
+            return item.get(DataComponents.CUSTOM_DATA).getUnsafe();
+        }
+        else{
+            tag.putString(key, value);
+            CustomData.set(DataComponents.CUSTOM_DATA, item, tag);
+            return item.get(DataComponents.CUSTOM_DATA).getUnsafe();
+        }
     }
 }

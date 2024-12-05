@@ -2,6 +2,7 @@ package de.srendi.advancedperipherals.common.util.inventory;
 
 import dan200.computercraft.shared.ModRegistry;
 import de.srendi.advancedperipherals.AdvancedPeripherals;
+import de.srendi.advancedperipherals.common.util.NBTUtil;
 import de.srendi.advancedperipherals.common.util.StringUtil;
 import net.minecraft.ResourceLocationException;
 import net.minecraft.core.NonNullList;
@@ -71,14 +72,14 @@ public class ItemUtil {
 
     public static ItemStack makeTurtle(Item turtle, String upgrade) {
         ItemStack stack = new ItemStack(turtle);
-        stack.getOrDefault(DataComponents.CUSTOM_DATA, upgrade);
+        NBTUtil.getUnsafeNbtOrDefault(stack, "RightUpgrade", upgrade);
         // stack.getOrCreateTag().putString("RightUpgrade", upgrade);
         return stack;
     }
 
     public static ItemStack makePocket(Item turtle, String upgrade) {
         ItemStack stack = new ItemStack(turtle);
-        stack.getOrDefault(DataComponents.CUSTOM_DATA, upgrade);
+        NBTUtil.getUnsafeNbtOrDefault(stack, "RightUpgrade", upgrade);
         // stack.getOrCreateTag().putString("Upgrade", upgrade);
         return stack;
     }

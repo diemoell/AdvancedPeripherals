@@ -3,7 +3,9 @@ package de.srendi.advancedperipherals.common.items;
 import de.srendi.advancedperipherals.common.configuration.APConfig;
 import de.srendi.advancedperipherals.common.setup.Items;
 import de.srendi.advancedperipherals.common.util.EnumColor;
+import de.srendi.advancedperipherals.common.util.NBTUtil;
 import de.srendi.advancedperipherals.lib.metaphysics.IFeedableAutomataCore;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -57,9 +59,9 @@ public class WeakAutomataCore extends APItem implements IFeedableAutomataCore {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        CompoundTag tag = stack.getOrCreateTag();
+    public void appendHoverText(ItemStack stack, @Nullable Item.TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
+        super.appendHoverText(stack, context, tooltip, flagIn);
+        CompoundTag tag = NBTUtil.getUnsafeNbt(stack);
         CompoundTag consumedData = tag.getCompound(CONSUMER_ENTITY_COMPOUND);
         consumedData.getAllKeys().forEach(key -> {
             WeakAutomataCoreRecord record = AUTOMATA_CORE_REGISTRY.get(key);
@@ -77,7 +79,7 @@ public class WeakAutomataCore extends APItem implements IFeedableAutomataCore {
         }
         String entityType = EntityType.getKey(entity.getType()).toString();
         if (AUTOMATA_CORE_REGISTRY.containsKey(entityType)) {
-            CompoundTag tag = stack.getOrCreateTag();
+            CompoundTag tag = NBTUtil.getUnsafeNbt(stack);
             CompoundTag consumedData = tag.getCompound(CONSUMER_ENTITY_COMPOUND);
             WeakAutomataCoreRecord record;
             if (consumedData.isEmpty()) {
