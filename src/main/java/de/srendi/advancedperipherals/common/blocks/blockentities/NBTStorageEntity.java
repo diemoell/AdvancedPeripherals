@@ -1,11 +1,14 @@
 package de.srendi.advancedperipherals.common.blocks.blockentities;
 
+import dan200.computercraft.shared.container.BasicContainer;
 import de.srendi.advancedperipherals.common.addons.computercraft.peripheral.NBTStoragePeripheral;
 import de.srendi.advancedperipherals.common.blocks.base.PeripheralBlockEntity;
 import de.srendi.advancedperipherals.common.setup.BlockEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
@@ -38,10 +41,16 @@ public class NBTStorageEntity extends PeripheralBlockEntity<NBTStoragePeripheral
         compound.put("storedData", stored);
     }
 
+    private final NonNullList<ItemStack> inventory = NonNullList.withSize(1, ItemStack.EMPTY);
+
     @Override
-    public void load(@NotNull CompoundTag compound) {
-        stored = compound.getCompound("storedData");
-        super.load(compound);
+    protected NonNullList<ItemStack> getItems() {
+        return inventory;
+    }
+
+    @Override
+    protected void setItems(NonNullList<ItemStack> items) {
+        BasicContainer.defaultSetItems(inventory, items);
     }
 
 }

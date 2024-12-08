@@ -5,6 +5,7 @@ import dan200.computercraft.api.turtle.ITurtleUpgrade;
 import dan200.computercraft.api.turtle.TurtleSide;
 import dan200.computercraft.api.upgrades.UpgradeType;
 import de.srendi.advancedperipherals.common.addons.computercraft.peripheral.metaphysics.EndAutomataCorePeripheral;
+import de.srendi.advancedperipherals.common.setup.CCRegistration;
 import de.srendi.advancedperipherals.lib.turtle.ClockwiseAnimatedTurtleUpgrade;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
@@ -13,8 +14,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class EndAutomata extends ClockwiseAnimatedTurtleUpgrade<EndAutomataCorePeripheral> {
 
-    public EndAutomata(ResourceLocation id, ItemStack stack) {
-        super(id, stack);
+    public EndAutomata(ItemStack stack) {
+        super(CCRegistration.ID.END_AUTOMATA, stack);
     }
 
     @Override
@@ -34,6 +35,6 @@ public class EndAutomata extends ClockwiseAnimatedTurtleUpgrade<EndAutomataCoreP
 
     @Override
     public UpgradeType<? extends ITurtleUpgrade> getType() {
-        return null;
+        return CCRegistration.END_TURTLE.get();
     }
 }

@@ -4,15 +4,17 @@ import de.srendi.advancedperipherals.AdvancedPeripherals;
 import de.srendi.advancedperipherals.common.configuration.APConfig;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.common.world.ForgeChunkManager;
-import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.common.world.chunk.ForcedChunkManager;
+import net.neoforged.neoforge.common.world.chunk.TicketController;
 import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.apache.logging.log4j.Level;
 import org.jetbrains.annotations.NotNull;
@@ -24,6 +26,13 @@ import java.util.*;
 @EventBusSubscriber(modid = AdvancedPeripherals.MOD_ID)
 public class ChunkManager extends SavedData {
 
+    public static TicketController ticketController = new TicketController(ResourceLocation.fromNamespaceAndPath(AdvancedPeripherals.MOD_ID, "ticket_controller"),  (level, ticketHelper) -> {
+        ticketHelper.getEntityTickets().forEach(((uuid, chunk) -> {
+            if (level.getEntity(uuid) == null)
+                ticketHelper.removeAllTickets(uuid);
+        }));
+    });
+
     private static final String DATA_NAME = AdvancedPeripherals.MOD_ID + "_ForcedChunks";
     private static final String FORCED_CHUNKS_TAG = "forcedChunks";
     private static int tickCounter = 0;
@@ -34,11 +43,12 @@ public class ChunkManager extends SavedData {
         super();
     }
 
+
     public static @NotNull ChunkManager get(@NotNull ServerLevel level) {
-        return level.getDataStorage().computeIfAbsent(ChunkManager::load, ChunkManager::new, DATA_NAME);
+        return level.getDataStorage().computeIfAbsent(new Factory<>(ChunkManager::new, ChunkManager::load), DATA_NAME);
     }
 
-    public static ChunkManager load(@NotNull CompoundTag data) {
+    public static ChunkManager load(@NotNull CompoundTag data, HolderLookup.Provider lookupProvider) {
         ChunkManager manager = new ChunkManager();
         CompoundTag forcedData = data.getCompound(FORCED_CHUNKS_TAG);
         for (String key : forcedData.getAllKeys()) {
@@ -58,8 +68,8 @@ public class ChunkManager extends SavedData {
     }
 
     @SubscribeEvent
-    public static void serverTick(TickEvent.ServerTickEvent event) {
-        if (event.phase == TickEvent.Phase.END) {
+    public static void serverTick(ServerTickEvent.Pre event) {
+        if (event.hasTime()) {
             tickCounter++;
             if (tickCounter % (APConfig.PERIPHERALS_CONFIG.chunkLoadValidTime.get() / 2) == 0) {
                 ChunkManager.get(ServerLifecycleHooks.getCurrentServer().overworld()).cleanup();
@@ -74,12 +84,12 @@ public class ChunkManager extends SavedData {
         setDirty();
         int chunkRadius = APConfig.PERIPHERALS_CONFIG.chunkyTurtleRadius.get();
         if (chunkRadius == 0) {
-            return ForgeChunkManager.forceChunk(level, AdvancedPeripherals.MOD_ID, owner, pos.x, pos.z, true, true);
+            return ticketController.forceChunk(level, owner, pos.x, pos.z, true, true);
         }
         boolean result = true;
         for (int x = chunkRadius * -1; x < chunkRadius; x++) {
             for (int z = chunkRadius * -1; z < chunkRadius; z++) {
-                result &= ForgeChunkManager.forceChunk(level, AdvancedPeripherals.MOD_ID, owner, pos.x + x, pos.z + z, true, true);
+                result &= ticketController.forceChunk(level, owner, pos.x + x, pos.z + z, true, true);
             }
         }
         return result;
@@ -101,11 +111,11 @@ public class ChunkManager extends SavedData {
         boolean result = true;
         int chunkRadius = APConfig.PERIPHERALS_CONFIG.chunkyTurtleRadius.get();
         if (chunkRadius == 0) {
-            result = ForgeChunkManager.forceChunk(level, AdvancedPeripherals.MOD_ID, owner, pos.x, pos.z, false, true);
+            result = ticketController.forceChunk(level, owner, pos.x, pos.z, false, true);
         } else {
             for (int x = chunkRadius * -1; x < chunkRadius; x++) {
                 for (int z = chunkRadius * -1; z < chunkRadius; z++) {
-                    result &= ForgeChunkManager.forceChunk(level, AdvancedPeripherals.MOD_ID, owner, pos.x + x, pos.z + z, true, true);
+                    result &= ticketController.forceChunk(level, owner, pos.x + x, pos.z + z, true, true);
                 }
             }
         }
@@ -124,11 +134,11 @@ public class ChunkManager extends SavedData {
                 String dimensionName = level.dimension().location().toString();
                 forcedChunks.entrySet().stream().filter(entry -> entry.getValue().getDimensionName().equals(dimensionName)).forEach(entry -> {
                     if (chunkRadius == 0) {
-                        ForgeChunkManager.forceChunk(level, AdvancedPeripherals.MOD_ID, entry.getKey(), entry.getValue().getPos().x, entry.getValue().getPos().z, true, true);
+                        ticketController.forceChunk(level, entry.getKey(), entry.getValue().getPos().x, entry.getValue().getPos().z, true, true);
                     }
                     for (int x = chunkRadius * -1; x < chunkRadius; x++) {
                         for (int z = chunkRadius * -1; z < chunkRadius; z++) {
-                            ForgeChunkManager.forceChunk(level, AdvancedPeripherals.MOD_ID, entry.getKey(), entry.getValue().getPos().x + x, entry.getValue().getPos().z + z, true, true);
+                            ticketController.forceChunk(level, entry.getKey(), entry.getValue().getPos().x + x, entry.getValue().getPos().z + z, true, true);
                         }
                     }
                 });
@@ -145,11 +155,11 @@ public class ChunkManager extends SavedData {
                 String dimensionName = level.dimension().location().toString();
                 forcedChunks.entrySet().stream().filter(entry -> entry.getValue().getDimensionName().equals(dimensionName)).forEach(entry -> {
                     if (chunkRadius == 0) {
-                        ForgeChunkManager.forceChunk(level, AdvancedPeripherals.MOD_ID, entry.getKey(), entry.getValue().getPos().x, entry.getValue().getPos().z, false, true);
+                        ticketController.forceChunk(level, entry.getKey(), entry.getValue().getPos().x, entry.getValue().getPos().z, false, true);
                     }
                     for (int x = chunkRadius * -1; x < chunkRadius; x++) {
                         for (int z = chunkRadius * -1; z < chunkRadius; z++) {
-                            ForgeChunkManager.forceChunk(level, AdvancedPeripherals.MOD_ID, entry.getKey(), entry.getValue().getPos().x + x, entry.getValue().getPos().z + z, false, true);
+                            ticketController.forceChunk(level, entry.getKey(), entry.getValue().getPos().x + x, entry.getValue().getPos().z + z, false, true);
                         }
                     }
                 });
@@ -172,7 +182,7 @@ public class ChunkManager extends SavedData {
     }
 
     @Override
-    public @NotNull CompoundTag save(@NotNull CompoundTag data) {
+    public @NotNull CompoundTag save(@NotNull CompoundTag data, HolderLookup.@NotNull Provider registries) {
         CompoundTag forcedChunksTag = new CompoundTag();
         forcedChunks.forEach((key, value) -> forcedChunksTag.put(key.toString(), value.serialize()));
         return data;

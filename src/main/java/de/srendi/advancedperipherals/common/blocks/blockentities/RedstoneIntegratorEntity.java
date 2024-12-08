@@ -1,5 +1,6 @@
 package de.srendi.advancedperipherals.common.blocks.blockentities;
 
+import dan200.computercraft.shared.container.BasicContainer;
 import dan200.computercraft.shared.util.RedstoneUtil;
 import de.srendi.advancedperipherals.common.addons.computercraft.peripheral.RedstoneIntegratorPeripheral;
 import de.srendi.advancedperipherals.common.blocks.base.PeripheralBlockEntity;
@@ -8,7 +9,9 @@ import de.srendi.advancedperipherals.common.util.ServerWorker;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RedStoneWireBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -63,14 +66,6 @@ public class RedstoneIntegratorEntity extends PeripheralBlockEntity<RedstoneInte
     }
 
     @Override
-    public void load(@NotNull CompoundTag compound) {
-        for (Direction direction : Direction.values()) {
-            setRedstoneOutput(direction, compound.getInt(direction.name() + "Power"));
-        }
-        super.load(compound);
-    }
-
-    @Override
     public void saveAdditional(@NotNull CompoundTag compound, HolderLookup.@NotNull Provider registries) {
         super.saveAdditional(compound, registries);
         int i = 0;
@@ -78,6 +73,18 @@ public class RedstoneIntegratorEntity extends PeripheralBlockEntity<RedstoneInte
             compound.putInt(direction.name() + "Power", power[i]);
             i++;
         }
+    }
+
+    private final NonNullList<ItemStack> inventory = NonNullList.withSize(1, ItemStack.EMPTY);
+
+    @Override
+    protected NonNullList<ItemStack> getItems() {
+        return inventory;
+    }
+
+    @Override
+    protected void setItems(NonNullList<ItemStack> items) {
+        BasicContainer.defaultSetItems(inventory, items);
     }
 
 }

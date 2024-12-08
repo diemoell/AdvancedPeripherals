@@ -1,7 +1,7 @@
 package de.srendi.advancedperipherals.common.addons.computercraft.operations;
 
 import de.srendi.advancedperipherals.lib.peripherals.IPeripheralOperation;
-import net.neoforged.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,14 +10,14 @@ public enum SimpleFreeOperation implements IPeripheralOperation<Object> {
     CHAT_MESSAGE(100);
 
     private final int defaultCooldown;
-    private ForgeConfigSpec.IntValue cooldown;
+    private ModConfigSpec.IntValue cooldown;
 
     SimpleFreeOperation(int defaultCooldown) {
         this.defaultCooldown = defaultCooldown;
     }
 
     @Override
-    public void addToConfig(ForgeConfigSpec.Builder builder) {
+    public void addToConfig(ModConfigSpec.Builder builder) {
         cooldown = builder.defineInRange(settingsName() + "Cooldown", defaultCooldown, 1_000, Integer.MAX_VALUE);
     }
 

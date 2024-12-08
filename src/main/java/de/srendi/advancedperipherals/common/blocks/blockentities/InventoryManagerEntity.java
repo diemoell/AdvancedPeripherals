@@ -1,13 +1,16 @@
 package de.srendi.advancedperipherals.common.blocks.blockentities;
 
+import dan200.computercraft.shared.container.BasicContainer;
 import de.srendi.advancedperipherals.common.addons.computercraft.peripheral.InventoryManagerPeripheral;
 import de.srendi.advancedperipherals.common.blocks.base.IInventoryBlock;
 import de.srendi.advancedperipherals.common.blocks.base.PeripheralBlockEntity;
 import de.srendi.advancedperipherals.common.container.InventoryManagerContainer;
 import de.srendi.advancedperipherals.common.items.MemoryCardItem;
 import de.srendi.advancedperipherals.common.setup.BlockEntityTypes;
+import de.srendi.advancedperipherals.common.util.NBTUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -56,11 +59,23 @@ public class InventoryManagerEntity extends PeripheralBlockEntity<InventoryManag
         if (items.get(0).isEmpty()) return null;
         ItemStack stack = items.get(0);
         //Checks if the item contains the owner name
-        if (!stack.getOrCreateTag().contains("owner")) return null;
+        if (!NBTUtil.getUnsafeNbt(stack).contains("owner")) return null;
         //Loop through all players and check if the player is online
         for (Player entity : ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers()) {
-            if (entity.getName().getString().equals(stack.getOrCreateTag().getString("owner"))) return entity;
+            if (entity.getName().getString().equals(NBTUtil.getUnsafeNbt(stack).getString("owner"))) return entity;
         }
         return null;
+    }
+
+    private final NonNullList<ItemStack> inventory = NonNullList.withSize(1, ItemStack.EMPTY);
+
+    @Override
+    protected NonNullList<ItemStack> getItems() {
+        return inventory;
+    }
+
+    @Override
+    protected void setItems(NonNullList<ItemStack> items) {
+        BasicContainer.defaultSetItems(inventory, items);
     }
 }
