@@ -3,6 +3,7 @@ package de.srendi.advancedperipherals.common.addons.computercraft.integrations;
 import dan200.computercraft.api.ComputerCraftAPI;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheralProvider;
+import dan200.computercraft.api.peripheral.PeripheralCapability;
 import de.srendi.advancedperipherals.AdvancedPeripherals;
 import de.srendi.advancedperipherals.common.util.Platform;
 import de.srendi.advancedperipherals.lib.integrations.IPeripheralIntegration;
@@ -21,7 +22,7 @@ import java.util.PriorityQueue;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-public class IntegrationPeripheralProvider implements IPeripheralProvider {
+public class IntegrationPeripheralProvider{
 
     private static final String[] SUPPORTED_MODS = new String[]{"powah", "create", "mekanism", "botania"};
 
@@ -91,13 +92,11 @@ public class IntegrationPeripheralProvider implements IPeripheralProvider {
         }
     }
 
-    @NotNull
-    @Override
-    public LazyOptional<IPeripheral> getPeripheral(@NotNull Level level, @NotNull BlockPos blockPos, @NotNull Direction direction) {
+    public IPeripheral getPeripheral(@NotNull Level level, @NotNull BlockPos blockPos, @NotNull Direction direction) {
         for (IPeripheralIntegration integration : integrations) {
             if (integration.isSuitable(level, blockPos, direction))
-                return LazyOptional.of(() -> integration.buildPeripheral(level, blockPos, direction));
+                return level.getCapability(PeripheralCapability.get(), blockPos, direction);
         }
-        return LazyOptional.empty();
+        return null;
     }
 }
