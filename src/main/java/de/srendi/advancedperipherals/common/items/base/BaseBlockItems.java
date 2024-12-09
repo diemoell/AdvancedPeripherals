@@ -15,14 +15,14 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public abstract class BaseBlockItem extends BlockItem {
+public abstract class BaseBlockItems extends BlockItem {
     private Component description;
 
-    public BaseBlockItem(Block blockIn, Properties properties) {
+    public BaseBlockItems(Block blockIn, Properties properties) {
         super(blockIn, properties);
     }
 
-    public BaseBlockItem(Block blockIn) {
+    public BaseBlockItems(Block blockIn) {
         super(blockIn, new Properties());
     }
 

@@ -33,9 +33,8 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.WorldgenRandom;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.common.MinecraftForge;
-import net.neoforged.event.entity.player.SleepingTimeCheckEvent;
-import net.neoforged.eventbus.api.Event;
-import net.neoforged.server.ServerLifecycleHooks;
+import net.neoforged.neoforge.event.entity.player.SleepingTimeCheckEvent;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;

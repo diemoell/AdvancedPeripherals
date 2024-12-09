@@ -17,6 +17,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.server.ServerAboutToStartEvent;
 import net.neoforged.fml.common.Mod;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,17 +37,38 @@ public class VillageStructures {
                 SinglePoolElement.legacy(nbtPieceRL, emptyProcessor).apply(projection) :
                 SinglePoolElement.single(nbtPieceRL, emptyProcessor).apply(projection);
 
-        // Weight is handled by how many times the entry appears in this list.
-        // We do not need to worry about immutability as this field is created using Lists.newArrayList(); which makes a mutable list.
-        for (int i = 0; i < weight; i++) {
-            pool.templates.add(piece);
+        // Use reflection to get the private fields
+        Field templatesField = null;
+        Field rawTemplatesField = null;
+        try {
+            templatesField = StructureTemplatePool.class.getDeclaredField("templates");
+            rawTemplatesField = StructureTemplatePool.class.getDeclaredField("rawTemplates");
+            templatesField.setAccessible(true);
+            rawTemplatesField.setAccessible(true);
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+            return;
         }
 
-        // This list of pairs of pieces and weights is not used by vanilla by default but another mod may need it for efficiency.
-        // So let's add to this list for completeness. We need to make a copy of the array as it can be an immutable list.
-        List<Pair<StructurePoolElement, Integer>> listOfPieceEntries = new ArrayList<>(pool.rawTemplates);
-        listOfPieceEntries.add(new Pair<>(piece, weight));
-        pool.rawTemplates = listOfPieceEntries;
+        // Modify the templates field
+        try {
+            List<StructurePoolElement> templates = (List<StructurePoolElement>) templatesField.get(pool);
+            for (int i = 0; i < weight; i++) {
+                templates.add(piece);
+            }
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        // Modify the rawTemplates field
+        try {
+            List<Pair<StructurePoolElement, Integer>> rawTemplates = (List<Pair<StructurePoolElement, Integer>>) rawTemplatesField.get(pool);
+            List<Pair<StructurePoolElement, Integer>> listOfPieceEntries = new ArrayList<>(rawTemplates);
+            listOfPieceEntries.add(new Pair<>(piece, weight));
+            rawTemplatesField.set(pool, listOfPieceEntries);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
 
     @SubscribeEvent

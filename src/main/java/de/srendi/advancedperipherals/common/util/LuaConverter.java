@@ -15,6 +15,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.neoforged.neoforge.common.IForgeShearable;
+import net.neoforged.neoforge.common.IShearable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
@@ -51,7 +52,7 @@ public class LuaConverter {
         data.put("baby", animal.isBaby());
         data.put("inLove", animal.isInLove());
         data.put("aggressive", animal.isAggressive());
-        if (animal instanceof IForgeShearable shareable && !itemInHand.isEmpty()) {
+        if (animal instanceof IShearable shareable && !itemInHand.isEmpty()) {
             data.put("shareable", shareable.isShearable(itemInHand, animal.level(), animal.blockPosition()));
         }
         return data;
@@ -103,7 +104,7 @@ public class LuaConverter {
     public static Map<String, Object> stackToObject(@NotNull ItemStack stack) {
         if (stack.isEmpty()) return new HashMap<>();
         Map<String, Object> map = itemToObject(stack.getItem());
-        CompoundTag nbt = stack.copy().getOrCreateTag();
+        CompoundTag nbt = de.srendi.advancedperipherals.common.util.NBTUtil.getUnsafeNbt(stack.copy()) ;
         map.put("count", stack.getCount());
         map.put("displayName", stack.getDisplayName().getString());
         map.put("maxStackSize", stack.getMaxStackSize());

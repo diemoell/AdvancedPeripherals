@@ -5,12 +5,12 @@ import dan200.computercraft.api.lua.MethodResult;
 import de.srendi.advancedperipherals.common.addons.computercraft.owner.TurtlePeripheralOwner;
 import de.srendi.advancedperipherals.common.util.LuaConverter;
 import de.srendi.advancedperipherals.lib.peripherals.AutomataCorePeripheral;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.neoforged.registries.ForgeRegistries;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,7 +32,7 @@ public class AutomataLookPlugin extends AutomataCorePlugin {
         BlockHitResult blockHit = (BlockHitResult) result;
         BlockState state = owner.getLevel().getBlockState(blockHit.getBlockPos());
         Map<String, Object> data = new HashMap<>();
-        ResourceLocation blockName = ForgeRegistries.BLOCKS.getKey(state.getBlock());
+        ResourceLocation blockName = BuiltInRegistries.BLOCK.getKey(state.getBlock());
         if (blockName != null)
             data.put("name", blockName.toString());
         data.put("tags", LuaConverter.tagsToList(() -> state.getBlock().builtInRegistryHolder().tags()));

@@ -9,15 +9,19 @@ import dan200.computercraft.api.turtle.ITurtleAccess;
 import dan200.computercraft.api.turtle.TurtleSide;
 import de.srendi.advancedperipherals.common.util.DataStorageUtil;
 import de.srendi.advancedperipherals.lib.turtle.ClockwiseAnimatedTurtleUpgrade;
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.stream.Stream;
 
 public class MetaTurtleUpgradeModeller<T extends ClockwiseAnimatedTurtleUpgrade<?>> implements TurtleUpgradeModeller<T> {
 
     @NotNull
     @Override
-    public TransformedModel getModel(T upgrade, @Nullable ITurtleAccess turtle, @NotNull TurtleSide side) {
+    public TransformedModel getModel(T upgrade, @Nullable ITurtleAccess turtle, @NotNull TurtleSide side, DataComponentPatch data) {
         if (upgrade.getLeftModel() == null) {
             PoseStack stack = new PoseStack();
             stack.pushPose();
@@ -38,4 +42,8 @@ public class MetaTurtleUpgradeModeller<T extends ClockwiseAnimatedTurtleUpgrade<
         return TransformedModel.of(side == TurtleSide.LEFT ? upgrade.getLeftModel() : upgrade.getRightModel());
     }
 
+    @Override
+    public Stream<ResourceLocation> getDependencies() {
+        return TurtleUpgradeModeller.super.getDependencies();
+    }
 }

@@ -70,7 +70,7 @@ public class ManaPoolIntegration implements APGenericPeripheral {
 
     private List<ItemStack> getPoolItems(ManaPoolBlockEntity blockEntity) {
         BlockPos position = blockEntity.getBlockPos();
-        return blockEntity.getLevel().getEntitiesOfClass(ItemEntity.class, new AABB(position, position.offset(1, 1, 1)))
+        return blockEntity.getLevel().getEntitiesOfClass(ItemEntity.class, AABB.encapsulatingFullBlocks(position, position.offset(1, 1, 1)))
                 .stream()
                 .map(ItemEntity::getItem)
                 .collect(Collectors.toList());

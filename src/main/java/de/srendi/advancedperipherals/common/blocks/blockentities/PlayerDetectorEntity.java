@@ -5,6 +5,8 @@ import de.srendi.advancedperipherals.common.blocks.base.PeripheralBlockEntity;
 import de.srendi.advancedperipherals.common.events.Events;
 import de.srendi.advancedperipherals.common.setup.BlockEntityTypes;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -32,5 +34,15 @@ public class PlayerDetectorEntity extends PeripheralBlockEntity<PlayerDetectorPe
                 computer.queueEvent(message.eventName(), message.playerName(), message.fromDimension(), message.toDimension());
             } else computer.queueEvent(message.eventName(), message.playerName(), message.fromDimension());
         }));
+    }
+
+    @Override
+    protected NonNullList<ItemStack> getItems() {
+        return null;
+    }
+
+    @Override
+    protected void setItems(NonNullList<ItemStack> items) {
+
     }
 }
