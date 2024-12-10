@@ -3,7 +3,7 @@ package de.srendi.advancedperipherals.common.blocks.blockentities;
 import dan200.computercraft.shared.container.BasicContainer;
 import de.srendi.advancedperipherals.common.addons.computercraft.peripheral.InventoryManagerPeripheral;
 import de.srendi.advancedperipherals.common.blocks.base.IInventoryBlock;
-import de.srendi.advancedperipherals.common.blocks.base.PeripheralBlockEntity;
+import de.srendi.advancedperipherals.common.blocks.base.PeripheralBlockEntitys;
 import de.srendi.advancedperipherals.common.container.InventoryManagerContainer;
 import de.srendi.advancedperipherals.common.items.MemoryCardItem;
 import de.srendi.advancedperipherals.common.setup.BlockEntityTypes;
@@ -21,7 +21,7 @@ import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class InventoryManagerEntity extends PeripheralBlockEntity<InventoryManagerPeripheral> implements IInventoryBlock<InventoryManagerContainer> {
+public class InventoryManagerEntity extends PeripheralBlockEntitys<InventoryManagerPeripheral> implements IInventoryBlock<InventoryManagerContainer> {
 
     public InventoryManagerEntity(BlockPos pos, BlockState state) {
         super(BlockEntityTypes.INVENTORY_MANAGER.get(), pos, state);

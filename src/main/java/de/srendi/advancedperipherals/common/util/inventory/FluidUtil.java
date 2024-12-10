@@ -1,6 +1,5 @@
 package de.srendi.advancedperipherals.common.util.inventory;
 
-import com.minecolonies.api.util.constant.TagConstants;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
@@ -9,7 +8,7 @@ import de.srendi.advancedperipherals.AdvancedPeripherals;
 import de.srendi.advancedperipherals.common.addons.computercraft.owner.IPeripheralOwner;
 import de.srendi.advancedperipherals.common.util.CoordUtil;
 import de.srendi.advancedperipherals.common.util.StringUtil;
-import de.srendi.advancedperipherals.common.util.component.APDComponents;
+import de.srendi.advancedperipherals.common.util.component.APComponents;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -86,7 +85,7 @@ public class FluidUtil {
 
     @NotNull
     public static String getFingerprint(@NotNull FluidStack stack) {
-        String fingerprint = stack.getOrDefault(APDComponents.Tag, new CompoundTag()) + getRegistryKey(stack).toString() + stack.getHoverName().getString();
+        String fingerprint = stack.getOrDefault(APComponents.Tag, new CompoundTag()) + getRegistryKey(stack).toString() + stack.getHoverName().getString();
         try {
             byte[] bytesOfHash = fingerprint.getBytes(StandardCharsets.UTF_8);
             MessageDigest md = MessageDigest.getInstance("MD5");

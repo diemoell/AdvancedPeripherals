@@ -3,7 +3,7 @@ package de.srendi.advancedperipherals.common.blocks.blockentities;
 import dan200.computercraft.shared.container.BasicContainer;
 import dan200.computercraft.shared.util.RedstoneUtil;
 import de.srendi.advancedperipherals.common.addons.computercraft.peripheral.RedstoneIntegratorPeripheral;
-import de.srendi.advancedperipherals.common.blocks.base.PeripheralBlockEntity;
+import de.srendi.advancedperipherals.common.blocks.base.PeripheralBlockEntitys;
 import de.srendi.advancedperipherals.common.setup.BlockEntityTypes;
 import de.srendi.advancedperipherals.common.util.ServerWorker;
 import net.minecraft.core.BlockPos;
@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-public class RedstoneIntegratorEntity extends PeripheralBlockEntity<RedstoneIntegratorPeripheral> {
+public class RedstoneIntegratorEntity extends PeripheralBlockEntitys<RedstoneIntegratorPeripheral> {
 
     public int[] power = new int[Direction.values().length];
 

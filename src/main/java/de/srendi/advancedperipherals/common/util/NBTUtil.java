@@ -1,9 +1,11 @@
 package de.srendi.advancedperipherals.common.util;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.serialization.DataResult;
 import de.srendi.advancedperipherals.AdvancedPeripherals;
 import de.srendi.advancedperipherals.common.configuration.APConfig;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.*;
 import net.minecraft.world.item.ItemStack;
@@ -77,6 +79,16 @@ public class NBTUtil {
 
     public static ChunkPos chunkPosFromNBT(CompoundTag nbt) {
         return new ChunkPos(nbt.getInt("x"), nbt.getInt("z"));
+    }
+
+
+    public static CompoundTag encodeToNbt(DataComponentPatch patch) {
+        CompoundTag tag = new CompoundTag();
+        tag.put("Components", DataComponentPatch.CODEC.encodeStart(NbtOps.INSTANCE, patch).getOrThrow());
+        return tag;
+    }
+    public static DataComponentPatch decodeFromNbt(CompoundTag nbt) {
+        return DataComponentPatch.CODEC.parse(NbtOps.INSTANCE, nbt).getOrThrow();
     }
 
     @Deprecated

@@ -9,10 +9,12 @@ import de.srendi.advancedperipherals.AdvancedPeripherals;
 import de.srendi.advancedperipherals.common.addons.computercraft.peripheral.RsBridgePeripheral;
 import de.srendi.advancedperipherals.common.addons.refinedstorage.RefinedStorageNode;
 import de.srendi.advancedperipherals.common.setup.BlockEntityTypes;
+import de.srendi.advancedperipherals.common.util.NBTUtil;
 import de.srendi.advancedperipherals.lib.peripherals.IPeripheralTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -69,8 +71,8 @@ public class RsBridgeEntity extends NetworkNodeBlockEntity<RefinedStorageNode> i
     }
 
     @Override
-    public CompoundTag getPeripheralSettings() {
-        return peripheralSettings;
+    public DataComponentPatch getPeripheralSettings() {
+        return NBTUtil.decodeFromNbt(peripheralSettings);
     }
 
     @Override

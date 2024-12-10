@@ -5,7 +5,7 @@ import dan200.computercraft.core.apis.TableHelper;
 import de.srendi.advancedperipherals.AdvancedPeripherals;
 import de.srendi.advancedperipherals.common.util.NBTUtil;
 import de.srendi.advancedperipherals.common.util.Pair;
-import de.srendi.advancedperipherals.common.util.component.APDComponents;
+import de.srendi.advancedperipherals.common.util.component.APComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -95,7 +95,7 @@ public class ItemFilter {
     public static ItemFilter fromStack(ItemStack stack) {
         ItemFilter filter = empty();
         filter.item = stack.getItem();
-        filter.nbt = stack.isEmpty() ? stack.get(APDComponents.Tag) : null;
+        filter.nbt = stack.isEmpty() ? stack.get(APComponents.Tag) : null;
         // filter.nbt = stack.hasTag() ? stack.getTag() : null;
         return filter;
     }
@@ -110,7 +110,7 @@ public class ItemFilter {
 
     public ItemStack toItemStack() {
         var result = new ItemStack(item, count);
-        result.set(APDComponents.Tag, nbt != null ? nbt.copy() : null);
+        result.set(APComponents.Tag, nbt != null ? nbt.copy() : null);
         // result.setTag(nbt != null ? nbt.copy() : null);
         return result;
     }

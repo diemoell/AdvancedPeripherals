@@ -2,7 +2,7 @@ package de.srendi.advancedperipherals.common.blocks.blockentities;
 
 import dan200.computercraft.shared.container.BasicContainer;
 import de.srendi.advancedperipherals.common.addons.computercraft.peripheral.ChatBoxPeripheral;
-import de.srendi.advancedperipherals.common.blocks.base.PeripheralBlockEntity;
+import de.srendi.advancedperipherals.common.blocks.base.PeripheralBlockEntitys;
 import de.srendi.advancedperipherals.common.setup.BlockEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -13,7 +13,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
-public class ChatBoxEntity extends PeripheralBlockEntity<ChatBoxPeripheral> {
+public class ChatBoxEntity extends PeripheralBlockEntitys<ChatBoxPeripheral> {
 
     private final NonNullList<ItemStack> inventory = NonNullList.withSize(1, ItemStack.EMPTY);
 

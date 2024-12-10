@@ -5,14 +5,18 @@ import dan200.computercraft.api.turtle.ITurtleAccess;
 import dan200.computercraft.api.turtle.TurtleSide;
 import de.srendi.advancedperipherals.common.addons.computercraft.owner.TurtlePeripheralOwner;
 import de.srendi.advancedperipherals.common.configuration.APConfig;
+import de.srendi.advancedperipherals.common.util.APDataComponentUtil;
 import de.srendi.advancedperipherals.common.util.ChunkManager;
+import de.srendi.advancedperipherals.common.util.component.APComponents;
 import de.srendi.advancedperipherals.lib.peripherals.BasePeripheral;
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.xml.crypto.Data;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -27,12 +31,14 @@ public class ChunkyPeripheral extends BasePeripheral<TurtlePeripheralOwner> {
     }
 
     protected UUID getUUID() {
-        CompoundTag data = owner.getDataStorage();
-        if (!data.contains(UUID_TAG)) {
-            data.putUUID(UUID_TAG, UUID.randomUUID());
-            owner.markDataStorageDirty();
+        DataComponentPatch data = owner.getDataStorage();
+
+        if (data.get(APComponents.UUID_TAG.get()).isEmpty()) {
+            owner.markDataStorageDirty(
+                    DataComponentPatch.builder().set(APComponents.UUID_TAG.get(), UUID.randomUUID()).build()
+            );
         }
-        return data.getUUID(UUID_TAG);
+        return data.get(APComponents.UUID_TAG.get()).get();
     }
 
     public ChunkPos getChunkPos() {

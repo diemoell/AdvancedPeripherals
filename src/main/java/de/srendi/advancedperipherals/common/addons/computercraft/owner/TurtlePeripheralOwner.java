@@ -5,11 +5,13 @@ import dan200.computercraft.api.turtle.ITurtleAccess;
 import dan200.computercraft.api.turtle.TurtleSide;
 import dan200.computercraft.shared.util.InventoryUtil;
 import de.srendi.advancedperipherals.common.util.DataStorageUtil;
+import de.srendi.advancedperipherals.common.util.NBTUtil;
 import de.srendi.advancedperipherals.common.util.fakeplayer.APFakePlayer;
 import de.srendi.advancedperipherals.common.util.fakeplayer.FakePlayerProviderTurtle;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.FrontAndTop;
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -70,15 +72,14 @@ public class TurtlePeripheralOwner extends BasePeripheralOwner {
         return turtle.getLevel().getPlayerByUUID(owningPlayer.getId());
     }
 
-    @NotNull
     @Override
-    public CompoundTag getDataStorage() {
+    public @NotNull DataComponentPatch getDataStorage() {
         return DataStorageUtil.getDataStorage(turtle, side);
     }
 
     @Override
-    public void markDataStorageDirty() {
-        turtle.updateUpgradeNBTData(side);
+    public void markDataStorageDirty(DataComponentPatch path) {
+        turtle.setUpgradeData(side, path);
     }
 
     @Override

@@ -2,7 +2,10 @@ package de.srendi.advancedperipherals.common.addons.computercraft.owner;
 
 import de.srendi.advancedperipherals.common.configuration.APConfig;
 import de.srendi.advancedperipherals.lib.peripherals.IPeripheralTileEntity;
+import mekanism.common.capabilities.Capabilities;
+import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.NotNull;
 
 public class TileEntityFuelAbility<T extends BlockEntity & IPeripheralTileEntity> extends FuelAbility<BlockEntityPeripheralOwner<T>> {
@@ -13,15 +16,18 @@ public class TileEntityFuelAbility<T extends BlockEntity & IPeripheralTileEntity
 
     @Override
     protected boolean consumeFuel(int count) {
-        return owner.tileEntity.getCapability(ForgeCapabilities.ENERGY).map(storage -> {
+            var storage = owner.tileEntity.getLevel().getCapability(Capabilities.ENERGY.block(), owner.tileEntity.getBlockPos(), Direction.DOWN);
             int energyCount = count * APConfig.METAPHYSICS_CONFIG.energyToFuelRate.get();
-            int extractedCount = storage.extractEnergy(energyCount, true);
-            if (extractedCount == energyCount) {
-                storage.extractEnergy(energyCount, false);
-                return true;
+            int extractedCount = 0;
+            if (storage != null) {
+                extractedCount = storage.extractEnergy(energyCount, true);
+                if (extractedCount == energyCount) {
+                    storage.extractEnergy(energyCount, false);
+                    return true;
+                }
+                return false;
             }
             return false;
-        }).orElse(false);
     }
 
     @Override
@@ -36,19 +42,28 @@ public class TileEntityFuelAbility<T extends BlockEntity & IPeripheralTileEntity
 
     @Override
     public int getFuelCount() {
-        return owner.tileEntity.getCapability(ForgeCapabilities.ENERGY).map(storage -> storage.getEnergyStored() / APConfig.METAPHYSICS_CONFIG.energyToFuelRate.get()).orElse(0);
+        var storage = owner.tileEntity.getLevel().getCapability(Capabilities.ENERGY.block(), owner.tileEntity.getBlockPos(), Direction.DOWN);
+        if(storage != null){
+            return storage.getEnergyStored() / APConfig.METAPHYSICS_CONFIG.energyToFuelRate.get();
+        }
+        return 0;
     }
 
     @Override
     public int getFuelMaxCount() {
-        return owner.tileEntity.getCapability(ForgeCapabilities.ENERGY).map(storage -> storage.getMaxEnergyStored() / APConfig.METAPHYSICS_CONFIG.energyToFuelRate.get()).orElse(0);
+        var storage = owner.tileEntity.getLevel().getCapability(Capabilities.ENERGY.block(), owner.tileEntity.getBlockPos(), Direction.DOWN);
+        if(storage != null){
+            return storage.getMaxEnergyStored() / APConfig.METAPHYSICS_CONFIG.energyToFuelRate.get();
+        }
+        return 0;
     }
 
     @Override
     public void addFuel(int count) {
-        owner.tileEntity.getCapability(ForgeCapabilities.ENERGY).ifPresent(storage -> {
+        var storage = owner.tileEntity.getLevel().getCapability(Capabilities.ENERGY.block(), owner.tileEntity.getBlockPos(), Direction.DOWN);
+        if(storage != null){
             int energyCount = count * APConfig.METAPHYSICS_CONFIG.energyToFuelRate.get();
             storage.receiveEnergy(energyCount, false);
-        });
+        }
     }
 }

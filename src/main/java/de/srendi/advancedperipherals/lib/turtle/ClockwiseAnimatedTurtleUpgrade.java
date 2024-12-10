@@ -3,12 +3,9 @@ package de.srendi.advancedperipherals.lib.turtle;
 import dan200.computercraft.api.turtle.ITurtleAccess;
 import dan200.computercraft.api.turtle.TurtleSide;
 import de.srendi.advancedperipherals.common.util.DataStorageUtil;
-import de.srendi.advancedperipherals.common.util.NBTUtil;
-import de.srendi.advancedperipherals.common.util.component.APDComponents;
+import de.srendi.advancedperipherals.common.util.component.APComponents;
 import de.srendi.advancedperipherals.lib.peripherals.IBasePeripheral;
 import net.minecraft.core.component.DataComponentPatch;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -64,9 +61,9 @@ public abstract class ClockwiseAnimatedTurtleUpgrade<T extends IBasePeripheral<?
 
     @Override
     public boolean isItemSuitable(ItemStack stack) {
-        if (stack.get(APDComponents.STORED_DATA) == null) return super.isItemSuitable(stack);
+        if (stack.get(APComponents.STORED_DATA) == null) return super.isItemSuitable(stack);
         var tweakedStack = stack.copy();
-        tweakedStack.remove(APDComponents.STORED_DATA);
+        tweakedStack.remove(APComponents.STORED_DATA);
         return super.isItemSuitable(tweakedStack);
     }
 

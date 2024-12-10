@@ -1,12 +1,14 @@
 package de.srendi.advancedperipherals.common.blocks.base;
 
 import dan200.computercraft.api.peripheral.IComputerAccess;
+import de.srendi.advancedperipherals.common.util.NBTUtil;
 import de.srendi.advancedperipherals.lib.peripherals.BasePeripheral;
 import de.srendi.advancedperipherals.lib.peripherals.IPeripheralTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.ContainerHelper;
@@ -24,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 
-public abstract class PeripheralBlockEntity<T extends BasePeripheral<?>> extends BaseContainerBlockEntity implements WorldlyContainer, MenuProvider, IPeripheralTileEntity {
+public abstract class PeripheralBlockEntitys<T extends BasePeripheral<?>> extends BaseContainerBlockEntity implements WorldlyContainer, MenuProvider, IPeripheralTileEntity {
     // TODO: move inventory logic to another tile entity!
     private static final String PERIPHERAL_SETTINGS_KEY = "peripheralSettings";
     protected CompoundTag peripheralSettings;
@@ -33,7 +35,7 @@ public abstract class PeripheralBlockEntity<T extends BasePeripheral<?>> extends
     protected T peripheral = null;
 
 
-    public PeripheralBlockEntity(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
+    public PeripheralBlockEntitys(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
         super(tileEntityTypeIn, pos, state);
         if (this instanceof IInventoryBlock<?> inventoryBlock) {
             items = NonNullList.withSize(inventoryBlock.getInvSize(), ItemStack.EMPTY);
@@ -155,8 +157,8 @@ public abstract class PeripheralBlockEntity<T extends BasePeripheral<?>> extends
         items.clear();
     }
 
-    public CompoundTag getPeripheralSettings() {
-        return peripheralSettings;
+    public DataComponentPatch getPeripheralSettings() {
+        return NBTUtil.decodeFromNbt(peripheralSettings);
     }
 
     @Override

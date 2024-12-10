@@ -2,7 +2,7 @@ package de.srendi.advancedperipherals.common.blocks.blockentities;
 
 import dan200.computercraft.shared.container.BasicContainer;
 import de.srendi.advancedperipherals.common.addons.computercraft.peripheral.NBTStoragePeripheral;
-import de.srendi.advancedperipherals.common.blocks.base.PeripheralBlockEntity;
+import de.srendi.advancedperipherals.common.blocks.base.PeripheralBlockEntitys;
 import de.srendi.advancedperipherals.common.setup.BlockEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -12,7 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
-public class NBTStorageEntity extends PeripheralBlockEntity<NBTStoragePeripheral> {
+public class NBTStorageEntity extends PeripheralBlockEntitys<NBTStoragePeripheral> {
 
     private CompoundTag stored;
 
