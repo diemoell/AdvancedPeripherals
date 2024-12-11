@@ -47,7 +47,7 @@ public class ChatBoxPeripheral extends BasePeripheral<IPeripheralOwner> {
         lastConsumedMessage = Events.getLastChatMessageID() - 1;
     }
 
-    public ChatBoxPeripheral(PeripheralBlockEntity<?> tileEntity) {
+    public ChatBoxPeripheral(PeripheralBlockEntitys<?> tileEntity) {
         this(new BlockEntityPeripheralOwner<>(tileEntity));
     }
 

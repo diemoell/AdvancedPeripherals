@@ -26,13 +26,15 @@ public abstract class FuelAbility<T extends IPeripheralOwner> implements IOwnerA
      * @return the fuel consumption rate
      */
     protected int getConsumptionRate() {
-        CompoundTag settings = owner.getDataStorage();
+        // TODO: Implement
+        /*CompoundTag settings = owner.getDataStorage();
         int rate = settings.getInt(FUEL_CONSUMING_RATE_SETTING);
         if (rate == 0) {
             setConsumptionRate(DEFAULT_FUEL_CONSUMING_RATE);
             return DEFAULT_FUEL_CONSUMING_RATE;
         }
-        return rate;
+        return rate;*/
+        return 0;
     }
 
     /**
@@ -41,10 +43,12 @@ public abstract class FuelAbility<T extends IPeripheralOwner> implements IOwnerA
      * @param rate the new fuel consumption rate
      */
     protected void setConsumptionRate(int rate) {
+        // TODO: Implement
+        /*
         if (rate < DEFAULT_FUEL_CONSUMING_RATE) rate = DEFAULT_FUEL_CONSUMING_RATE;
         int maxFuelRate = getMaxFuelConsumptionRate();
         if (rate > maxFuelRate) rate = maxFuelRate;
-        owner.getDataStorage().putInt(FUEL_CONSUMING_RATE_SETTING, rate);
+        owner.getDataStorage().putInt(FUEL_CONSUMING_RATE_SETTING, rate);*/
     }
 
     public abstract boolean isFuelConsumptionDisable();

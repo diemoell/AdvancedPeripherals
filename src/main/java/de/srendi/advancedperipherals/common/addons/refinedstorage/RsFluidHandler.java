@@ -1,5 +1,7 @@
 package de.srendi.advancedperipherals.common.addons.refinedstorage;
 
+// TODO:
+/*
 import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.api.util.Action;
 import com.refinedmods.refinedstorage.api.util.IComparer;
@@ -33,3 +35,4 @@ public class RsFluidHandler implements IStorageSystemFluidHandler {
         return network.extractFluid(fluid, filter.getCount(), IComparer.COMPARE_QUANTITY, simulate == FluidAction.SIMULATE ? Action.SIMULATE : Action.PERFORM);
     }
 }
+*/

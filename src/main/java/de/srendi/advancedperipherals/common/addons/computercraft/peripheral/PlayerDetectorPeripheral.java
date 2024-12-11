@@ -30,7 +30,7 @@ public class PlayerDetectorPeripheral extends BasePeripheral<IPeripheralOwner> {
     public static final String PERIPHERAL_TYPE = "playerDetector";
     private static final int MAX_RANGE = APConfig.PERIPHERALS_CONFIG.playerDetMaxRange.get();
 
-    public PlayerDetectorPeripheral(PeripheralBlockEntity<?> tileEntity) {
+    public PlayerDetectorPeripheral(PeripheralBlockEntitys<?> tileEntity) {
         super(PERIPHERAL_TYPE, new BlockEntityPeripheralOwner<>(tileEntity));
     }
 

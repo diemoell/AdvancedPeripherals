@@ -1,5 +1,7 @@
 package de.srendi.advancedperipherals.common.blocks.blockentities;
 
+// TODO:
+/*
 import com.refinedmods.refinedstorage.api.network.node.INetworkNodeProxy;
 import com.refinedmods.refinedstorage.blockentity.NetworkNodeBlockEntity;
 import com.refinedmods.refinedstorage.blockentity.config.IRedstoneConfigurable;
@@ -81,3 +83,4 @@ public class RsBridgeEntity extends NetworkNodeBlockEntity<RefinedStorageNode> i
     }
 
 }
+*/

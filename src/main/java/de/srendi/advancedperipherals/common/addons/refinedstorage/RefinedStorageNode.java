@@ -1,6 +1,7 @@
 package de.srendi.advancedperipherals.common.addons.refinedstorage;
 
-
+// TODO
+/*
 import com.refinedmods.refinedstorage.apiimpl.network.node.NetworkNode;
 import de.srendi.advancedperipherals.AdvancedPeripherals;
 import de.srendi.advancedperipherals.common.configuration.APConfig;
@@ -32,3 +33,4 @@ public class RefinedStorageNode extends NetworkNode {
         return super.getItemStack();
     }
 }
+*/

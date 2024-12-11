@@ -5,9 +5,13 @@ import dan200.computercraft.api.lua.LuaFunction;
 import dan200.computercraft.api.lua.MethodResult;
 import de.srendi.advancedperipherals.common.addons.computercraft.owner.TurtlePeripheralOwner;
 import de.srendi.advancedperipherals.common.util.LuaConverter;
+import de.srendi.advancedperipherals.common.util.component.APComponents;
 import de.srendi.advancedperipherals.lib.peripherals.AutomataCorePeripheral;
 import de.srendi.advancedperipherals.lib.peripherals.IPeripheralOperation;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponentPatch;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -17,6 +21,8 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
 import java.util.function.Predicate;
 
 import static de.srendi.advancedperipherals.common.addons.computercraft.operations.SingleOperation.CAPTURE_ANIMAL;
@@ -38,19 +44,23 @@ public class AutomataEntityTransferPlugin extends AutomataCorePlugin {
     }
 
     protected boolean isEntityInside() {
-        return !automataCore.getPeripheralOwner().getDataStorage().getCompound(ENTITY_NBT_KEY).isEmpty();
+        // TODO: Implement
+        return true;
     }
 
     protected void saveEntity(CompoundTag data) {
-        automataCore.getPeripheralOwner().getDataStorage().put(ENTITY_NBT_KEY, data);
+        // TODO: Implement
+        // automataCore.getPeripheralOwner().getDataStorage().put(ENTITY_NBT_KEY, data);
     }
 
     protected CompoundTag getEntity() {
-        return automataCore.getPeripheralOwner().getDataStorage().getCompound(ENTITY_NBT_KEY);
+        // TODO: Implement
+        // return automataCore.getPeripheralOwner().getDataStorage().getCompound(ENTITY_NBT_KEY);
     }
 
     protected void removeEntity() {
-        automataCore.getPeripheralOwner().getDataStorage().remove(ENTITY_NBT_KEY);
+        // TODO: Implement
+        // automataCore.getPeripheralOwner().getDataStorage().remove(ENTITY_NBT_KEY);
     }
 
     @Nullable

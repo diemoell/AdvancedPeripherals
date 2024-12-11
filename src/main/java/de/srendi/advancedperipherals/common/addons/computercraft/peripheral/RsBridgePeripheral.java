@@ -1,5 +1,7 @@
 package de.srendi.advancedperipherals.common.addons.computercraft.peripheral;
 
+// TODO: 
+/*
 import com.refinedmods.refinedstorage.api.autocrafting.task.CalculationResultType;
 import com.refinedmods.refinedstorage.api.autocrafting.task.ICalculationResult;
 import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingTask;
@@ -381,3 +383,4 @@ public class RsBridgePeripheral extends BasePeripheral<BlockEntityPeripheralOwne
         return MethodResult.of(RefinedStorage.isItemCraftable(getNetwork(), parsedFilter.toItemStack()));
     }
 }
+*/

@@ -8,7 +8,7 @@ import de.srendi.advancedperipherals.lib.peripherals.IPeripheralTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.FrontAndTop;
-import net.minecraft.core.component.DataComponentPatch;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -69,12 +69,12 @@ public class BlockEntityPeripheralOwner<T extends BlockEntity & IPeripheralTileE
 
     @NotNull
     @Override
-    public DataComponentPatch getDataStorage() {
+    public CompoundTag getDataStorage() {
         return DataStorageUtil.getDataStorage(tileEntity);
     }
 
     @Override
-    public void markDataStorageDirty(DataComponentPatch path) {
+    public void markDataStorageDirty() {
         tileEntity.setChanged();
     }
 

@@ -57,7 +57,8 @@ public class RecipesProvider extends RecipeProvider implements IConditionBuilder
 
         ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, Blocks.PLAYER_DETECTOR.get()).define('S', Items.SMOOTH_STONE).define('A', CASING).define('R', Tags.Items.STORAGE_BLOCKS_REDSTONE).pattern("SSS").pattern("SAS").pattern("SRS").unlockedBy(HAS_ITEM, has(CASING)).save(consumer);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, Blocks.REDSTONE_INTEGRATOR.get()).define('R', Tags.Items.STORAGE_BLOCKS_REDSTONE).define('A', CASING).define('C', Items.COMPARATOR).pattern("RCR").pattern("CAC").pattern("RCR").unlockedBy(HAS_ITEM, has(CASING)).save(consumer);
+        // TODO: Rs in 1.21 not ready
+        // ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, Blocks.REDSTONE_INTEGRATOR.get()).define('R', Tags.Items.STORAGE_BLOCKS_REDSTONE).define('A', CASING).define('C', Items.COMPARATOR).pattern("RCR").pattern("CAC").pattern("RCR").unlockedBy(HAS_ITEM, has(CASING)).save(consumer);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, Blocks.BLOCK_READER.get()).define('O', Items.OBSERVER).define('I', Tags.Items.INGOTS_IRON).define('M', ModRegistry.Blocks.WIRED_MODEM_FULL.get()).define('R', Tags.Items.STORAGE_BLOCKS_REDSTONE).define('A', CASING).pattern("IRI").pattern("MAO").pattern("IRI").unlockedBy(HAS_ITEM, has(CASING)).save(consumer);
 
@@ -97,6 +98,9 @@ public class RecipesProvider extends RecipeProvider implements IConditionBuilder
                 .unlockedBy(HAS_ITEM, has(CASING))
                 .save(consumer.withConditions(new ModLoadedCondition("ae2")));
 
+
+        // TODO: Rs in 1.21 not ready
+        /*
         ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, Blocks.RS_BRIDGE.get())
                 .define('Q', RSItems.QUARTZ_ENRICHED_IRON.get())
                 .define('A', CASING)
@@ -105,7 +109,7 @@ public class RecipesProvider extends RecipeProvider implements IConditionBuilder
                 .pattern("IAI")
                 .pattern("QIQ")
                 .unlockedBy(HAS_ITEM, has(CASING))
-                .save(consumer.withConditions(new ModLoadedCondition("refinedstorage")));
+                .save(consumer.withConditions(new ModLoadedCondition("refinedstorage")));*/
 
         ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, de.srendi.advancedperipherals.common.setup.Items.WEAK_AUTOMATA_CORE.get()).define('A', CASING).define('R', Tags.Items.STORAGE_BLOCKS_REDSTONE).define('S', Items.SOUL_LANTERN).define('D', Tags.Items.GEMS_DIAMOND).define('L', StrictNBTIngredient.of(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.LONG_REGENERATION))).pattern("RAR").pattern("DSD").pattern("RLR").unlockedBy(HAS_ITEM, has(CASING)).save(consumer);
 

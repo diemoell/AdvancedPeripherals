@@ -41,7 +41,7 @@ public class ColonyPeripheral extends BasePeripheral<IPeripheralOwner> {
 
     protected boolean hasPermission = true;
 
-    public ColonyPeripheral(PeripheralBlockEntity<?> tileEntity) {
+    public ColonyPeripheral(PeripheralBlockEntitys<?> tileEntity) {
         super(PERIPHERAL_TYPE, new BlockEntityPeripheralOwner<>(tileEntity));
     }
 

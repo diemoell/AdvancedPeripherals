@@ -1,5 +1,6 @@
 package de.srendi.advancedperipherals.common.blocks.blockentities;
 
+import dan200.computercraft.shared.container.BasicContainer;
 import de.srendi.advancedperipherals.common.addons.computercraft.peripheral.PlayerDetectorPeripheral;
 import de.srendi.advancedperipherals.common.blocks.base.PeripheralBlockEntitys;
 import de.srendi.advancedperipherals.common.events.Events;
@@ -36,13 +37,15 @@ public class PlayerDetectorEntity extends PeripheralBlockEntitys<PlayerDetectorP
         }));
     }
 
+    private final NonNullList<ItemStack> inventory = NonNullList.withSize(1, ItemStack.EMPTY);
+
     @Override
     protected NonNullList<ItemStack> getItems() {
-        return null;
+        return inventory;
     }
 
     @Override
     protected void setItems(NonNullList<ItemStack> items) {
-
+        BasicContainer.defaultSetItems(inventory, items);
     }
 }

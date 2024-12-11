@@ -32,8 +32,9 @@ import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.WorldgenRandom;
 import net.minecraft.world.phys.AABB;
-import net.neoforged.common.MinecraftForge;
-import net.neoforged.neoforge.event.entity.player.SleepingTimeCheckEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.util.TriState;
+import net.neoforged.neoforge.event.entity.player.CanContinueSleepingEvent;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.NotNull;
 
@@ -54,7 +55,7 @@ public class EnvironmentDetectorPeripheral extends BasePeripheral<IPeripheralOwn
             addPlugin(plugin.apply(owner));
     }
 
-    public EnvironmentDetectorPeripheral(PeripheralBlockEntity<?> tileEntity) {
+    public EnvironmentDetectorPeripheral(PeripheralBlockEntitys<?> tileEntity) {
         this(new BlockEntityPeripheralOwner<>(tileEntity).attachFuel());
     }
 
@@ -236,14 +237,13 @@ public class EnvironmentDetectorPeripheral extends BasePeripheral<IPeripheralOwn
         if(!player.level().dimensionType().bedWorks())
             return MethodResult.of(false, "not_allowed_in_dimension");
 
-        SleepingTimeCheckEvent evt = new SleepingTimeCheckEvent(player, Optional.empty());
-        MinecraftForge.EVENT_BUS.post(evt);
+        CanContinueSleepingEvent evt = new CanContinueSleepingEvent(player, null);
+        NeoForge.EVENT_BUS.post(evt);
 
-        Event.Result canContinueSleep = evt.getResult();
-        if (canContinueSleep == Event.Result.DEFAULT) {
+        if (evt.mayContinueSleeping()) {
             return MethodResult.of(!player.level().isDay());
         } else {
-            return MethodResult.of(canContinueSleep == Event.Result.ALLOW);
+            return MethodResult.of(true);
         }
     }
 }

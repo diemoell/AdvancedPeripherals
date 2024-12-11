@@ -1,5 +1,7 @@
 package de.srendi.advancedperipherals.common.blocks.blockentities;
 
+import com.google.errorprone.annotations.Var;
+import dan200.computercraft.shared.container.BasicContainer;
 import de.srendi.advancedperipherals.common.addons.computercraft.peripheral.EnergyDetectorPeripheral;
 import de.srendi.advancedperipherals.common.blocks.base.PeripheralBlockEntitys;
 import de.srendi.advancedperipherals.common.configuration.APConfig;
@@ -8,33 +10,33 @@ import de.srendi.advancedperipherals.common.util.EnergyStorageProxy;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.JigsawBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.common.capabilities.Capability;
-import net.neoforged.common.capabilities.ForgeCapabilities;
-import net.neoforged.common.util.LazyOptional;
-import net.neoforged.energy.EnergyStorage;
-import net.neoforged.energy.IEnergyStorage;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.energy.EnergyStorage;
+import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public class EnergyDetectorEntity extends PeripheralBlockEntity<EnergyDetectorPeripheral> {
+public class EnergyDetectorEntity extends PeripheralBlockEntitys<EnergyDetectorPeripheral> {
+
+    private final NonNullList<ItemStack> inventory = NonNullList.withSize(1, ItemStack.EMPTY);
 
     //a zero size, zero transfer energy storage to ensure that cables connect
     private final EnergyStorage zeroStorage = new EnergyStorage(0, 0, 0);
     public int transferRate = 0;
     //storageProxy that will forward the energy to the output but limit it to maxTransferRate
     public EnergyStorageProxy storageProxy = new EnergyStorageProxy(this, APConfig.PERIPHERALS_CONFIG.energyDetectorMaxFlow.get());
-    LazyOptional<IEnergyStorage> energyStorageCap = LazyOptional.of(() -> storageProxy);
     Direction energyInDirection = Direction.NORTH;
     Direction energyOutDirection = Direction.SOUTH;
-    LazyOptional<IEnergyStorage> zeroStorageCap = LazyOptional.of(() -> zeroStorage);
     @NotNull
     private Optional<IEnergyStorage> outReceivingStorage = Optional.empty();
 
@@ -46,21 +48,6 @@ public class EnergyDetectorEntity extends PeripheralBlockEntity<EnergyDetectorPe
     @Override
     protected EnergyDetectorPeripheral createPeripheral() {
         return new EnergyDetectorPeripheral(this);
-    }
-
-    @NotNull
-    @Override
-    public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction direction) {
-        energyInDirection = getBlockState().getValue(JigsawBlock.ORIENTATION).front();
-        energyOutDirection = getBlockState().getValue(JigsawBlock.ORIENTATION).front().getOpposite();
-        if (cap == ForgeCapabilities.ENERGY) {
-            if (direction == energyInDirection) {
-                return energyStorageCap.cast();
-            } else if (direction == energyOutDirection) {
-                return zeroStorageCap.cast();
-            }
-        }
-        return super.getCapability(cap, direction);
     }
 
     @Override
@@ -78,12 +65,6 @@ public class EnergyDetectorEntity extends PeripheralBlockEntity<EnergyDetectorPe
         }
     }
 
-    @Override
-    public void deserializeNBT(CompoundTag nbt) {
-        storageProxy.setMaxTransferRate(nbt.getInt("rateLimit"));
-        super.deserializeNBT(nbt);
-    }
-
     public void invalidateStorages() {
         outReceivingStorage = Optional.empty();
     }
@@ -97,12 +78,23 @@ public class EnergyDetectorEntity extends PeripheralBlockEntity<EnergyDetectorPe
             if (teOut == null) {
                 return Optional.empty();
             }
-            LazyOptional<IEnergyStorage> lazyOptionalOutStorage = teOut.getCapability(ForgeCapabilities.ENERGY, energyOutDirection.getOpposite());
-            outReceivingStorage = lazyOptionalOutStorage.resolve();
-            lazyOptionalOutStorage.addListener(l -> {
+            var lazyOptionalOutStorage = level.getCapability(Capabilities.EnergyStorage.BLOCK, teOut.getBlockPos(), energyOutDirection.getOpposite());
+            if(lazyOptionalOutStorage == null){
                 outReceivingStorage = Optional.empty();
-            });
+            }else {
+                outReceivingStorage = Optional.of(lazyOptionalOutStorage);
+            }
         }
         return outReceivingStorage;
+    }
+
+    @Override
+    protected NonNullList<ItemStack> getItems() {
+        return inventory;
+    }
+
+    @Override
+    protected void setItems(NonNullList<ItemStack> items) {
+        BasicContainer.defaultSetItems(inventory, items);
     }
 }

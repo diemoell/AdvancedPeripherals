@@ -1,7 +1,6 @@
 package de.srendi.advancedperipherals.common.addons;
 
 import de.srendi.advancedperipherals.AdvancedPeripherals;
-import de.srendi.advancedperipherals.common.addons.refinedstorage.RefinedStorage;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -34,8 +33,9 @@ public class APAddons {
         aeAdditionsLoaded = modList.isLoaded(AE_ADDITIONS_MODID);
         appMekLoaded = modList.isLoaded(APP_MEKANISTICS_MODID);
 
-        if (refinedStorageLoaded)
-            RefinedStorage.instance = new RefinedStorage();
+        // TODO: rs in 1.21 not ready
+        /*if (refinedStorageLoaded)
+            RefinedStorage.instance = new RefinedStorage();*/
 
     }
 

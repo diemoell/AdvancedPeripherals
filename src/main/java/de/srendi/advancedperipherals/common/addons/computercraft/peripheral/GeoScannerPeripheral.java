@@ -48,7 +48,7 @@ public class GeoScannerPeripheral extends BasePeripheral<IPeripheralOwner> {
         owner.attachOperation(SCAN_BLOCKS);
     }
 
-    public GeoScannerPeripheral(PeripheralBlockEntity<?> tileEntity) {
+    public GeoScannerPeripheral(PeripheralBlockEntitys<?> tileEntity) {
         this(new BlockEntityPeripheralOwner<>(tileEntity).attachFuel());
     }
 

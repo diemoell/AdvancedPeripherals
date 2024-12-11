@@ -5,7 +5,6 @@ import de.srendi.advancedperipherals.lib.peripherals.IPeripheralOperation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.FrontAndTop;
-import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -30,9 +29,9 @@ public interface IPeripheralOwner {
 
     @Nullable Player getOwner();
 
-    @NotNull DataComponentPatch getDataStorage();
+    @NotNull CompoundTag getDataStorage();
 
-    void markDataStorageDirty(DataComponentPatch path);
+    void markDataStorageDirty();
 
     <T> T withPlayer(Function<APFakePlayer, T> function);
 
