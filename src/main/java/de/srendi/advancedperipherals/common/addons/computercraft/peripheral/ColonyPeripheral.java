@@ -63,7 +63,7 @@ public class ColonyPeripheral extends BasePeripheral<IPeripheralOwner> {
     public final boolean isWithin(Map<?, ?> pos) throws LuaException {
         IColony colony = getColonyWithoutPermission();
 
-        if(colony == null)
+        if (colony == null)
             return false;
 
         if (!(pos.containsKey("x") && pos.containsKey("y") && pos.containsKey("z")))

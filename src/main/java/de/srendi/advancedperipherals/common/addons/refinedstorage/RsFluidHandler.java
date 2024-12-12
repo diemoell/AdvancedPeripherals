@@ -1,6 +1,9 @@
 package de.srendi.advancedperipherals.common.addons.refinedstorage;
 
 // TODO:
+
+public class RsFluidHandler {
+}
 /*
 import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.api.util.Action;

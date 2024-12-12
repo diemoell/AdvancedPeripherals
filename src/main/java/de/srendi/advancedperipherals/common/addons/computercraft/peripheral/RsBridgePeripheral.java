@@ -1,6 +1,9 @@
 package de.srendi.advancedperipherals.common.addons.computercraft.peripheral;
 
-// TODO: 
+// TODO:
+public class RsBridgePeripheral {
+
+}
 /*
 import com.refinedmods.refinedstorage.api.autocrafting.task.CalculationResultType;
 import com.refinedmods.refinedstorage.api.autocrafting.task.ICalculationResult;

@@ -3,15 +3,12 @@ package de.srendi.advancedperipherals.common.data;
 import dan200.computercraft.api.turtle.ITurtleUpgrade;
 import de.srendi.advancedperipherals.AdvancedPeripherals;
 import de.srendi.advancedperipherals.common.addons.computercraft.turtles.*;
-import de.srendi.advancedperipherals.common.addons.computercraft.turtles.metaphysics.*;
 import de.srendi.advancedperipherals.common.setup.Blocks;
 import de.srendi.advancedperipherals.common.setup.CCRegistration;
-import de.srendi.advancedperipherals.common.setup.Items;
 import net.minecraft.Util;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.PackOutput;
 import net.minecraft.data.registries.RegistryPatchGenerator;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -20,9 +17,8 @@ import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider;
 
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
 
-public class PocketUpgradesProvider{
+public class PocketUpgradesProvider {
 
     public static void generate(DataGenerator.PackGenerator output, CompletableFuture<HolderLookup.Provider> registries) {
         var newRegistries = RegistryPatchGenerator.createLookup(registries, Util.make(new RegistrySetBuilder(), builder -> {
@@ -46,7 +42,7 @@ public class PocketUpgradesProvider{
         simpleWithCustomItem(CCRegistration.ID.COLONY_POCKET, CCRegistration.COLONY_POCKET.get(), Blocks.COLONY_INTEGRATOR.get().asItem()).add(addUpgrade);
     }*/
 
-    public static ResourceKey<ITurtleUpgrade> id (ResourceLocation id) {
+    public static ResourceKey<ITurtleUpgrade> id(ResourceLocation id) {
         return ITurtleUpgrade.createKey(id);
     }
 }

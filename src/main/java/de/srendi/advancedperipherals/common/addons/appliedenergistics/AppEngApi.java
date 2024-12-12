@@ -27,10 +27,17 @@ import io.github.projectet.ae2things.item.DISKDrive;
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import me.ramidzkh.mekae2.ae2.MekanismKey;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.apache.logging.log4j.Level;
 import org.jetbrains.annotations.Nullable;
 
@@ -152,7 +159,7 @@ public class AppEngApi {
     private static Map<String, Object> getObjectFromItemStack(Pair<Long, AEItemKey> stack, @Nullable ICraftingService craftingService) {
         Map<String, Object> map = new HashMap<>();
         String displayName = stack.getRight().getDisplayName().getString();
-        CompoundTag nbt = stack.getRight().toTag();
+        CompoundTag nbt = stack.getRight().toTag(ServerLifecycleHooks.getCurrentServer().registryAccess());
         long amount = stack.getLeft();
         map.put("fingerprint", ItemUtil.getFingerprint(stack.getRight().toStack()));
         map.put("name", ItemUtil.getRegistryKey(stack.getRight().getItem()).toString());
@@ -168,7 +175,7 @@ public class AppEngApi {
     private static Map<String, Object> getObjectFromFluidStack(Pair<Long, AEFluidKey> stack, @Nullable ICraftingService craftingService) {
         Map<String, Object> map = new HashMap<>();
         long amount = stack.getLeft();
-        map.put("name", ForgeRegistries.FLUIDS.getKey(stack.getRight().getFluid()).toString());
+        map.put("name", NeoForgeRegistries.FLUID_TYPES.getKey(stack.getRight().getFluid().getFluidType()).toString());
         map.put("amount", amount);
         map.put("displayName", stack.getRight().getDisplayName().getString());
         map.put("tags", LuaConverter.tagsToList(() -> stack.getRight().getFluid().builtInRegistryHolder().tags()));
@@ -183,7 +190,7 @@ public class AppEngApi {
         map.put("name", stack.getRight().getStack().getTypeRegistryName().toString());
         map.put("amount", amount);
         map.put("displayName", stack.getRight().getDisplayName().getString());
-        map.put("tags", LuaConverter.tagsToList(() -> stack.getRight().getStack().getType().getTags()));
+        map.put("tags", LuaConverter.tagsToList(() -> stack.getRight().getStack().getTags()));
 
         return map;
     }
@@ -351,11 +358,10 @@ public class AppEngApi {
             BlockPos connectedInventoryPos = bus.getHost().getBlockEntity().getBlockPos().relative(bus.getSide());
             BlockEntity connectedInventoryEntity = level.getBlockEntity(connectedInventoryPos);
 
-            LazyOptional<IItemHandler> itemHandler = connectedInventoryEntity.getCapability(ForgeCapabilities.ITEM_HANDLER);
-            if (itemHandler.isPresent()) {
-                IItemHandler handler = itemHandler.orElse(null);
-                for (int i = 0; i < handler.getSlots(); i++) {
-                    total += handler.getSlotLimit(i);
+            IItemHandler itemHandler = connectedInventoryEntity.getLevel().getCapability(Capabilities.ItemHandler.BLOCK, connectedInventoryPos, Direction.DOWN);
+            if (itemHandler != null) {
+                for (int i = 0; i < itemHandler.getSlots(); i++) {
+                    total += itemHandler.getSlotLimit(i);
                 }
             }
         }
@@ -406,11 +412,10 @@ public class AppEngApi {
             BlockPos connectedInventoryPos = bus.getHost().getBlockEntity().getBlockPos().relative(bus.getSide());
             BlockEntity connectedInventoryEntity = level.getBlockEntity(connectedInventoryPos);
 
-            LazyOptional<IFluidHandler> fluidHandler = connectedInventoryEntity.getCapability(ForgeCapabilities.FLUID_HANDLER);
-            if (fluidHandler.isPresent()) {
-                IFluidHandler handler = fluidHandler.orElse(null);
-                for (int i = 0; i < handler.getTanks(); i++) {
-                    total += handler.getTankCapacity(i);
+            IFluidHandler fluidHandler = connectedInventoryEntity.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, connectedInventoryPos, Direction.DOWN);
+            if (fluidHandler != null) {
+                for (int i = 0; i < fluidHandler.getTanks(); i++) {
+                    total += fluidHandler.getTankCapacity(i);
                 }
             }
         }
@@ -439,32 +444,32 @@ public class AppEngApi {
                     int bytesPerType = cell.getBytesPerType(null);
 
                     if (cell.getKeyType().getClass().isAssignableFrom(AEKeyType.items().getClass())) {
-                        if (stack.getTag() == null)
+                        if (stack.get(DataComponents.CUSTOM_DATA).getUnsafe().isEmpty())
                             continue;
-                        int numOfType = stack.getTag().getLongArray("amts").length;
-                        long numItemsInCell = stack.getTag().getLong("ic");
+                        int numOfType = stack.get(DataComponents.CUSTOM_DATA).getUnsafe().getLongArray("amts").length;
+                        long numItemsInCell = stack.get(DataComponents.CUSTOM_DATA).getUnsafe().getLong("ic");
 
                         used += ((int) Math.ceil(((double) numItemsInCell) / 8)) + ((long) bytesPerType * numOfType);
                     }
                 } else if (APAddons.aeThingsLoaded && stack.getItem() instanceof DISKDrive disk) {
                     if (disk.getKeyType().toString().equals("ae2:i")) {
-                        if (stack.getTag() == null)
+                        if (stack.get(DataComponents.CUSTOM_DATA).getUnsafe().isEmpty())
                             continue;
-                        long numBytesInCell = stack.getTag().getLong("ic");
+                        long numBytesInCell = stack.get(DataComponents.CUSTOM_DATA).getUnsafe().getLong("ic");
                         used += numBytesInCell;
                     }
                 } else if (APAddons.aeAdditionsLoaded && stack.getItem() instanceof SuperStorageCell) {
-                    if (stack.getTag() == null)
+                    if (stack.get(DataComponents.CUSTOM_DATA).getUnsafe().isEmpty())
                         continue;
-                    long numItemsInCell = stack.getTag().getLong("ic");
+                    long numItemsInCell = stack.get(DataComponents.CUSTOM_DATA).getUnsafe().getLong("ic");
 
                     used += numItemsInCell;
                 } else if (APAddons.aeAdditionsLoaded && stack.getItem() instanceof StorageCell storageCell) {
                     if (storageCell.getKeyType() != AEKeyType.items())
                         continue;
-                    if (stack.getTag() == null)
+                    if (stack.get(DataComponents.CUSTOM_DATA).getUnsafe().isEmpty())
                         continue;
-                    long numItemsInCell = stack.getTag().getLong("ic");
+                    long numItemsInCell = stack.get(DataComponents.CUSTOM_DATA).getUnsafe().getLong("ic");
 
                     used += numItemsInCell;
                 }
@@ -505,25 +510,25 @@ public class AppEngApi {
                     int bytesPerType = cell.getBytesPerType(null);
 
                     if (cell.getKeyType().getClass().isAssignableFrom(AEKeyType.fluids().getClass())) {
-                        if (stack.getTag() == null)
+                        if (stack.get(DataComponents.CUSTOM_DATA).getUnsafe().isEmpty())
                             continue;
-                        int numOfType = stack.getTag().getLongArray("amts").length;
-                        long numBucketsInCell = stack.getTag().getLong("ic") / 1000;
+                        int numOfType = stack.get(DataComponents.CUSTOM_DATA).getUnsafe().getLongArray("amts").length;
+                        long numBucketsInCell = stack.get(DataComponents.CUSTOM_DATA).getUnsafe().getLong("ic") / 1000;
 
                         used += ((int) Math.ceil(((double) numBucketsInCell) / 8)) + ((long) bytesPerType * numOfType);
                     }
                 } else if (APAddons.aeAdditionsLoaded && stack.getItem() instanceof SuperStorageCell) {
-                    if (stack.getTag() == null)
+                    if (stack.get(DataComponents.CUSTOM_DATA).getUnsafe().isEmpty())
                         continue;
-                    long numItemsInCell = stack.getTag().getLong("ic");
+                    long numItemsInCell = stack.get(DataComponents.CUSTOM_DATA).getUnsafe().getLong("ic");
 
                     used += numItemsInCell;
                 } else if (APAddons.aeAdditionsLoaded && stack.getItem() instanceof StorageCell storageCell) {
                     if (storageCell.getKeyType() != AEKeyType.fluids())
                         continue;
-                    if (stack.getTag() == null)
+                    if (stack.get(DataComponents.CUSTOM_DATA).getUnsafe().isEmpty())
                         continue;
-                    long numItemsInCell = stack.getTag().getLong("ic");
+                    long numItemsInCell = stack.get(DataComponents.CUSTOM_DATA).getUnsafe().getLong("ic");
 
                     used += numItemsInCell;
                 }

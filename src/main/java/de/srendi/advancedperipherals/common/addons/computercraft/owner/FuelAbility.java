@@ -3,7 +3,6 @@ package de.srendi.advancedperipherals.common.addons.computercraft.owner;
 import dan200.computercraft.api.lua.LuaFunction;
 import dan200.computercraft.api.lua.MethodResult;
 import de.srendi.advancedperipherals.lib.peripherals.IPeripheralPlugin;
-import net.minecraft.nbt.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;

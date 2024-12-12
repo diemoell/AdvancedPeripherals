@@ -157,7 +157,7 @@ public class PlayerDetectorPeripheral extends BasePeripheral<IPeripheralOwner> {
             if (!isAllowedMultiDimensional() && player.level().dimension() != dimension)
                 continue;
             if (CoordUtil.isInRange(getPos(), player, getLevel(), firstPos, secondPos, MAX_RANGE))
-                if(player.getName().getString().equals(username))
+                if (player.getName().getString().equals(username))
                     return true;
         }
         return false;
@@ -171,7 +171,7 @@ public class PlayerDetectorPeripheral extends BasePeripheral<IPeripheralOwner> {
             if (!isAllowedMultiDimensional() && player.level().dimension() != dimension)
                 continue;
             if (CoordUtil.isInRange(getPos(), getLevel(), player, x, y, z, MAX_RANGE)) {
-                if(player.getName().getString().equals(username))
+                if (player.getName().getString().equals(username))
                     return true;
             }
         }
@@ -186,7 +186,7 @@ public class PlayerDetectorPeripheral extends BasePeripheral<IPeripheralOwner> {
             if (!isAllowedMultiDimensional() && player.level().dimension() != dimension)
                 continue;
             if (range == -1 || CoordUtil.isInRange(getPos(), getLevel(), player, range, MAX_RANGE)) {
-                if(player.getName().getString().equals(username))
+                if (player.getName().getString().equals(username))
                     return true;
             }
         }

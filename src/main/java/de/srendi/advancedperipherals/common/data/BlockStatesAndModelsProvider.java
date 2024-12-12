@@ -74,7 +74,7 @@ public class BlockStatesAndModelsProvider extends BlockStateProvider {
                 for (Direction direction : Direction.Plane.HORIZONTAL)
                     builder.texture(direction.toString(), blockTexture(block, sideTexture));
             }
-            if(side.equals("north"))
+            if (side.equals("north"))
                 particleTexture = blockTexture(block, "north");
 
             if (side.equals("front")) {

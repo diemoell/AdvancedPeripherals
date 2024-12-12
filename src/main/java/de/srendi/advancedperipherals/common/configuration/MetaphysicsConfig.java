@@ -2,8 +2,8 @@ package de.srendi.advancedperipherals.common.configuration;
 
 import de.srendi.advancedperipherals.common.addons.computercraft.operations.AutomataCoreTier;
 import net.minecraft.FieldsAreNonnullByDefault;
-import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.fml.config.ModConfig;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 @FieldsAreNonnullByDefault
 public class MetaphysicsConfig implements IAPConfig {

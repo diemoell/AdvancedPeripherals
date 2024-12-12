@@ -20,7 +20,7 @@ import java.util.PriorityQueue;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-public class IntegrationPeripheralProvider{
+public class IntegrationPeripheralProvider {
 
     private static final String[] SUPPORTED_MODS = new String[]{"powah", "create", "mekanism", "botania"};
 
@@ -36,7 +36,6 @@ public class IntegrationPeripheralProvider{
      * @param integration integration generator
      * @param tileClass   target integration class
      * @param <T>         target integration
-     *
      * @deprecated will be removed in 1.21. Use generics instead, see existing integrations
      */
     @Deprecated(forRemoval = true, since = "1.20.1-0.7.39")
@@ -51,7 +50,6 @@ public class IntegrationPeripheralProvider{
      * @param tileClass   target integration class
      * @param priority    Integration priority, lower is better
      * @param <T>         target integration
-     *
      * @deprecated will be removed in 1.21. Use generics instead, see existing integrations
      */
     @Deprecated(forRemoval = true, since = "1.20.1-0.7.39")
@@ -68,7 +66,6 @@ public class IntegrationPeripheralProvider{
      * @param predicate   target block entity
      * @param priority    Integration priority, lower is better
      * @param <T>         target integration
-     *
      * @deprecated will be removed in 1.21. Use generics instead, see existing integrations
      */
     @Deprecated(forRemoval = true, since = "1.20.1-0.7.39")

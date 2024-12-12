@@ -18,7 +18,9 @@
       "conditions": {
         "items": [
           {
-            "items": ["advancedperipherals:husbandry_automata_core"]
+            "items": [
+              "advancedperipherals:husbandry_automata_core"
+            ]
           }
         ]
       }

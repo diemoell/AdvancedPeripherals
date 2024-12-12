@@ -1,7 +1,6 @@
 package de.srendi.advancedperipherals.common.util;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.mojang.serialization.DataResult;
 import de.srendi.advancedperipherals.AdvancedPeripherals;
 import de.srendi.advancedperipherals.common.configuration.APConfig;
 import net.minecraft.core.BlockPos;
@@ -52,7 +51,7 @@ public class NBTUtil {
             return json == null ? null : TagParser.parseTag(json);
         } catch (CommandSyntaxException ex) {
             AdvancedPeripherals.debug("Could not parse json data to NBT", Level.ERROR);
-            if(APConfig.GENERAL_CONFIG.enableDebugMode.get())
+            if (APConfig.GENERAL_CONFIG.enableDebugMode.get())
                 ex.printStackTrace();
             return null;
         }
@@ -87,17 +86,17 @@ public class NBTUtil {
         tag.put("Components", DataComponentPatch.CODEC.encodeStart(NbtOps.INSTANCE, patch).getOrThrow());
         return tag;
     }
+
     public static DataComponentPatch decodeFromNbt(CompoundTag nbt) {
         return DataComponentPatch.CODEC.parse(NbtOps.INSTANCE, nbt).getOrThrow();
     }
 
     @Deprecated
     // In future versions we may use Data Components instead of the
-    public static CompoundTag getUnsafeNbt(ItemStack item){
-        if (item.get(DataComponents.CUSTOM_DATA) != null){
+    public static CompoundTag getUnsafeNbt(ItemStack item) {
+        if (item.get(DataComponents.CUSTOM_DATA) != null) {
             return item.get(DataComponents.CUSTOM_DATA).getUnsafe();
-        }
-        else {
+        } else {
             CustomData.set(DataComponents.CUSTOM_DATA, item, new CompoundTag());
             return item.get(DataComponents.CUSTOM_DATA).getUnsafe();
         }
@@ -105,12 +104,11 @@ public class NBTUtil {
 
     @Deprecated
     // In future versions we may use Data Components instead of the
-    public static CompoundTag getUnsafeNbtOrDefault(ItemStack item, String key, String value){
+    public static CompoundTag getUnsafeNbtOrDefault(ItemStack item, String key, String value) {
         CompoundTag tag = new CompoundTag();
-        if (item.get(DataComponents.CUSTOM_DATA) != null){
+        if (item.get(DataComponents.CUSTOM_DATA) != null) {
             return item.get(DataComponents.CUSTOM_DATA).getUnsafe();
-        }
-        else{
+        } else {
             tag.putString(key, value);
             CustomData.set(DataComponents.CUSTOM_DATA, item, tag);
             return item.get(DataComponents.CUSTOM_DATA).getUnsafe();

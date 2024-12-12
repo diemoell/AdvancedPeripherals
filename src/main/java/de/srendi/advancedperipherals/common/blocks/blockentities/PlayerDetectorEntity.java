@@ -31,7 +31,7 @@ public class PlayerDetectorEntity extends PeripheralBlockEntitys<PlayerDetectorP
     @Override
     public <T extends BlockEntity> void handleTick(Level level, BlockState state, BlockEntityType<T> type) {
         lastConsumedMessage = Events.traversePlayerMessages(lastConsumedMessage, message -> getConnectedComputers().forEach(computer -> {
-            if(message.eventName().equals("playerChangedDimension")) {
+            if (message.eventName().equals("playerChangedDimension")) {
                 computer.queueEvent(message.eventName(), message.playerName(), message.fromDimension(), message.toDimension());
             } else computer.queueEvent(message.eventName(), message.playerName(), message.fromDimension());
         }));

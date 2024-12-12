@@ -23,7 +23,7 @@ public class APConfig {
         super(config.getType(), config.getConfigSpec(), container, "Advancedperipherals/" + config.getFileName() + ".toml");
     }*/
 
-    public APConfig(){
+    public APConfig() {
 
     }
 
@@ -39,11 +39,11 @@ public class APConfig {
     }
 
     public static class APConfigHelper {
-        public static String getAPConfigFilePath(IAPConfig config){
+        public static String getAPConfigFilePath(IAPConfig config) {
             return "Advancedperipherals/" + config.getFileName() + ".toml";
         }
 
-        public static void registerConfig(Map<IConfigSpec, IAPConfig> knownConfigs, ModContainer modContainer, IAPConfig config){
+        public static void registerConfig(Map<IConfigSpec, IAPConfig> knownConfigs, ModContainer modContainer, IAPConfig config) {
             modContainer.registerConfig(config.getType(), config.getConfigSpec(), APConfigHelper.getAPConfigFilePath(config));
             knownConfigs.put(config.getConfigSpec(), config);
         }

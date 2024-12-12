@@ -1,6 +1,8 @@
 package de.srendi.advancedperipherals.common.addons.refinedstorage;
 
 // TODO:
+public class RsItemHandler {
+}
 /*
 import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.api.util.Action;
@@ -11,9 +13,10 @@ import de.srendi.advancedperipherals.common.util.inventory.ItemFilter;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 */
-/**
- * Used to transfer item between an inventory and the RS system.
- * @see de.srendi.advancedperipherals.common.addons.computercraft.peripheral.RsBridgePeripheral
+/*
+  Used to transfer item between an inventory and the RS system.
+
+  @see de.srendi.advancedperipherals.common.addons.computercraft.peripheral.RsBridgePeripheral
  */
 
 /*

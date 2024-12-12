@@ -1,8 +1,6 @@
 package de.srendi.advancedperipherals.common.commands;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-
-import dan200.computercraft.core.apis.IAPIEnvironment;
 import dan200.computercraft.core.computer.ComputerSide;
 import dan200.computercraft.core.computer.Environment;
 import dan200.computercraft.shared.ModRegistry;
@@ -10,11 +8,9 @@ import dan200.computercraft.shared.command.text.ChatHelpers;
 import dan200.computercraft.shared.command.text.TableBuilder;
 import dan200.computercraft.shared.computer.core.ServerComputer;
 import dan200.computercraft.shared.computer.core.ServerContext;
-
 import de.srendi.advancedperipherals.AdvancedPeripherals;
 import de.srendi.advancedperipherals.common.addons.computercraft.peripheral.ChunkyPeripheral;
 import de.srendi.advancedperipherals.common.util.inventory.ItemUtil;
-
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -37,21 +33,21 @@ public class APCommands {
     public static final String ROOT_LITERAL = "advancedperipherals";
     public static final String FORCELOAD_LITERAL = "forceload";
     static final String FORCELOAD_HELP =
-        "/" + ROOT_LITERAL + " " + FORCELOAD_LITERAL + " help" + " - show this help message\n" +
-        "/" + ROOT_LITERAL + " " + FORCELOAD_LITERAL + " dump" + " - show all chunky turtles\n";
+            "/" + ROOT_LITERAL + " " + FORCELOAD_LITERAL + " help" + " - show this help message\n" +
+                    "/" + ROOT_LITERAL + " " + FORCELOAD_LITERAL + " dump" + " - show all chunky turtles\n";
 
     @SubscribeEvent
     public static void register(RegisterCommandsEvent event) {
         event.getDispatcher().register(Commands.literal(ROOT_LITERAL)
-            .then(Commands.literal("getHashItem").executes(context -> getHashItem(context.getSource())))
-            .then(Commands.literal(FORCELOAD_LITERAL)
-                .executes(context -> forceloadHelp(context.getSource()))
-                .then(Commands.literal("help")
-                    .executes(context -> forceloadHelp(context.getSource())))
-                .then(Commands.literal("dump")
-                    .requires(ModRegistry.Permissions.PERMISSION_DUMP)
-                    .executes(context -> forceloadDump(context.getSource())))
-            )
+                .then(Commands.literal("getHashItem").executes(context -> getHashItem(context.getSource())))
+                .then(Commands.literal(FORCELOAD_LITERAL)
+                        .executes(context -> forceloadHelp(context.getSource()))
+                        .then(Commands.literal("help")
+                                .executes(context -> forceloadHelp(context.getSource())))
+                        .then(Commands.literal("dump")
+                                .requires(ModRegistry.Permissions.PERMISSION_DUMP)
+                                .executes(context -> forceloadDump(context.getSource())))
+                )
         );
     }
 
@@ -109,7 +105,7 @@ public class APCommands {
                 throw new RuntimeException(e);
             }
 
-            if (env != null){
+            if (env != null) {
                 for (ComputerSide side : ComputerSide.values()) {
                     if (env.getPeripheral(side) instanceof ChunkyPeripheral) {
                         return true;
@@ -121,8 +117,8 @@ public class APCommands {
 
         for (ServerComputer computer : computers) {
             table.row(
-                makeComputerDumpCommand(computer),
-                makeComputerPosCommand(computer)
+                    makeComputerDumpCommand(computer),
+                    makeComputerPosCommand(computer)
             );
         }
 
@@ -133,17 +129,17 @@ public class APCommands {
 
     private static Component makeComputerDumpCommand(ServerComputer computer) {
         return ChatHelpers.link(
-            Component.literal("#" + computer.getID()),
-            "/computercraft dump " + computer.getInstanceUUID(),
-            Component.translatable("commands.computercraft.dump.action")
+                Component.literal("#" + computer.getID()),
+                "/computercraft dump " + computer.getInstanceUUID(),
+                Component.translatable("commands.computercraft.dump.action")
         );
     }
 
     private static Component makeComputerPosCommand(ServerComputer computer) {
         return ChatHelpers.link(
-            ChatHelpers.position(computer.getPosition()),
-            "/computercraft tp " + computer.getInstanceUUID(),
-            Component.translatable("commands.computercraft.tp.action")
+                ChatHelpers.position(computer.getPosition()),
+                "/computercraft tp " + computer.getInstanceUUID(),
+                Component.translatable("commands.computercraft.tp.action")
         );
     }
 }

@@ -7,7 +7,6 @@ import dan200.computercraft.shared.util.WorldUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
@@ -67,11 +66,11 @@ public final class FakePlayerProviderTurtle {
         ItemStack activeStack = player.getItemInHand(InteractionHand.MAIN_HAND);
         if (!activeStack.isEmpty()) {
             activeStack.forEachModifier(EquipmentSlot.MAINHAND, (attributeHolder, modifier) -> {
-                        AttributeInstance attributeinstance = player.getAttributes().getInstance(attributeHolder);
-                        if (attributeinstance != null) {
-                            attributeinstance.addTransientModifier(modifier);
-                        }
-                    });
+                AttributeInstance attributeinstance = player.getAttributes().getInstance(attributeHolder);
+                if (attributeinstance != null) {
+                    attributeinstance.addTransientModifier(modifier);
+                }
+            });
             // player.getAttributes().addTransientAttributeModifiers(activeStack.getAttributeModifiers(EquipmentSlot.MAINHAND));
         }
     }

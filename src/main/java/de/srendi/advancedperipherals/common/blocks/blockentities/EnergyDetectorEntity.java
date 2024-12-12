@@ -1,6 +1,5 @@
 package de.srendi.advancedperipherals.common.blocks.blockentities;
 
-import com.google.errorprone.annotations.Var;
 import dan200.computercraft.shared.container.BasicContainer;
 import de.srendi.advancedperipherals.common.addons.computercraft.peripheral.EnergyDetectorPeripheral;
 import de.srendi.advancedperipherals.common.blocks.base.PeripheralBlockEntitys;
@@ -14,7 +13,6 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.JigsawBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -22,7 +20,6 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.EnergyStorage;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
@@ -79,9 +76,9 @@ public class EnergyDetectorEntity extends PeripheralBlockEntitys<EnergyDetectorP
                 return Optional.empty();
             }
             var lazyOptionalOutStorage = level.getCapability(Capabilities.EnergyStorage.BLOCK, teOut.getBlockPos(), energyOutDirection.getOpposite());
-            if(lazyOptionalOutStorage == null){
+            if (lazyOptionalOutStorage == null) {
                 outReceivingStorage = Optional.empty();
-            }else {
+            } else {
                 outReceivingStorage = Optional.of(lazyOptionalOutStorage);
             }
         }

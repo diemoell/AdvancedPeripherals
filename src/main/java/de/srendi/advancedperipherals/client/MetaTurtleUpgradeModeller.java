@@ -10,7 +10,6 @@ import dan200.computercraft.api.turtle.TurtleSide;
 import de.srendi.advancedperipherals.common.util.DataStorageUtil;
 import de.srendi.advancedperipherals.lib.turtle.ClockwiseAnimatedTurtleUpgrade;
 import net.minecraft.core.component.DataComponentPatch;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

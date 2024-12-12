@@ -3,8 +3,8 @@ package de.srendi.advancedperipherals.common.blocks.base;
 import de.srendi.advancedperipherals.common.blocks.blockentities.EnergyDetectorEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -38,7 +38,7 @@ public class APBlockEntityBlock<T extends BlockEntity> extends BaseBlockEntityBl
 
         BlockEntity blockEntity = level.getBlockEntity(pos);
 
-        if(blockEntity instanceof EnergyDetectorEntity energyDetector)
+        if (blockEntity instanceof EnergyDetectorEntity energyDetector)
             energyDetector.invalidateStorages();
 
     }

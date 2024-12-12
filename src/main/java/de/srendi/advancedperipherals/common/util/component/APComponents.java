@@ -29,8 +29,9 @@ public class APComponents {
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<String>> PERIPHERAL_TYPE = register("peripheralType",
             builder -> builder.persistent(Codec.STRING));
-    private static <T>DeferredHolder<DataComponentType<?>, DataComponentType<T>> register(String name,
-                                                                                          UnaryOperator<DataComponentType.Builder<T>> builderOperator) {
+
+    private static <T> DeferredHolder<DataComponentType<?>, DataComponentType<T>> register(String name,
+                                                                                           UnaryOperator<DataComponentType.Builder<T>> builderOperator) {
         return DATA_COMPONENT_TYPES.register(name, () -> builderOperator.apply(DataComponentType.builder()).build());
     }
 

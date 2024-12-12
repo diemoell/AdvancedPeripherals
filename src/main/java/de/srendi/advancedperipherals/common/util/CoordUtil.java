@@ -38,10 +38,10 @@ public class CoordUtil {
             ey = y;
             y = tmp;
         }
-        double bx = (double)(pos.getX() + 0.5), by = (double)(pos.getY() + 0.5), bz = (double)(pos.getZ() + 0.5);
+        double bx = (double) (pos.getX() + 0.5), by = (double) (pos.getY() + 0.5), bz = (double) (pos.getZ() + 0.5);
         return Math.abs(x - bx) <= range && Math.abs(z - bz) <= range &&
-            // check both feet position and eye position, and ensure it will work if player is higher than 2 blocks
-            ((y <= by && by <= ey) || Math.min(Math.abs(y - by), Math.abs(ey - by)) <= range);
+                // check both feet position and eye position, and ensure it will work if player is higher than 2 blocks
+                ((y <= by && by <= ey) || Math.min(Math.abs(y - by), Math.abs(ey - by)) <= range);
     }
 
     public static boolean isInRange(@Nullable BlockPos pos, @Nullable Level world, @Nullable Player player, int x, int y, int z, int maxRange) {
@@ -65,9 +65,9 @@ public class CoordUtil {
             ey = y;
             y = tmp;
         }
-        double bx = (double)(pos.getX() + 0.5), by = (double)(pos.getY() + 0.5), bz = (double)(pos.getZ() + 0.5);
+        double bx = (double) (pos.getX() + 0.5), by = (double) (pos.getY() + 0.5), bz = (double) (pos.getZ() + 0.5);
         return Math.abs(x - bx) <= dx && Math.abs(z - bz) <= dz &&
-            ((y <= by && by <= ey) || Math.min(Math.abs(y - by), Math.abs(ey - by)) <= dy);
+                ((y <= by && by <= ey) || Math.min(Math.abs(y - by), Math.abs(ey - by)) <= dy);
     }
 
     public static boolean isInRange(@Nullable BlockPos blockPos, @Nullable Player player, @Nullable Level world, @NotNull BlockPos firstPos, @NotNull BlockPos secondPos, int maxRange) {
@@ -80,7 +80,7 @@ public class CoordUtil {
         // Use manhattan distance, not euclidean distance to keep same behavior than other `isInRange` functions
         if (i + j > (maxRange != -1 ? maxRange : Integer.MAX_VALUE))
             return false;
-        return world.getNearbyPlayers(TargetingConditions.forNonCombat(), null, new AABB(new Vec3(firstPos.getX(),firstPos.getY(), firstPos.getZ()), new Vec3(secondPos.getX(),secondPos.getY(),secondPos.getZ()))).contains(player);
+        return world.getNearbyPlayers(TargetingConditions.forNonCombat(), null, new AABB(new Vec3(firstPos.getX(), firstPos.getY(), firstPos.getZ()), new Vec3(secondPos.getX(), secondPos.getY(), secondPos.getZ()))).contains(player);
     }
 
     public static Direction getDirection(FrontAndTop orientation, String computerSide) throws LuaException {

@@ -13,67 +13,67 @@ description = '''
 Advanced Peripherals provides multiple extensions for ComputerCraft in form of Peripherals, Pocket Upgrades, Turtles or new gear.
 It also integrates with multiple third party mods.
 '''
-[[dependencies.${mod_id}]]
+[[dependencies.${ mod_id }]]
 modId = "forge"
 mandatory = true
 versionRange = "[${neo_version},)"
 ordering = "NONE"
 side = "BOTH"
-[[dependencies.${mod_id}]]
+[[dependencies.${ mod_id }]]
 modId = "minecraft"
 mandatory = true
 versionRange = "[${minecraft_version},)"
 ordering = "NONE"
 side = "BOTH"
-[[dependencies.${mod_id}]]
+[[dependencies.${ mod_id }]]
 modId = "computercraft"
 mandatory = true
 versionRange = "[${cc_version},)"
 ordering = "NONE"
 side = "BOTH"
-[[dependencies.${mod_id}]]
+[[dependencies.${ mod_id }]]
 modId = "curios"
 mandatory = false
 versionRange = "[${curios_version},)"
 ordering = "NONE"
 side = "BOTH"
-[[dependencies.${mod_id}]]
+[[dependencies.${ mod_id }]]
 modId = "ae2"
 mandatory = false
 versionRange = "[${appliedenergistics_version},)"
 ordering = "NONE"
 side = "BOTH"
-[[dependencies.${mod_id}]]
+[[dependencies.${ mod_id }]]
 modId = "refinedstorage"
 mandatory = false
 versionRange = "[${refinedstorage_version},)"
 ordnering = "NONE"
 side = "BOTH"
-[[dependencies.${mod_id}]]
+[[dependencies.${ mod_id }]]
 modId = "minecolonies"
 mandatory = false
 versionRange = "[${minecolonies_version},)"
 ordering = "NONE"
 side = "BOTH"
-[[dependencies.${mod_id}]]
+[[dependencies.${ mod_id }]]
 modId = "patchouli"
 mandatory = false
 versionRange = "[${patchouli_version},)"
 ordering = "NONE"
 side = "BOTH"
-[[dependencies.${mod_id}]]
+[[dependencies.${ mod_id }]]
 modId = "create"
 mandatory = false
 versionRange = "[0.5.1,)"
 ordering = "NONE"
 side = "BOTH"
-[[dependencies.${mod_id}]]
+[[dependencies.${ mod_id }]]
 modId = "botania"
 mandatory = false
 versionRange = "[${botania_version},)"
 ordering = "NONE"
 side = "BOTH"
-[[dependencies.${mod_id}]]
+[[dependencies.${ mod_id }]]
 modId = "mekanism"
 mandatory = false
 versionRange = "[${mekanism_version},)"

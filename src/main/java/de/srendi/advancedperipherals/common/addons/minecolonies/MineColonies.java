@@ -10,29 +10,26 @@ import com.minecolonies.api.colony.permissions.Action;
 import com.minecolonies.api.colony.workorders.IWorkOrder;
 import com.minecolonies.api.entity.citizen.Skill;
 import com.minecolonies.api.research.*;
-import com.minecolonies.api.research.costs.IResearchCost;
 import com.minecolonies.api.research.effects.IResearchEffect;
 import com.minecolonies.api.research.util.ResearchState;
 import com.minecolonies.core.colony.buildings.AbstractBuildingStructureBuilder;
 import com.minecolonies.core.colony.buildings.utils.BuildingBuilderResource;
+import com.minecolonies.core.entity.citizen.citizenhandlers.CitizenSkillHandler;
 import com.minecolonies.core.research.BuildingResearchRequirement;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import de.srendi.advancedperipherals.common.util.LuaConverter;
 import io.netty.buffer.Unpooled;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.common.capabilities.ForgeCapabilities;
-import net.neoforged.common.util.LazyOptional;
+import net.neoforged.neoforge.common.crafting.SizedIngredient;
 import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.server.command.CommandHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -116,7 +113,7 @@ public class MineColonies {
      * Converts a building {@link IBuilding} and job {@link IJob} to a map
      *
      * @param work the home building
-     * @param job the job
+     * @param job  the job
      * @return a map with information about the building and job
      */
     public static Object jobToObject(IBuilding work, IJob<?> job) {
@@ -151,12 +148,12 @@ public class MineColonies {
      * @param skills skills as list. Can be obtained via {@link ICitizenData#getCitizenSkillHandler}
      * @return a map with information about the skill
      */
-    public static Object skillsToObject(Map<Skill, Tuple<Integer, Double>> skills) {
+    public static Object skillsToObject(Map<Skill, CitizenSkillHandler.SkillData> skills) {
         Map<String, Object> map = new HashMap<>();
         for (Skill skill : skills.keySet()) {
             Map<String, Object> skillData = new HashMap<>();
-            skillData.put("level", skills.get(skill).getA());
-            skillData.put("xp", skills.get(skill).getB());
+            skillData.put("level", skills.get(skill).getLevel());
+            skillData.put("xp", skills.get(skill).getExperience());
             map.put(skill.name(), skillData);
         }
 
@@ -175,8 +172,9 @@ public class MineColonies {
         Map<String, Object> structureData = new HashMap<>();
         structureData.put("cornerA", LuaConverter.posToObject(building.getCorners().getA()));
         structureData.put("cornerB", LuaConverter.posToObject(building.getCorners().getB()));
-        structureData.put("rotation", building.getRotation());
-        structureData.put("mirror", building.isMirrored());
+        // TODO: Where is the rotation and mirror???
+        // structureData.put("rotation", building.getRotation());
+        // structureData.put("mirror", building.isMirrored());
 
         List<Object> citizensData = new ArrayList<>();
         for (ICitizenData citizen : building.getAllAssignedCitizen()) {
@@ -212,10 +210,9 @@ public class MineColonies {
      * @return the size of all inventories in this building
      */
     public static int getStorageSize(IBuilding building) {
-        LazyOptional<IItemHandler> capability = building.getCapability(ForgeCapabilities.ITEM_HANDLER);
-        IItemHandler handler = capability.resolve().orElse(null);
-        if (handler != null)
-            return handler.getSlots();
+        IItemHandler capability = building.getItemHandlerCap();
+        if (capability != null)
+            return capability.getSlots();
 
         return 0;
     }
@@ -273,20 +270,21 @@ public class MineColonies {
 
                 List<String> effects = new ArrayList<>();
                 for (IResearchEffect<?> researchEffect : research.getEffects())
-                    effects.add(TextComponentHelper.createComponentTranslation(null, researchEffect.getDesc().getKey(), researchEffect.getDesc().getArgs()).getString());
+                    effects.add(Component.translatable(researchEffect.getDesc().getKey(), researchEffect.getDesc().getArgs()).getString());
 
                 List<Map<String, Object>> cost = new ArrayList<>();
-                for (IResearchCost item : research.getCostList()) {
+                for (SizedIngredient item : research.getCostList()) {
                     Map<String, Object> researchCost = new HashMap<>();
                     List<Map<String, Object>> researchCostItems = new ArrayList<>();
 
-                    for (Item costItem : item.getItems())
-                        researchCostItems.add(LuaConverter.itemToObject(costItem));
+                    for (ItemStack costItem : item.getItems())
+                        researchCostItems.add(LuaConverter.itemToObject(costItem.getItem()));
 
                     researchCost.put("validItems", researchCostItems);
-                    researchCost.put("count", item.getCount());
-                    researchCost.put("", item.getType().getId().toString());
-
+                    researchCost.put("count", item.count());
+                    if (item.ingredient().getCustomIngredient() != null) {
+                        researchCost.put("", item.ingredient().getCustomIngredient().getType().toString());
+                    }
                     cost.add(researchCost);
                 }
 
@@ -307,7 +305,7 @@ public class MineColonies {
 
                 Map<String, Object> map = new HashMap<>();
                 map.put("id", researchName.toString());
-                map.put("name", TextComponentHelper.createComponentTranslation(null, research.getName().getKey(), research.getName().getArgs()).getString());
+                map.put("name", Component.translatable(research.getName().getKey(), research.getName().getArgs()).getString());
                 map.put("requirements", requirements);
                 map.put("cost", cost);
                 map.put("researchEffects", effects);
@@ -338,7 +336,7 @@ public class MineColonies {
             return null;
 
         //We need to tell the building that we want information about it
-        FriendlyByteBuf buffer = new FriendlyByteBuf(Unpooled.buffer());
+        RegistryFriendlyByteBuf buffer = new RegistryFriendlyByteBuf(new FriendlyByteBuf(Unpooled.buffer()), colony.getWorld().registryAccess());
         builderBuilding.serializeToView(buffer, false);
         buffer.release();
 

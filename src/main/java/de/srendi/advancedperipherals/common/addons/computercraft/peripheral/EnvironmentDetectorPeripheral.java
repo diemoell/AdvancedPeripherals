@@ -33,7 +33,6 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.WorldgenRandom;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.common.util.TriState;
 import net.neoforged.neoforge.event.entity.player.CanContinueSleepingEvent;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.NotNull;
@@ -231,10 +230,10 @@ public class EnvironmentDetectorPeripheral extends BasePeripheral<IPeripheralOwn
     @LuaFunction(mainThread = true)
     public final MethodResult canSleepPlayer(String playername) {
         Player player = ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayerByName(playername);
-        if(player == null)
+        if (player == null)
             return MethodResult.of(false, "player_not_online");
 
-        if(!player.level().dimensionType().bedWorks())
+        if (!player.level().dimensionType().bedWorks())
             return MethodResult.of(false, "not_allowed_in_dimension");
 
         CanContinueSleepingEvent evt = new CanContinueSleepingEvent(player, null);

@@ -11,7 +11,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.village.VillagerTradesEvent;
 import net.neoforged.neoforge.event.village.WandererTradesEvent;
-import net.neoforged.fml.common.Mod;
 
 import static de.srendi.advancedperipherals.common.village.VillagerTrade.TradeBuilder;
 

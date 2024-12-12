@@ -65,7 +65,7 @@ public class InventoryManagerPeripheral extends BasePeripheral<BlockEntityPeriph
         Direction direction = validateSide(invDirection);
 
         BlockEntity targetEntity = owner.getLevel().getBlockEntity(owner.getPos().relative(direction));
-        IItemHandler inventoryFrom = targetEntity != null ? targetEntity.getLevel().getCapability(Capabilities.ItemHandler.BLOCK, targetEntity.getBlockPos() ,direction) : null;
+        IItemHandler inventoryFrom = targetEntity != null ? targetEntity.getLevel().getCapability(Capabilities.ItemHandler.BLOCK, targetEntity.getBlockPos(), direction) : null;
         Pair<IItemHandler, Integer> inventoryTo = getHandlerFromSlot(filter.getToSlot());
 
         inventoryTo.ifRightPresent(slot -> filter.toSlot = slot);
@@ -90,7 +90,7 @@ public class InventoryManagerPeripheral extends BasePeripheral<BlockEntityPeriph
 
         BlockEntity targetEntity = owner.getLevel().getBlockEntity(owner.getPos().relative(direction));
         Pair<IItemHandler, Integer> inventoryFrom = getHandlerFromSlot(filter.getFromSlot());
-        IItemHandler inventoryTo = targetEntity != null ? targetEntity.getLevel().getCapability(Capabilities.ItemHandler.BLOCK, targetEntity.getBlockPos() ,direction) : null;
+        IItemHandler inventoryTo = targetEntity != null ? targetEntity.getLevel().getCapability(Capabilities.ItemHandler.BLOCK, targetEntity.getBlockPos(), direction) : null;
 
         if (inventoryTo == null)
             return MethodResult.of(0, "INVENTORY_TO_INVALID");
@@ -119,7 +119,7 @@ public class InventoryManagerPeripheral extends BasePeripheral<BlockEntityPeriph
         Direction direction = validateSide(target);
 
         BlockEntity targetEntity = owner.getLevel().getBlockEntity(owner.getPos().relative(direction));
-        IItemHandler inventoryTo = targetEntity != null ? targetEntity.getLevel().getCapability(Capabilities.ItemHandler.BLOCK, targetEntity.getBlockPos() ,direction) : null;
+        IItemHandler inventoryTo = targetEntity != null ? targetEntity.getLevel().getCapability(Capabilities.ItemHandler.BLOCK, targetEntity.getBlockPos(), direction) : null;
 
         if (inventoryTo == null)
             return MethodResult.of(null, "INVENTORY_TO_INVALID");

@@ -1,7 +1,9 @@
+package de.srendi.advancedperipherals.common.addons.create;
 // TODO: creat in 1.21 not ready
+public class BasinIntegration {
+}
 
 /*
-package de.srendi.advancedperipherals.common.addons.create;
 
 import com.simibubi.create.content.processing.basin.BasinBlockEntity;
 import dan200.computercraft.api.lua.LuaFunction;

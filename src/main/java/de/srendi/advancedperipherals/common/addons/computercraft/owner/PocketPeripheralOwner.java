@@ -23,7 +23,7 @@ public class PocketPeripheralOwner extends BasePeripheralOwner {
     public PocketPeripheralOwner(IPocketAccess pocket) {
         super();
         this.pocket = pocket;
-        if(APConfig.PERIPHERALS_CONFIG.disablePocketFuelConsumption.get())
+        if (APConfig.PERIPHERALS_CONFIG.disablePocketFuelConsumption.get())
             attachAbility(PeripheralOwnerAbility.FUEL, new InfinitePocketFuelAbility(this));
     }
 

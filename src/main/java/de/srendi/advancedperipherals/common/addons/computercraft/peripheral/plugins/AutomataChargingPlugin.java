@@ -10,6 +10,8 @@ import de.srendi.advancedperipherals.common.addons.computercraft.owner.TurtlePer
 import de.srendi.advancedperipherals.common.configuration.APConfig;
 import de.srendi.advancedperipherals.lib.peripherals.AutomataCorePeripheral;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -30,7 +32,8 @@ public class AutomataChargingPlugin extends AutomataCorePlugin {
 
         ItemStack stack = owner.getToolInMainHand();
         int fuel = arguments.optInt(0, -1);
-        return stack.getCapability(ForgeCapabilities.ENERGY).map(storage -> {
+        IEnergyStorage storage = stack.getCapability(Capabilities.EnergyStorage.ITEM);
+        if (storage != null) {
             int availableFuelSpace = fuelAbility.getFuelMaxCount() - fuelAbility.getFuelCount();
             int requestedRF;
             if (fuel != -1) {
@@ -43,6 +46,7 @@ public class AutomataChargingPlugin extends AutomataCorePlugin {
             fuelAbility.addFuel(receivedFuel);
             automataCore.addRotationCycle();
             return MethodResult.of(true, receivedFuel);
-        }).orElse(MethodResult.of(null, "Item should provide energy ..."));
+        }
+        return MethodResult.of(null, "Item should provide energy ...");
     }
 }

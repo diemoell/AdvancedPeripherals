@@ -51,7 +51,7 @@ public class SpreaderIntegration implements APGenericPeripheral {
 
     @LuaFunction(mainThread = true)
     public final Object getLens(ManaSpreaderBlockEntity blockEntity) {
-        if(blockEntity.getItem(0) == ItemStack.EMPTY)
+        if (blockEntity.getItem(0) == ItemStack.EMPTY)
             return null;
         return LuaConverter.stackToObject(blockEntity.getItem(0));
     }

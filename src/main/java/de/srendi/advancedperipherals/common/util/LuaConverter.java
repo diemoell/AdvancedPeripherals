@@ -103,7 +103,7 @@ public class LuaConverter {
     public static Map<String, Object> stackToObject(@NotNull ItemStack stack) {
         if (stack.isEmpty()) return new HashMap<>();
         Map<String, Object> map = itemToObject(stack.getItem());
-        CompoundTag nbt = de.srendi.advancedperipherals.common.util.NBTUtil.getUnsafeNbt(stack.copy()) ;
+        CompoundTag nbt = de.srendi.advancedperipherals.common.util.NBTUtil.getUnsafeNbt(stack.copy());
         map.put("count", stack.getCount());
         map.put("displayName", stack.getDisplayName().getString());
         map.put("maxStackSize", stack.getMaxStackSize());

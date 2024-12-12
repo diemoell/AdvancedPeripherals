@@ -18,7 +18,7 @@ public abstract class BaseItemScreen<T extends BaseItemContainer> extends Abstra
 
     @Override
     public void render(@NotNull GuiGraphics guiGraphics, int x, int y, float partialTicks) {
-        renderBackground(guiGraphics,x ,y ,partialTicks);
+        renderBackground(guiGraphics, x, y, partialTicks);
         super.render(guiGraphics, x, y, partialTicks);
         renderTooltip(guiGraphics, x, y);
     }

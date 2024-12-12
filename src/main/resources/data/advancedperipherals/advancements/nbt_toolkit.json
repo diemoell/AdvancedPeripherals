@@ -17,7 +17,9 @@
       "conditions": {
         "items": [
           {
-            "items": ["advancedperipherals:block_reader"]
+            "items": [
+              "advancedperipherals:block_reader"
+            ]
           }
         ]
       }
@@ -27,7 +29,9 @@
       "conditions": {
         "items": [
           {
-            "items": ["advancedperipherals:nbt_storage"]
+            "items": [
+              "advancedperipherals:nbt_storage"
+            ]
           }
         ]
       }

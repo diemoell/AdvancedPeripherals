@@ -1,6 +1,5 @@
 package de.srendi.advancedperipherals.common.setup;
 
-import dan200.computercraft.api.ForgeComputerCraftAPI;
 import dan200.computercraft.api.pocket.IPocketUpgrade;
 import dan200.computercraft.api.turtle.ITurtleUpgrade;
 import dan200.computercraft.api.upgrades.UpgradeType;
@@ -43,11 +42,11 @@ public class CCRegistration {
 
     public static IntegrationPeripheralProvider integrationPeripheralProvider;
 
-    public static void register() {
+    /*public static void register() {
         IntegrationPeripheralProvider.load();
         integrationPeripheralProvider = new IntegrationPeripheralProvider();
-        ForgeComputerCraftAPI.registerPeripheralProvider(integrationPeripheralProvider);
-    }
+        ForgeComputerCraftAPI.registerGenericCapability(integrationPeripheralProvider);
+    }*/
 
     public static class ID {
 

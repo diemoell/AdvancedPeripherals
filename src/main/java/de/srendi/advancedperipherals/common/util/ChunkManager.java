@@ -9,11 +9,10 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.common.world.chunk.ForcedChunkManager;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.world.chunk.TicketController;
 import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.apache.logging.log4j.Level;
@@ -26,7 +25,7 @@ import java.util.*;
 @EventBusSubscriber(modid = AdvancedPeripherals.MOD_ID)
 public class ChunkManager extends SavedData {
 
-    public static TicketController ticketController = new TicketController(ResourceLocation.fromNamespaceAndPath(AdvancedPeripherals.MOD_ID, "ticket_controller"),  (level, ticketHelper) -> {
+    public static TicketController ticketController = new TicketController(ResourceLocation.fromNamespaceAndPath(AdvancedPeripherals.MOD_ID, "ticket_controller"), (level, ticketHelper) -> {
         ticketHelper.getEntityTickets().forEach(((uuid, chunk) -> {
             if (level.getEntity(uuid) == null)
                 ticketHelper.removeAllTickets(uuid);

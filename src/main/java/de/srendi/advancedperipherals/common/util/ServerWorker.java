@@ -3,7 +3,6 @@ package de.srendi.advancedperipherals.common.util;
 import de.srendi.advancedperipherals.AdvancedPeripherals;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 import java.util.Queue;

@@ -1,8 +1,8 @@
 package de.srendi.advancedperipherals.common.configuration;
 
 import net.minecraft.FieldsAreNonnullByDefault;
-import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.fml.config.ModConfig;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 @FieldsAreNonnullByDefault
 public class WorldConfig implements IAPConfig {

@@ -16,7 +16,6 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.fluids.FluidStack;
 
-
 import java.util.Map;
 
 public class FluidFilter {
@@ -115,7 +114,7 @@ public class FluidFilter {
         if (tag != null && !stack.getFluid().is(tag))
             return false;
         if (nbt != null && !stack.getOrDefault(APComponents.Tag, new CompoundTag()).equals(nbt) && (fluid == Fluids.EMPTY || stack.getFluid().isSame(fluid)))
-        // if (nbt != null && !stack.getOrCreateTag().equals(nbt) && (fluid == Fluids.EMPTY || stack.getFluid().isSame(fluid)))
+            // if (nbt != null && !stack.getOrCreateTag().equals(nbt) && (fluid == Fluids.EMPTY || stack.getFluid().isSame(fluid)))
             return false;
 
         return true;

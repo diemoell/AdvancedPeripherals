@@ -28,7 +28,7 @@ public abstract class PoweredPeripheralBlockEntity<T extends BasePeripheral<?>> 
     @Override
     public void saveAdditional(@NotNull CompoundTag compound, HolderLookup.@NotNull Provider registries) {
         super.saveAdditional(compound, registries);
-        if(energyStorage != null){
+        if (energyStorage != null) {
             compound.putInt("energy", this.energyStorage.getEnergyStored());
         }
     }
@@ -36,7 +36,7 @@ public abstract class PoweredPeripheralBlockEntity<T extends BasePeripheral<?>> 
     @Override
     public void loadAdditional(@NotNull CompoundTag compound, HolderLookup.@NotNull Provider registries) {
         super.loadAdditional(compound, registries);
-        if(energyStorage != null){
+        if (energyStorage != null) {
             energyStorage.receiveEnergy(compound.getInt("energy") - this.energyStorage.getEnergyStored(), false);
         }
     }

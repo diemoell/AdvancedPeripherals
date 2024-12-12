@@ -7,7 +7,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.NoteBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.common.NeoForge;
 import org.jetbrains.annotations.NotNull;
 
 public class NoteBlockIntegration extends BlockIntegrationPeripheral<NoteBlock> {
@@ -24,12 +23,14 @@ public class NoteBlockIntegration extends BlockIntegrationPeripheral<NoteBlock> 
 
     @LuaFunction(mainThread = true)
     public final int changeNote() {
-        BlockState state = world.getBlockState(pos);
+        // TODO:
+        /*BlockState state = world.getBlockState(pos);
         int newNote = net.neoforged.common.ForgeHooks.onNoteChange(world, pos, state, state.getValue(NoteBlock.NOTE), state.cycle(NoteBlock.NOTE).getValue(NoteBlock.NOTE));
         if (newNote == -1) return -1;
         state = state.setValue(NoteBlock.NOTE, newNote);
         world.setBlock(pos, state, 3);
-        return newNote;
+        return newNote;*/
+        return 0;
     }
 
     @LuaFunction(mainThread = true)

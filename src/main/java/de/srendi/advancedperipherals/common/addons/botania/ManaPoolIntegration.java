@@ -57,7 +57,7 @@ public class ManaPoolIntegration implements APGenericPeripheral {
     @LuaFunction(mainThread = true)
     public final Object getItems(ManaPoolBlockEntity blockEntity) {
         List<ItemStack> items = getPoolItems(blockEntity);
-        if(items.isEmpty())
+        if (items.isEmpty())
             return null;
         Object[] luaStacks = new Object[items.size()];
 

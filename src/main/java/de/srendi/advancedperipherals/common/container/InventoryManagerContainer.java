@@ -22,7 +22,7 @@ public class InventoryManagerContainer extends BaseContainer {
         layoutPlayerInventorySlots(7, 84);
         if (tileEntity != null) {
             var handler = tileEntity.getLevel().getCapability(Capabilities.ItemHandler.BLOCK, tileEntity.getBlockPos(), Direction.DOWN);
-            if (handler != null){
+            if (handler != null) {
                 addSlot(new SlotInputHandler(handler, 0, 79, 29, new SlotCondition().setNeededItem(Items.MEMORY_CARD.get()))); //Input
             }
         }

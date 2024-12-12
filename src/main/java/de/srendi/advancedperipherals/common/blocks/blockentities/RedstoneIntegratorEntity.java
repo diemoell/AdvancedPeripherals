@@ -59,7 +59,7 @@ public class RedstoneIntegratorEntity extends PeripheralBlockEntitys<RedstoneInt
      * See <a href="https://github.com/SirEndii/AdvancedPeripherals/issues/384">#384</a>
      *
      * @param direction Cardinal direction
-     * @param power The redstone power from 0 to 15
+     * @param power     The redstone power from 0 to 15
      */
     public void setOutput(Direction direction, int power) {
         ServerWorker.add(() -> setRedstoneOutput(direction, power));

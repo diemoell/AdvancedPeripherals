@@ -4,8 +4,8 @@ import de.srendi.advancedperipherals.common.addons.computercraft.operations.Simp
 import de.srendi.advancedperipherals.common.addons.computercraft.operations.SingleOperation;
 import de.srendi.advancedperipherals.common.addons.computercraft.operations.SphereOperation;
 import net.minecraft.FieldsAreNonnullByDefault;
-import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.fml.config.ModConfig;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 @FieldsAreNonnullByDefault
 public class PeripheralsConfig implements IAPConfig {

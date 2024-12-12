@@ -17,7 +17,9 @@
       "conditions": {
         "items": [
           {
-            "items": ["advancedperipherals:redstone_integrator"]
+            "items": [
+              "advancedperipherals:redstone_integrator"
+            ]
           }
         ]
       }
@@ -27,7 +29,9 @@
       "conditions": {
         "items": [
           {
-            "items": ["advancedperipherals:energy_detector"]
+            "items": [
+              "advancedperipherals:energy_detector"
+            ]
           }
         ]
       }
@@ -37,7 +41,9 @@
       "conditions": {
         "items": [
           {
-            "items": ["advancedperipherals:inventory_manager"]
+            "items": [
+              "advancedperipherals:inventory_manager"
+            ]
           }
         ]
       }

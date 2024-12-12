@@ -15,7 +15,6 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProc
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.server.ServerAboutToStartEvent;
-import net.neoforged.fml.common.Mod;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;

@@ -42,7 +42,7 @@ public class VillagerTrade implements VillagerTrades.ItemListing {
             if (itemStack != null)
                 return new MerchantOffer(new ItemCost(itemStack.getItem()), new ItemStack(Items.EMERALD, emeraldAmount), maxUses, xp, 1);
             if (item != null)
-                return new MerchantOffer(new ItemCost(new ItemStack(item, itemAmount).getItem()) , new ItemStack(Items.EMERALD, emeraldAmount), maxUses, xp, 1);
+                return new MerchantOffer(new ItemCost(new ItemStack(item, itemAmount).getItem()), new ItemStack(Items.EMERALD, emeraldAmount), maxUses, xp, 1);
 
         }
         if (type == Type.ITEM_FOR_EMERALD) {
@@ -116,10 +116,10 @@ public class VillagerTrade implements VillagerTrades.ItemListing {
          * This one is for normal villagers with any type of{@link ItemLike}.
          * {@link net.minecraft.world.item.Item} or {@link net.minecraft.world.level.block.Block} as example.
          *
-         * @param event this should be executed in an event - pass the villager trade event here
-         * @param itemLike the item for trade
-         * @param type the trade type
-         * @param emeraldAmount the emerald amount of the trade
+         * @param event           this should be executed in an event - pass the villager trade event here
+         * @param itemLike        the item for trade
+         * @param type            the trade type
+         * @param emeraldAmount   the emerald amount of the trade
          * @param professionLevel the profession level of the villager. 1 to 5
          * @return a builder instance
          */
@@ -131,10 +131,10 @@ public class VillagerTrade implements VillagerTrades.ItemListing {
          * Creates a new TradeBuilder instance. Can be used to create villager trades for normal villagers
          * This one is for normal villagers with item stacks
          *
-         * @param event this should be executed in an event - pass the villager trade event here
-         * @param itemStack the item for trade
-         * @param type the trade type
-         * @param emeraldAmount the emerald amount of the trade
+         * @param event           this should be executed in an event - pass the villager trade event here
+         * @param itemStack       the item for trade
+         * @param type            the trade type
+         * @param emeraldAmount   the emerald amount of the trade
          * @param professionLevel the profession level of the villager. 1 to 5
          * @return a builder instance
          */
@@ -147,10 +147,10 @@ public class VillagerTrade implements VillagerTrades.ItemListing {
          * This one is for wandering traders with any type of{@link ItemLike}.
          * {@link net.minecraft.world.item.Item} or {@link net.minecraft.world.level.block.Block} as example.
          *
-         * @param event this should be executed in an event - pass the villager trade event here
-         * @param itemLike the item for trade
-         * @param type the trade type
-         * @param emeraldAmount the emerald amount of the trade
+         * @param event           this should be executed in an event - pass the villager trade event here
+         * @param itemLike        the item for trade
+         * @param type            the trade type
+         * @param emeraldAmount   the emerald amount of the trade
          * @param professionLevel the profession level of the villager. 1 to 5
          * @return a builder instance
          */
@@ -162,10 +162,10 @@ public class VillagerTrade implements VillagerTrades.ItemListing {
          * Creates a new TradeBuilder instance. Can be used to create villager trades for wandering traders.
          * This one is for normal villagers with item stacks
          *
-         * @param event this should be executed in an event - pass the villager trade event here
-         * @param itemStack the item for trade
-         * @param type the trade type
-         * @param emeraldAmount the emerald amount of the trade
+         * @param event           this should be executed in an event - pass the villager trade event here
+         * @param itemStack       the item for trade
+         * @param type            the trade type
+         * @param emeraldAmount   the emerald amount of the trade
          * @param professionLevel the profession level of the villager. 1 to 5
          * @return a builder instance
          */
@@ -214,10 +214,10 @@ public class VillagerTrade implements VillagerTrades.ItemListing {
          */
         public void build() {
             VillagerTrade trade = new VillagerTrade(type, emeraldAmount, itemAmount, maxUses, xp, item, itemStack);
-            if(wandererEvent != null) {
-                if(professionLevel == 1)
+            if (wandererEvent != null) {
+                if (professionLevel == 1)
                     wandererEvent.getGenericTrades().add(trade);
-                if(professionLevel == 2)
+                if (professionLevel == 2)
                     wandererEvent.getRareTrades().add(trade);
                 return;
             }

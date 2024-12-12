@@ -6,7 +6,6 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import de.srendi.advancedperipherals.AdvancedPeripherals;
 import de.srendi.advancedperipherals.common.configuration.APConfig;
 import de.srendi.advancedperipherals.common.util.Pair;
-import de.srendi.advancedperipherals.network.APNetworking;
 import de.srendi.advancedperipherals.network.toclient.ToastToClientPacket;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.arguments.MessageArgument;
@@ -23,7 +22,6 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.CommandEvent;
 import net.neoforged.neoforge.event.ServerChatEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
-import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.handling.DirectionalPayloadHandler;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
@@ -180,6 +178,9 @@ public class Events {
         }
     }
 
-    public record ChatMessageObject(String username, String message, String uuid, boolean isHidden) {}
-    public record PlayerMessageObject(String eventName, String playerName, String fromDimension, String toDimension) {}
+    public record ChatMessageObject(String username, String message, String uuid, boolean isHidden) {
+    }
+
+    public record PlayerMessageObject(String eventName, String playerName, String fromDimension, String toDimension) {
+    }
 }

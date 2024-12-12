@@ -13,7 +13,7 @@ public class ToastUtil {
      * Displays a toast on a players screen.
      * This is a client side operation! Don't execute this on the server side
      *
-     * @param title the title of the toast
+     * @param title   the title of the toast
      * @param message the message of the toast
      */
     public static void displayToast(Component title, Component message) {

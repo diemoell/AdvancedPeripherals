@@ -17,7 +17,9 @@
       "conditions": {
         "items": [
           {
-            "items": ["advancedperipherals:geo_scanner"]
+            "items": [
+              "advancedperipherals:geo_scanner"
+            ]
           }
         ]
       }
@@ -27,7 +29,9 @@
       "conditions": {
         "items": [
           {
-            "items": ["advancedperipherals:environment_detector"]
+            "items": [
+              "advancedperipherals:environment_detector"
+            ]
           }
         ]
       }
