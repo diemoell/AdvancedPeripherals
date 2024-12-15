@@ -4,9 +4,10 @@ import de.srendi.advancedperipherals.AdvancedPeripherals;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.InterModEnqueueEvent;
 
-@EventBusSubscriber(modid = AdvancedPeripherals.MOD_ID)
+@Mod(value = AdvancedPeripherals.MOD_ID)
 public class APAddons {
 
     public static final String CURIOS_MODID = "curios";
@@ -21,7 +22,7 @@ public class APAddons {
     public static boolean aeAdditionsLoaded;
     public static boolean appMekLoaded;
 
-    private APAddons() {
+    public APAddons() {
     }
 
     public static void commonSetup() {
@@ -38,13 +39,4 @@ public class APAddons {
 
     }
 
-    @SubscribeEvent
-    public static void interModComms(InterModEnqueueEvent event) {
-        /*
-        if (!curiosLoaded) {
-        }
-
-        InterModComms.sendTo("curios", SlotTypeMessage.REGISTER_TYPE, () -> new SlotTypeMessage.Builder("glasses").size(1).build());
-        */
-    }
 }

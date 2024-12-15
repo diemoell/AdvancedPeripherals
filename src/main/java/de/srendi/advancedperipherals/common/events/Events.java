@@ -28,7 +28,7 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 import java.util.function.Consumer;
 
-@EventBusSubscriber(modid = AdvancedPeripherals.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber
 public class Events {
 
     private static final String PLAYED_BEFORE = "ap_played_before";
