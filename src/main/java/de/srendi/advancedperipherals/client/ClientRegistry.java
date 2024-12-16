@@ -6,6 +6,7 @@ import de.srendi.advancedperipherals.AdvancedPeripherals;
 import de.srendi.advancedperipherals.common.container.InventoryManagerScreen;
 import de.srendi.advancedperipherals.common.setup.CCRegistration;
 import de.srendi.advancedperipherals.common.setup.ContainerTypes;
+import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
@@ -23,7 +24,7 @@ public class ClientRegistry {
     @SubscribeEvent
     public static void registerModels(ModelEvent.RegisterAdditional event) {
         for (String model : TURTLE_MODELS) {
-            event.register(new ModelResourceLocation(ResourceLocation.fromNamespaceAndPath(AdvancedPeripherals.MOD_ID, model), "inventory"));
+            event.register(new ModelResourceLocation(ResourceLocation.fromNamespaceAndPath(AdvancedPeripherals.MOD_ID, model), "standalone"));
         }
     }
 

@@ -1,6 +1,7 @@
 package de.srendi.advancedperipherals.common.events;
 
 import com.google.common.collect.EvictingQueue;
+import com.ldtteam.structurize.event.EventSubscriber;
 import com.mojang.brigadier.context.CommandContextBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import de.srendi.advancedperipherals.AdvancedPeripherals;
@@ -28,7 +29,7 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 import java.util.function.Consumer;
 
-@EventBusSubscriber
+@EventBusSubscriber(modid = AdvancedPeripherals.MOD_ID)
 public class Events {
 
     private static final String PLAYED_BEFORE = "ap_played_before";
@@ -114,19 +115,6 @@ public class Events {
             }
             putChatMessage(Pair.of(getLastChatMessageID(), new ChatMessageObject(event.getUsername(), message, event.getPlayer().getUUID().toString(), isHidden)));
         }
-    }
-
-    @SubscribeEvent
-    public static void registerServerToClient(final RegisterPayloadHandlersEvent event) {
-        final PayloadRegistrar registrar = event.registrar("1");
-        registrar.playBidirectional(
-                ToastToClientPacket.ID,
-                ToastToClientPacket.CODEC,
-                new DirectionalPayloadHandler<>(
-                        ToastToClientPacket::handle,
-                        ToastToClientPacket::handle
-                )
-        );
     }
 
     public static synchronized void putChatMessage(Pair<Long, ChatMessageObject> message) {

@@ -15,7 +15,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 
 import java.util.function.Supplier;
 
-@EventBusSubscriber(modid = AdvancedPeripherals.MOD_ID)
+// @EventBusSubscriber(modid = AdvancedPeripherals.MOD_ID)
 public class CCRegistration {
     static final RegistrationHelper<UpgradeType<? extends ITurtleUpgrade>> TURTLE_REGISTRY = PlatformHelper.get().createRegistrationHelper(ITurtleUpgrade.typeRegistry());
 
