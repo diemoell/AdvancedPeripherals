@@ -1,7 +1,6 @@
 package de.srendi.advancedperipherals.common.addons.computercraft.operations;
 
 import de.srendi.advancedperipherals.lib.metaphysics.IAutomataCoreTier;
-import net.neoforged.common.ForgeConfigSpec;
 
 public enum AutomataCoreTier implements IAutomataCoreTier {
     TIER1(2, 2),

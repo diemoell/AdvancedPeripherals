@@ -5,6 +5,8 @@ import de.srendi.advancedperipherals.AdvancedPeripherals;
 import de.srendi.advancedperipherals.common.util.StringUtil;
 import net.minecraft.ResourceLocationException;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -30,7 +32,7 @@ public class ItemUtil {
     private ItemUtil() {
     }
 
-    public static <T> T getRegistryEntry(String name, IForgeRegistry<T> forgeRegistry) {
+    public static <T> T getRegistryEntry(String name, Registry<T> forgeRegistry) {
         ResourceLocation location;
         try {
             location = new ResourceLocation(name);
@@ -39,7 +41,7 @@ public class ItemUtil {
         }
 
         T value;
-        if (location != null && forgeRegistry.containsKey(location) && (value = forgeRegistry.getValue(location)) != null) {
+        if (location != null && forgeRegistry.containsKey(location) && (value = forgeRegistry.get(location)) != null) {
             return value;
         } else {
             return null;

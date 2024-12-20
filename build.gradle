@@ -156,7 +156,6 @@ repositories {
         url = "https://maven.tterrag.com/"
         content {
             includeGroup("com.simibubi.create")
-            includeGroup("com.jozufozu.flywheel")
             includeGroup("com.tterrag.registrate")
         }
     }
@@ -214,11 +213,7 @@ dependencies {
     compileOnly "org.jetbrains:annotations:${jb_annotations}"
     implementation "net.neoforged:neoforge:${neo_version}"
     implementation "cc.tweaked:cc-tweaked-${minecraft_version}-forge:${cc_version}"
-    // Compile-time API required
-    // Ae2
-    compileOnly "appeng:appliedenergistics2-forge:${appliedenergistics_version}"
-    // Curios
-    compileOnly "top.theillusivec4.curios:curios-forge:${curios_version}:api"
+
     // Minimal requirements end
 
     // Extended requirements
@@ -226,52 +221,52 @@ dependencies {
     compileOnly "mekanism:Mekanism:${mekanism_version}"
     runtimeOnly "mekanism:Mekanism:${mekanism_version}"
 
-    // runtimeOnly "mekanism:Mekanism:${mekanism_version}"// core
-
     // Applied Energistics 2
-    runtimeOnly "appeng:appliedenergistics2-forge:${appliedenergistics_version}"
+    runtimeOnly "appeng:appliedenergistics2-neoforge:${appliedenergistics_version}"
+    compileOnly "appeng:appliedenergistics2-neoforge:${appliedenergistics_version}"
 
     // Applied Mekanistics
     implementation "curse.maven:applied-mekanistics-574300:${appliedmekanistics_version}"
 
     // Curios
     runtimeOnly "top.theillusivec4.curios:curios-forge:${curios_version}"
+    compileOnly "top.theillusivec4.curios:curios-forge:${curios_version}:api"
 
     // Refined Storage
-    //implementation "com.refinedmods:refinedstorage:${refinedstorage_version}"
+    implementation "curse.maven:refined-storage-243076:${refinedstorage_version}"
 
     // AE2 Things
-    compileOnly "curse.maven:ae2things-609977:${ae2things_version}-sources"
-    runtimeOnly "curse.maven:ae2things-609977:${ae2things_version}-sources"
+    //compileOnly "curse.maven:ae2things-609977:${ae2things_version}-sources"
+    //runtimeOnly "curse.maven:ae2things-609977:${ae2things_version}-sources"
 
     // AE2 Additions
-    compileOnly "curse.maven:ae-additions-493962:${ae2additions_version}"
-    runtimeOnly "curse.maven:ae-additions-493962:${ae2additions_version}"
+    //compileOnly "curse.maven:ae-additions-493962:${ae2additions_version}"
+    //runtimeOnly "curse.maven:ae-additions-493962:${ae2additions_version}"
 
     //implementation "thedarkcolour:kotlinforforge:${kotlinforforge_version}"
 
     // Botania
-    compileOnly "vazkii.botania:Botania:${botania_version}"
-    runtimeOnly "vazkii.botania:Botania:${botania_version}"
+    //compileOnly "vazkii.botania:Botania:${botania_version}"
+    //runtimeOnly "vazkii.botania:Botania:${botania_version}"
 
     // Minecolonies
     // Remove/Comment this section if you want to use runData.
-    runtimeOnly "com.ldtteam:minecolonies:${minecolonies_version}"
-    runtimeOnly "com.ldtteam:structurize:${structurize_version}"
-    runtimeOnly "com.ldtteam:domum_ornamentum:${domumornamentum_version}:universal"
-    runtimeOnly "com.ldtteam:blockui:${blockui_version}"
+    //runtimeOnly "com.ldtteam:minecolonies:${minecolonies_version}"
+    //runtimeOnly "com.ldtteam:structurize:${structurize_version}"
+    //runtimeOnly "com.ldtteam:domum_ornamentum:${domumornamentum_version}:universal"
+    //runtimeOnly "com.ldtteam:blockui:${blockui_version}"
 
-    compileOnly "com.ldtteam:minecolonies:${minecolonies_version}"
-    compileOnly "com.ldtteam:structurize:${structurize_version}"
-    compileOnly "com.ldtteam:domum_ornamentum:${domumornamentum_version}:universal"
-    compileOnly "com.ldtteam:blockui:${blockui_version}"
+    //compileOnly "com.ldtteam:minecolonies:${minecolonies_version}"
+    //compileOnly "com.ldtteam:structurize:${structurize_version}"
+    //compileOnly "com.ldtteam:domum_ornamentum:${domumornamentum_version}:universal"
+    //compileOnly "com.ldtteam:blockui:${blockui_version}"
 
     //Patchouli
-    runtimeOnly "vazkii.patchouli:Patchouli:${patchouli_version}-FORGE"
+    //runtimeOnly "vazkii.patchouli:Patchouli:${patchouli_version}-FORGE"
 
     // Create
-    compileOnly "com.simibubi.create:create-1.20.1:${create_version}:all"
-    runtimeOnly "com.simibubi.create:create-1.20.1:${create_version}:all"
+    //compileOnly "com.simibubi.create:create-1.20.1:${create_version}:all"
+    //runtimeOnly "com.simibubi.create:create-1.20.1:${create_version}:all"
 
     //Powah
     implementation "curse.maven:powah-633483:${powah_version}"
@@ -291,11 +286,11 @@ dependencies {
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junit_version}"
     // Testing stuff
     // JEI
-    //implementation "mezz.jei:jei-${jei_version}"
+    implementation "mezz.jei:jei-${jei_version}"
 
     // Create Crafts & Additions
-    compileOnly "curse.maven:createaddition-439890:${createadditions_version}"
-    runtimeOnly "curse.maven:createaddition-439890:${createadditions_version}"
+    //compileOnly "curse.maven:createaddition-439890:${createadditions_version}"
+    //runtimeOnly "curse.maven:createaddition-439890:${createadditions_version}"
 }
 
 

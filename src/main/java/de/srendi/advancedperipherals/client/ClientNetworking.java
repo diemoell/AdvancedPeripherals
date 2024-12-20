@@ -1,7 +1,5 @@
 package de.srendi.advancedperipherals.client;
 
-import dan200.computercraft.shared.network.NetworkMessage;
-import dan200.computercraft.shared.network.server.ServerNetworkContext;
 import de.srendi.advancedperipherals.network.base.IPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
