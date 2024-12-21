@@ -3,7 +3,7 @@ name: Build and Test
 on:
   workflow_dispatch:
   push:
-  pull_request_target:
+  pull_request:
     types:
       - opened
       - synchronize
@@ -11,5 +11,3 @@ on:
 jobs:
   build-and-test:
     uses: IntelligenceModding/actions/.github/workflows/build-and-test.yaml@master
-    with:
-      ref: ${{ github.event.pull_request.head.sha || github.sha }}
