@@ -19,7 +19,7 @@ build
 
 # other
 eclipse
-runs
+runs/
 server
 
 # Files from Forge MDK

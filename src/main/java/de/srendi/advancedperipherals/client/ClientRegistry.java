@@ -1,6 +1,5 @@
 package de.srendi.advancedperipherals.client;
 
-import dan200.computercraft.api.ComputerCraftAPI;
 import dan200.computercraft.api.client.turtle.RegisterTurtleModellersEvent;
 import dan200.computercraft.api.client.turtle.TurtleUpgradeModeller;
 import de.srendi.advancedperipherals.AdvancedPeripherals;
@@ -33,7 +32,7 @@ public class ClientRegistry {
     public static void onClientSetup(FMLClientSetupEvent event) {
         MenuScreens.register(ContainerTypes.INVENTORY_MANAGER_CONTAINER.get(), InventoryManagerScreen::new);
     }
-    
+
     @SubscribeEvent
     public static void onUpgradeModeller(RegisterTurtleModellersEvent event) {
         event.register(CCRegistration.CHUNKY_TURTLE.get(), TurtleUpgradeModeller.flatItem());
@@ -47,17 +46,11 @@ public class ClientRegistry {
         event.register(CCRegistration.OP_WEAK_TURTLE.get(), new MetaTurtleUpgradeModeller<>());
         event.register(CCRegistration.HUSBANDRY_TURTLE.get(), new MetaTurtleUpgradeModeller<>());
         event.register(CCRegistration.END_TURTLE.get(), new MetaTurtleUpgradeModeller<>());
-        event.register(CCRegistration.WEAK_TURTLE.get(), new MetaTurtleUpgradeModeller<>());    
+        event.register(CCRegistration.WEAK_TURTLE.get(), new MetaTurtleUpgradeModeller<>());
     }
 
     @SubscribeEvent
     public static void onClientSetup(RegisterKeyMappingsEvent event) {
         KeyBindings.register(event);
     }
-
-    //TODO change the icon of the curio icon
-    /*@SubscribeEvent
-    public static void onTextureStitching(TextureStitchEvent.Pre event) {
-        event.addSprite(new ResourceLocation(AdvancedPeripherals.MOD_ID, "item/empty_glasses_slot"));
-    }*/
 }

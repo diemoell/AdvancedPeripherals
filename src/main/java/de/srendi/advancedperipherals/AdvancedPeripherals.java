@@ -3,7 +3,9 @@ package de.srendi.advancedperipherals;
 import dan200.computercraft.api.peripheral.PeripheralCapability;
 import de.srendi.advancedperipherals.common.addons.APAddons;
 import de.srendi.advancedperipherals.common.blocks.base.PeripheralBlockEntity;
+import de.srendi.advancedperipherals.common.blocks.blockentities.EnergyDetectorEntity;
 import de.srendi.advancedperipherals.common.configuration.APConfig;
+import de.srendi.advancedperipherals.common.setup.BlockEntityTypes;
 import de.srendi.advancedperipherals.common.setup.Registration;
 import de.srendi.advancedperipherals.network.APNetworking;
 import net.minecraft.resources.ResourceLocation;
@@ -72,6 +74,10 @@ public class AdvancedPeripherals {
                     entry.get(),
                     (blockEntity, side) -> ((PeripheralBlockEntity<?>) blockEntity).createFluidHandler());
         });
+        event.registerBlockEntity(
+                Capabilities.EnergyStorage.BLOCK,
+                BlockEntityTypes.ENERGY_DETECTOR.get(),
+                EnergyDetectorEntity::getEnergyStorage);
     }
 
 }

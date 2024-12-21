@@ -1,27 +1,8 @@
 package de.srendi.advancedperipherals.network;
 
-import de.srendi.advancedperipherals.AdvancedPeripherals;
-import de.srendi.advancedperipherals.network.base.IPacket;
-import de.srendi.advancedperipherals.network.toclient.ToastToClientPacket;
-import net.minecraft.client.gui.components.toasts.Toast;
-import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModLoadingContext;
-import net.neoforged.neoforge.network.connection.ConnectionUtils;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlerEvent;
-import net.neoforged.neoforge.network.registration.IPayloadRegistrar;
-
-
-import java.util.Optional;
-import java.util.function.Function;
 
 public class APNetworking {
     private static final String PROTOCOL_VERSION = ModLoadingContext.get().getActiveContainer().getModInfo().getVersion().toString();
@@ -41,10 +22,6 @@ public class APNetworking {
 
     }
 
-    /**
-     * Send a packet to a specific player.<p>
-     * Must be called Server side.
-     */
     /*public static void sendTo(Object msg, ServerPlayer player) {
         if (!(player instanceof FakePlayer)) {
             NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), msg);

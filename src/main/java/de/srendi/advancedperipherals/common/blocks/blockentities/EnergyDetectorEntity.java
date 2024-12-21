@@ -13,12 +13,11 @@ import net.minecraft.world.level.block.JigsawBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.EnergyStorage;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Optional;
 
 public class EnergyDetectorEntity extends PeripheralBlockEntity<EnergyDetectorPeripheral> {
 
@@ -31,8 +30,7 @@ public class EnergyDetectorEntity extends PeripheralBlockEntity<EnergyDetectorPe
     Direction energyInDirection = Direction.NORTH;
     Direction energyOutDirection = Direction.SOUTH;
     IEnergyStorage zeroStorageCap = zeroStorage;
-    @NotNull
-    private Optional<IEnergyStorage> outReceivingStorage = Optional.empty();
+    private IEnergyStorage outReceivingStorage = null;
 
     public EnergyDetectorEntity(BlockPos pos, BlockState state) {
         super(BlockEntityTypes.ENERGY_DETECTOR.get(), pos, state);
@@ -44,20 +42,17 @@ public class EnergyDetectorEntity extends PeripheralBlockEntity<EnergyDetectorPe
         return new EnergyDetectorPeripheral(this);
     }
 
-    /*@NotNull
-    @Override
-    public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction direction) {
+    public IEnergyStorage getEnergyStorage(@Nullable Direction direction) {
         energyInDirection = getBlockState().getValue(JigsawBlock.ORIENTATION).front();
         energyOutDirection = getBlockState().getValue(JigsawBlock.ORIENTATION).front().getOpposite();
-        if (cap == ForgeCapabilities.ENERGY) {
-            if (direction == energyInDirection) {
-                return energyStorageCap.cast();
-            } else if (direction == energyOutDirection) {
-                return zeroStorageCap.cast();
-            }
+
+        if (direction == energyInDirection) {
+            return energyStorageCap;
+        } else if (direction == energyOutDirection) {
+            return zeroStorageCap;
         }
-        return super.getCapability(cap, direction);
-    }*/
+        return null;
+    }
 
     @Override
     public void saveAdditional(@NotNull CompoundTag compound) {
@@ -69,7 +64,7 @@ public class EnergyDetectorEntity extends PeripheralBlockEntity<EnergyDetectorPe
     public <T extends BlockEntity> void handleTick(Level level, BlockState state, BlockEntityType<T> type) {
         if (!level.isClientSide) {
             // this handles the rare edge case that receiveEnergy is called multiple times in one tick
-            transferRate = storageProxy.getTransferedInThisTick();
+            transferRate = storageProxy.getTransferredInThisTick();
             storageProxy.resetTransferedInThisTick();
         }
     }
@@ -81,23 +76,18 @@ public class EnergyDetectorEntity extends PeripheralBlockEntity<EnergyDetectorPe
     }
 
     public void invalidateStorages() {
-        outReceivingStorage = Optional.empty();
+        outReceivingStorage = null;
     }
 
     // returns the cached output storage of the receiving block or refetches it if it has been invalidated
-    @NotNull
-    public Optional<IEnergyStorage> getOutputStorage() {
+    public IEnergyStorage getOutputStorage() {
         // the documentation says that the value of the LazyOptional should be cached locally and invallidated using addListener
-        if (outReceivingStorage.isEmpty()) {
+        if (outReceivingStorage == null) {
             BlockEntity teOut = level.getBlockEntity(worldPosition.relative(energyOutDirection));
             if (teOut == null) {
-                return Optional.empty();
+                return null;
             }
-            /*IEnergyStorage lazyOptionalOutStorage = teOut.getCapability(ForgeCapabilities.ENERGY, energyOutDirection.getOpposite());
-            outReceivingStorage = lazyOptionalOutStorage.resolve();
-            lazyOptionalOutStorage.addListener(l -> {
-                outReceivingStorage = Optional.empty();
-            });*/
+            outReceivingStorage = level.getCapability(Capabilities.EnergyStorage.BLOCK, worldPosition.relative(energyOutDirection), energyOutDirection.getOpposite());
         }
         return outReceivingStorage;
     }

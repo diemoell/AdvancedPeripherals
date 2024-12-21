@@ -1,7 +1,17 @@
 package de.srendi.advancedperipherals.common.setup;
 
 import com.google.common.collect.Sets;
-import de.srendi.advancedperipherals.common.blocks.blockentities.*;
+import de.srendi.advancedperipherals.common.blocks.blockentities.BlockReaderEntity;
+import de.srendi.advancedperipherals.common.blocks.blockentities.ChatBoxEntity;
+import de.srendi.advancedperipherals.common.blocks.blockentities.EnergyDetectorEntity;
+import de.srendi.advancedperipherals.common.blocks.blockentities.EnvironmentDetectorEntity;
+import de.srendi.advancedperipherals.common.blocks.blockentities.GeoScannerEntity;
+import de.srendi.advancedperipherals.common.blocks.blockentities.InventoryManagerEntity;
+import de.srendi.advancedperipherals.common.blocks.blockentities.MeBridgeEntity;
+import de.srendi.advancedperipherals.common.blocks.blockentities.NBTStorageEntity;
+import de.srendi.advancedperipherals.common.blocks.blockentities.PlayerDetectorEntity;
+import de.srendi.advancedperipherals.common.blocks.blockentities.RedstoneIntegratorEntity;
+import de.srendi.advancedperipherals.common.blocks.blockentities.RsBridgeEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.registries.DeferredHolder;

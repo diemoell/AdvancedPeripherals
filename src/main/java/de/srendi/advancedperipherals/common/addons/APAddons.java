@@ -18,7 +18,7 @@ public class APAddons {
     public static boolean curiosLoaded;
     public static boolean refinedStorageLoaded;
     public static boolean appMekLoaded;
-    public static boolean patchouliLoaded  ;
+    public static boolean patchouliLoaded;
 
     private APAddons() {
     }

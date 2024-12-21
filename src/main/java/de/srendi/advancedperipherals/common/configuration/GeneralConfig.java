@@ -4,8 +4,6 @@ import de.srendi.advancedperipherals.lib.LibConfig;
 import net.minecraft.FieldsAreNonnullByDefault;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.common.ModConfigSpec;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.common.NeoForgeConfig;
 
 @FieldsAreNonnullByDefault
 public class GeneralConfig implements IAPConfig {
