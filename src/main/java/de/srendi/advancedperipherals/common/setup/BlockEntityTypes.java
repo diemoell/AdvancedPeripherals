@@ -5,7 +5,6 @@ import de.srendi.advancedperipherals.common.blocks.blockentities.*;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.registries.RegistryObject;
 
 public class BlockEntityTypes {
 
@@ -19,8 +18,6 @@ public class BlockEntityTypes {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<RedstoneIntegratorEntity>> REDSTONE_INTEGRATOR = Registration.BLOCK_ENTITIES.register("redstone_integrator", () -> new BlockEntityType<>(RedstoneIntegratorEntity::new, Sets.newHashSet(Blocks.REDSTONE_INTEGRATOR.get()), null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BlockReaderEntity>> BLOCK_READER = Registration.BLOCK_ENTITIES.register("block_reader", () -> new BlockEntityType<>(BlockReaderEntity::new, Sets.newHashSet(Blocks.BLOCK_READER.get()), null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GeoScannerEntity>> GEO_SCANNER = Registration.BLOCK_ENTITIES.register("geo_scanner", () -> new BlockEntityType<>(GeoScannerEntity::new, Sets.newHashSet(Blocks.GEO_SCANNER.get()), null));
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ColonyIntegratorEntity>> COLONY_INTEGRATOR = Registration.BLOCK_ENTITIES.register("colony_integrator", () -> new BlockEntityType<>(ColonyIntegratorEntity::new, Sets.newHashSet(Blocks.COLONY_INTEGRATOR.get()), null));
-
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<NBTStorageEntity>> NBT_STORAGE = Registration.BLOCK_ENTITIES.register("nbt_storage", () -> new BlockEntityType<>(NBTStorageEntity::new, Sets.newHashSet(Blocks.NBT_STORAGE.get()), null));
 
     public static void register() {

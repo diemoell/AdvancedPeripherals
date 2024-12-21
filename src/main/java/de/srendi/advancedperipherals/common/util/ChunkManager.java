@@ -2,22 +2,21 @@ package de.srendi.advancedperipherals.common.util;
 
 import de.srendi.advancedperipherals.AdvancedPeripherals;
 import de.srendi.advancedperipherals.common.configuration.APConfig;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.saveddata.SavedData;
-import net.neoforged.common.world.ForgeChunkManager;
-import net.neoforged.event.TickEvent;
-import net.neoforged.event.server.ServerStartedEvent;
-import net.neoforged.event.server.ServerStoppingEvent;
-import net.neoforged.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.server.ServerLifecycleHooks;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.server.ServerStartedEvent;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.apache.logging.log4j.Level;
 import org.jetbrains.annotations.NotNull;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.*;
 
 @Mod.EventBusSubscriber(modid = AdvancedPeripherals.MOD_ID)
@@ -34,7 +33,7 @@ public class ChunkManager extends SavedData {
     }
 
     public static @NotNull ChunkManager get(@NotNull ServerLevel level) {
-        return level.getDataStorage().computeIfAbsent(ChunkManager::load, ChunkManager::new, DATA_NAME);
+        return level.getDataStorage().computeIfAbsent(new SavedData.Factory<>(ChunkManager::new, ChunkManager::load, null), DATA_NAME);
     }
 
     public static ChunkManager load(@NotNull CompoundTag data) {
@@ -66,12 +65,14 @@ public class ChunkManager extends SavedData {
 
     private static boolean forceChunk(UUID owner, ServerLevel level, ChunkPos pos) {
         AdvancedPeripherals.debug("Forcing chunk " + pos, Level.WARN);
-        return ForgeChunkManager.forceChunk(level, AdvancedPeripherals.MOD_ID, owner, pos.x, pos.z, true, true);
+        //return ChunkTicketManager.forceChunk(level, AdvancedPeripherals.MOD_ID, owner, pos.x, pos.z, true, true);#
+        return false;
     }
 
     private static boolean unforceChunk(UUID owner, ServerLevel level, ChunkPos pos) {
         AdvancedPeripherals.debug("Unforcing chunk " + pos, Level.WARN);
-        return ForgeChunkManager.forceChunk(level, AdvancedPeripherals.MOD_ID, owner, pos.x, pos.z, false, true);
+        //return ForgeChunkManager.forceChunk(level, AdvancedPeripherals.MOD_ID, owner, pos.x, pos.z, false, true);
+        return false;
     }
 
     public synchronized boolean addForceChunk(ServerLevel level, UUID owner, ChunkPos pos) {

@@ -33,12 +33,14 @@ public class AdvancedPeripherals {
         APConfig.register(ModLoadingContext.get());
 
         modBus.addListener(this::commonSetup);
+        modBus.addListener(this::registerCapabilities);
+
         Registration.register(modBus);
     }
 
     public static void debug(String message) {
         if (APConfig.GENERAL_CONFIG.enableDebugMode.get())
-            LOGGER.debug("[DEBUG] {}", message);
+            LOGGER.info("[DEBUG] {}", message);
     }
 
     public static void debug(String message, Level level) {

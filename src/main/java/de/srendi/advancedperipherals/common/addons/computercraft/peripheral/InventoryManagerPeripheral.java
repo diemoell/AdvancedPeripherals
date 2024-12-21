@@ -18,11 +18,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.common.capabilities.ForgeCapabilities;
-import net.neoforged.items.IItemHandler;
-import net.neoforged.items.wrapper.PlayerArmorInvWrapper;
-import net.neoforged.items.wrapper.PlayerInvWrapper;
-import net.neoforged.items.wrapper.PlayerOffhandInvWrapper;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.wrapper.PlayerArmorInvWrapper;
+import net.neoforged.neoforge.items.wrapper.PlayerInvWrapper;
+import net.neoforged.neoforge.items.wrapper.PlayerOffhandInvWrapper;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -65,7 +64,7 @@ public class InventoryManagerPeripheral extends BasePeripheral<BlockEntityPeriph
         Direction direction = validateSide(invDirection);
 
         BlockEntity targetEntity = owner.getLevel().getBlockEntity(owner.getPos().relative(direction));
-        IItemHandler inventoryFrom = targetEntity != null ? targetEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, direction).resolve().orElse(null) : null;
+        IItemHandler inventoryFrom = null; // targetEntity != null ? targetEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, direction).resolve().orElse(null) : null;
         Pair<IItemHandler, Integer> inventoryTo = getHandlerFromSlot(filter.getToSlot());
 
         inventoryTo.ifRightPresent(slot -> filter.toSlot = slot);
@@ -90,7 +89,7 @@ public class InventoryManagerPeripheral extends BasePeripheral<BlockEntityPeriph
 
         BlockEntity targetEntity = owner.getLevel().getBlockEntity(owner.getPos().relative(direction));
         Pair<IItemHandler, Integer> inventoryFrom = getHandlerFromSlot(filter.getFromSlot());
-        IItemHandler inventoryTo = targetEntity != null ? targetEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, direction).resolve().orElse(null) : null;
+        IItemHandler inventoryTo = null; //targetEntity != null ? targetEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, direction).resolve().orElse(null) : null;
 
         if (inventoryTo == null)
             return MethodResult.of(0, "INVENTORY_TO_INVALID");
@@ -119,7 +118,7 @@ public class InventoryManagerPeripheral extends BasePeripheral<BlockEntityPeriph
         Direction direction = validateSide(target);
 
         BlockEntity targetEntity = owner.getLevel().getBlockEntity(owner.getPos().relative(direction));
-        IItemHandler inventoryTo = targetEntity != null ? targetEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, direction).resolve().orElse(null) : null;
+        IItemHandler inventoryTo = null; //targetEntity != null ? targetEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, direction).resolve().orElse(null) : null;
 
         if (inventoryTo == null)
             return MethodResult.of(null, "INVENTORY_TO_INVALID");

@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "[${loader_version},)"
+loaderVersion = "[2,)"
 license = "All rights reserved"
 issueTrackerURL = "https://github.com/Seniorendi/AdvancedPeripherals/issues"
 logoFile = "pack.png"
@@ -13,69 +13,73 @@ description = '''
 Advanced Peripherals provides multiple extensions for ComputerCraft in form of Peripherals, Pocket Upgrades, Turtles or new gear.
 It also integrates with multiple third party mods.
 '''
+
+[[accessTransformers]]
+file="META-INF/accesstransformer.cfg"
+
 [[dependencies.${mod_id}]]
-modId = "forge"
-mandatory = true
+modId = "neoforge"
+type = "required"
 versionRange = "[${neo_version},)"
 ordering = "NONE"
 side = "BOTH"
 [[dependencies.${mod_id}]]
 modId = "minecraft"
-mandatory = true
+type = "required"
 versionRange = "[${minecraft_version},)"
 ordering = "NONE"
 side = "BOTH"
 [[dependencies.${mod_id}]]
 modId = "computercraft"
-mandatory = true
+type = "required"
 versionRange = "[${cc_version},)"
 ordering = "NONE"
 side = "BOTH"
 [[dependencies.${mod_id}]]
 modId = "curios"
-mandatory = false
+type = "optional"
 versionRange = "[${curios_version},)"
 ordering = "NONE"
 side = "BOTH"
 [[dependencies.${mod_id}]]
 modId = "ae2"
-mandatory = false
+type = "optional"
 versionRange = "[${appliedenergistics_version},)"
 ordering = "NONE"
 side = "BOTH"
 [[dependencies.${mod_id}]]
 modId = "refinedstorage"
-mandatory = false
-versionRange = "[${refinedstorage_version},)"
+type = "optional"
+versionRange = "[1.13.0-beta4,)"
 ordnering = "NONE"
 side = "BOTH"
 [[dependencies.${mod_id}]]
 modId = "minecolonies"
-mandatory = false
+type = "optional"
 versionRange = "[${minecolonies_version},)"
 ordering = "NONE"
 side = "BOTH"
 [[dependencies.${mod_id}]]
 modId = "patchouli"
-mandatory = false
+type = "optional"
 versionRange = "[${patchouli_version},)"
 ordering = "NONE"
 side = "BOTH"
 [[dependencies.${mod_id}]]
 modId = "create"
-mandatory = false
+type = "optional"
 versionRange = "[0.5.1,)"
 ordering = "NONE"
 side = "BOTH"
 [[dependencies.${mod_id}]]
 modId = "botania"
-mandatory = false
+type = "optional"
 versionRange = "[${botania_version},)"
 ordering = "NONE"
 side = "BOTH"
 [[dependencies.${mod_id}]]
 modId = "mekanism"
-mandatory = false
+type = "optional"
 versionRange = "[${mekanism_version},)"
 ordering = "NONE"
 side = "BOTH"

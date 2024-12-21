@@ -19,7 +19,7 @@ import java.util.PriorityQueue;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-public class IntegrationPeripheralProvider implements IPeripheralProvider {
+public class IntegrationPeripheralProvider {
 
     private static final String[] SUPPORTED_MODS = new String[]{"powah", "create", "mekanism", "botania"};
 
@@ -89,7 +89,7 @@ public class IntegrationPeripheralProvider implements IPeripheralProvider {
         }
     }
 
-    @NotNull
+    /*@NotNull
     @Override
     public LazyOptional<IPeripheral> getPeripheral(@NotNull Level level, @NotNull BlockPos blockPos, @NotNull Direction direction) {
         for (IPeripheralIntegration integration : integrations) {
@@ -97,5 +97,5 @@ public class IntegrationPeripheralProvider implements IPeripheralProvider {
                 return LazyOptional.of(() -> integration.buildPeripheral(level, blockPos, direction));
         }
         return LazyOptional.empty();
-    }
+    }*/
 }

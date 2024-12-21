@@ -15,12 +15,10 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.common.capabilities.Capability;
-import net.neoforged.common.util.LazyOptional;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import static dan200.computercraft.shared.Capabilities.CAPABILITY_PERIPHERAL;
 
 public class RsBridgeEntity extends NetworkNodeBlockEntity<RefinedStorageNode> implements INetworkNodeProxy<RefinedStorageNode>, IRedstoneConfigurable, IPeripheralTileEntity {
 
@@ -29,14 +27,14 @@ public class RsBridgeEntity extends NetworkNodeBlockEntity<RefinedStorageNode> i
     private static final BlockEntitySynchronizationSpec SPEC = BlockEntitySynchronizationSpec.builder().build();
     protected CompoundTag peripheralSettings;
     protected RsBridgePeripheral peripheral = new RsBridgePeripheral(this);
-    private LazyOptional<IPeripheral> peripheralCap;
+    private IPeripheral peripheralCap;
 
     public RsBridgeEntity(BlockPos pos, BlockState state) {
-        super(BlockEntityTypes.RS_BRIDGE.get(), pos, state, SPEC);
+        super(BlockEntityTypes.RS_BRIDGE.get(), pos, state, SPEC, null);
         peripheralSettings = new CompoundTag();
     }
 
-    @NotNull
+    /*@NotNull
     public <T1> LazyOptional<T1> getCapability(@NotNull Capability<T1> cap, @Nullable Direction direction) {
         if (cap == CAPABILITY_PERIPHERAL) {
             if (peripheral.isEnabled()) {
@@ -49,7 +47,7 @@ public class RsBridgeEntity extends NetworkNodeBlockEntity<RefinedStorageNode> i
             }
         }
         return super.getCapability(cap, direction);
-    }
+    }*/
 
     public RefinedStorageNode createNode(Level level, BlockPos blockPos) {
         return new RefinedStorageNode(level, blockPos);

@@ -1,6 +1,7 @@
 package de.srendi.advancedperipherals.common.addons.computercraft.operations;
 
 import de.srendi.advancedperipherals.lib.metaphysics.IAutomataCoreTier;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public enum AutomataCoreTier implements IAutomataCoreTier {
     TIER1(2, 2),
@@ -10,8 +11,8 @@ public enum AutomataCoreTier implements IAutomataCoreTier {
 
     private final int defaultInteractionRadius;
     private final int defaultMaxFuelConsumptionRate;
-    private ForgeConfigSpec.IntValue interactionRadius;
-    private ForgeConfigSpec.IntValue maxFuelConsumptionRate;
+    private ModConfigSpec.IntValue interactionRadius;
+    private ModConfigSpec.IntValue maxFuelConsumptionRate;
 
     AutomataCoreTier(int defaultInteractionRadius, int defaultMaxFuelConsumptionRate) {
         this.defaultInteractionRadius = defaultInteractionRadius;
@@ -31,7 +32,7 @@ public enum AutomataCoreTier implements IAutomataCoreTier {
     }
 
     @Override
-    public void addToConfig(ForgeConfigSpec.Builder builder) {
+    public void addToConfig(ModConfigSpec.Builder builder) {
         interactionRadius = builder.defineInRange(settingsName() + "InteractionRadius", defaultInteractionRadius, 1, 64);
         maxFuelConsumptionRate = builder.defineInRange(settingsName() + "MaxFuelConsumptionRate", defaultMaxFuelConsumptionRate, 1, 32);
     }

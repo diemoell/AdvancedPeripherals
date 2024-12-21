@@ -14,15 +14,11 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.common.util.FakePlayer;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.neoforge.network.connection.ConnectionUtils;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlerEvent;
 import net.neoforged.neoforge.network.registration.IPayloadRegistrar;
-import net.neoforged.network.NetworkDirection;
-import net.neoforged.network.NetworkRegistry;
-import net.neoforged.network.PacketDistributor;
-import net.neoforged.network.simple.SimpleChannel;
+
 
 import java.util.Optional;
 import java.util.function.Function;
@@ -32,15 +28,15 @@ public class APNetworking {
     private static int id = 0;
 
     public static void init() {
-        registerServerToClient(ToastToClientPacket.class, ToastToClientPacket::decode);
+        //registerServerToClient(ToastToClientPacket.class, ToastToClientPacket::decode);
     }
 
     @SubscribeEvent
     public static void register(final RegisterPayloadHandlerEvent event) {
-        final IPayloadRegistrar registrar = event.registrar(AdvancedPeripherals.MOD_ID)
-                .versioned(PROTOCOL_VERSION)
-                .common(AdvancedPeripherals.getRL("toasttoclient"), ToastToClientPacket::decode, IPacket::handlePacket)
-                .optional();
+        //final IPayloadRegistrar registrar = event.registrar(AdvancedPeripherals.MOD_ID)
+        //        .versioned(PROTOCOL_VERSION)
+        //      .common(AdvancedPeripherals.getRL("toasttoclient"), ToastToClientPacket::decode, IPacket::handlePacket)
+        //      .optional();
 
 
     }
@@ -49,7 +45,7 @@ public class APNetworking {
      * Send a packet to a specific player.<p>
      * Must be called Server side.
      */
-    public static void sendTo(Object msg, ServerPlayer player) {
+    /*public static void sendTo(Object msg, ServerPlayer player) {
         if (!(player instanceof FakePlayer)) {
             NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), msg);
         }
@@ -69,5 +65,5 @@ public class APNetworking {
 
     public static void sendToAllInWorld(Object mes, ServerLevel world) {
         NETWORK_CHANNEL.send(PacketDistributor.DIMENSION.with(world::dimension), mes);
-    }
+    }*/
 }

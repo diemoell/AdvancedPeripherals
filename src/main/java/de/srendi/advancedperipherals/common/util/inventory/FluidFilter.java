@@ -1,9 +1,11 @@
 package de.srendi.advancedperipherals.common.util.inventory;
 
 import dan200.computercraft.api.lua.LuaException;
+import dan200.computercraft.core.apis.TableHelper;
 import de.srendi.advancedperipherals.AdvancedPeripherals;
 import de.srendi.advancedperipherals.common.util.NBTUtil;
 import de.srendi.advancedperipherals.common.util.Pair;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -36,7 +38,7 @@ public class FluidFilter {
                 String name = TableHelper.getStringField(item, "name");
                 if (name.startsWith("#")) {
                     fluidFilter.tag = TagKey.create(Registries.FLUID, new ResourceLocation(name.substring(1)));
-                } else if ((fluidFilter.fluid = ItemUtil.getRegistryEntry(name, Regist.FLUIDS)) == null) {
+                } else if ((fluidFilter.fluid = ItemUtil.getRegistryEntry(name, BuiltInRegistries.FLUID)) == null) {
                     return Pair.of(null, "FLUID_NOT_FOUND");
                 }
             } catch (LuaException luaException) {

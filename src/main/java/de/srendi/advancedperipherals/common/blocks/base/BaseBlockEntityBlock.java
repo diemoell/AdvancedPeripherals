@@ -19,7 +19,6 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.neoforged.network.NetworkHooks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -45,7 +44,7 @@ public abstract class BaseBlockEntityBlock extends BaseBlock implements EntityBl
         MenuProvider namedContainerProvider = this.getMenuProvider(state, levelIn, pos);
         if (namedContainerProvider != null) {
             if (!(player instanceof ServerPlayer serverPlayerEntity)) return InteractionResult.PASS;
-            NetworkHooks.openScreen(serverPlayerEntity, namedContainerProvider, pos);
+            //NetworkHooks.openScreen(serverPlayerEntity, namedContainerProvider, pos);
         }
         return InteractionResult.SUCCESS;
     }

@@ -14,7 +14,7 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.properties.Property;
-import net.neoforged.common.IForgeShearable;
+import net.neoforged.neoforge.common.IShearable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
@@ -51,7 +51,7 @@ public class LuaConverter {
         data.put("baby", animal.isBaby());
         data.put("inLove", animal.isInLove());
         data.put("aggressive", animal.isAggressive());
-        if (animal instanceof IForgeShearable shareable && !itemInHand.isEmpty()) {
+        if (animal instanceof IShearable shareable && !itemInHand.isEmpty()) {
             data.put("shareable", shareable.isShearable(itemInHand, animal.level(), animal.blockPosition()));
         }
         return data;

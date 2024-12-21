@@ -1,14 +1,11 @@
 package de.srendi.advancedperipherals.common.setup;
 
-import com.refinedmods.refinedstorage.apiimpl.API;
 import de.srendi.advancedperipherals.common.configuration.APConfig;
 import de.srendi.advancedperipherals.common.items.APItem;
 import de.srendi.advancedperipherals.common.items.MemoryCardItem;
 import de.srendi.advancedperipherals.common.items.WeakAutomataCore;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredItem;
-import net.neoforged.registries.RegistryObject;
 
 public class Items {
 

@@ -1,9 +1,9 @@
 package de.srendi.advancedperipherals.common.util;
 
 import de.srendi.advancedperipherals.AdvancedPeripherals;
-import net.neoforged.event.TickEvent;
-import net.neoforged.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.event.TickEvent;
 
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;

@@ -29,6 +29,8 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 
+import java.util.Comparator;
+
 
 @Mod.EventBusSubscriber(modid = AdvancedPeripherals.MOD_ID)
 public class APCommands {
@@ -97,7 +99,7 @@ public class APCommands {
                 }
             }
             return false;
-        }).sorted((a, b) -> a.getID() - b.getID()).toArray(size -> new ServerComputer[size]);
+        }).sorted(Comparator.comparingInt(ServerComputer::getID)).toArray(ServerComputer[]::new);
 
         for (ServerComputer computer : computers) {
             table.row(
@@ -114,7 +116,8 @@ public class APCommands {
         CommandSourceStack source = context.getSource().withPermission(0);
         String command = StringArgumentType.getString(context, "command");
         try {
-            return source.getServer().getCommands().performPrefixedCommand(source, command);
+            source.getServer().getCommands().performPrefixedCommand(source, command);
+            return 1;
         } catch (RuntimeException e) {
             source.sendFailure(Component.literal(e.getMessage()));
             return 0;
@@ -125,7 +128,7 @@ public class APCommands {
     private static Component makeComputerDumpCommand(ServerComputer computer) {
         return ChatHelpers.link(
             Component.literal("#" + computer.getID()),
-            "/computercraft dump " + computer.getInstanceID(),
+            "/computercraft dump " + computer.getInstanceUUID(),
             Component.translatable("commands.computercraft.dump.action")
         );
     }
@@ -133,7 +136,7 @@ public class APCommands {
     private static Component makeComputerPosCommand(ServerComputer computer) {
         return ChatHelpers.link(
             ChatHelpers.position(computer.getPosition()),
-            "/computercraft tp " + computer.getInstanceID(),
+            "/computercraft tp " + computer.getInstanceUUID(),
             Component.translatable("commands.computercraft.tp.action")
         );
     }

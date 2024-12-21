@@ -4,13 +4,12 @@ import dan200.computercraft.api.lua.IArguments;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.lua.LuaFunction;
 import dan200.computercraft.api.lua.MethodResult;
+import de.srendi.advancedperipherals.AdvancedPeripherals;
 import de.srendi.advancedperipherals.common.addons.computercraft.owner.FuelAbility;
 import de.srendi.advancedperipherals.common.addons.computercraft.owner.PeripheralOwnerAbility;
 import de.srendi.advancedperipherals.common.addons.computercraft.owner.TurtlePeripheralOwner;
-import de.srendi.advancedperipherals.common.configuration.APConfig;
 import de.srendi.advancedperipherals.lib.peripherals.AutomataCorePeripheral;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.common.capabilities.ForgeCapabilities;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -31,7 +30,9 @@ public class AutomataChargingPlugin extends AutomataCorePlugin {
 
         ItemStack stack = owner.getToolInMainHand();
         int fuel = arguments.optInt(0, -1);
-        return stack.getCapability(ForgeCapabilities.ENERGY).map(storage -> {
+        //TODO
+        AdvancedPeripherals.debug("chargeTurtle NOT IMPLEMENTED");
+        /*return stack.getCapability(ForgeCapabilities.ENERGY).map(storage -> {
             int availableFuelSpace = fuelAbility.getFuelMaxCount() - fuelAbility.getFuelCount();
             int requestedRF;
             if (fuel != -1) {
@@ -44,6 +45,7 @@ public class AutomataChargingPlugin extends AutomataCorePlugin {
             fuelAbility.addFuel(receivedFuel);
             automataCore.addRotationCycle();
             return MethodResult.of(true, receivedFuel);
-        }).orElse(MethodResult.of(null, "Item should provide energy ..."));
+        }).orElse(MethodResult.of(null, "Item should provide energy ..."));*/
+        return MethodResult.of(false);
     }
 }

@@ -35,6 +35,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.*;
 import net.neoforged.bus.api.Event;
 import net.neoforged.neoforge.common.CommonHooks;
+import net.neoforged.neoforge.common.NeoForgeMod;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import org.jetbrains.annotations.NotNull;
@@ -235,7 +236,7 @@ public class APFakePlayer extends FakePlayer {
         if (hit instanceof BlockHitResult blockHit) {
             ItemStack stack = getMainHandItem();
             BlockPos pos = blockHit.getBlockPos();
-            PlayerInteractEvent.RightClickBlock event = ForgeHooks.onRightClickBlock(this, InteractionHand.MAIN_HAND, pos, blockHit);
+            PlayerInteractEvent.RightClickBlock event = CommonHooks.onRightClickBlock(this, InteractionHand.MAIN_HAND, pos, blockHit);
             if (event.isCanceled()) {
                 return event.getCancellationResult();
             }
@@ -274,7 +275,8 @@ public class APFakePlayer extends FakePlayer {
             ItemStack copyBeforeUse = stack.copy();
             InteractionResult result = stack.useOn(new UseOnContext(level(), this, InteractionHand.MAIN_HAND, stack, blockHit));
             if (stack.isEmpty()) {
-                CommonHooks.onPlayerDestroyItem(this, copyBeforeUse, InteractionHand.MAIN_HAND);
+                //TODO
+                //CommonHooks.onPlayerDestroyItem(this, copyBeforeUse, InteractionHand.MAIN_HAND);
             }
             return result;
         } else if (hit instanceof EntityHitResult entityHit) {
@@ -289,7 +291,7 @@ public class APFakePlayer extends FakePlayer {
 
     @NotNull
     public HitResult findHit(boolean skipEntity, boolean skipBlock, @Nullable Predicate<Entity> entityFilter) {
-        AttributeInstance reachAttribute = getAttribute(ForgeMod.BLOCK_REACH.get());
+        AttributeInstance reachAttribute = getAttribute(NeoForgeMod.BLOCK_REACH.value());
         if (reachAttribute == null)
             throw new IllegalArgumentException("How did this happened?");
 

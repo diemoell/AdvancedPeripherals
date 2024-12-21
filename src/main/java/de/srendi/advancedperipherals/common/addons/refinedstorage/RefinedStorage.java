@@ -19,14 +19,14 @@ import de.srendi.advancedperipherals.common.util.inventory.FluidFilter;
 import de.srendi.advancedperipherals.common.util.inventory.ItemFilter;
 import de.srendi.advancedperipherals.common.util.inventory.ItemUtil;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
-import net.neoforged.fluids.FluidStack;
-import net.neoforged.registries.ForgeRegistries;
+import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -216,7 +216,7 @@ public class RefinedStorage {
 
         Map<String, Object> map = new HashMap<>();
         Supplier<Stream<TagKey<Fluid>>> tags = () -> fluidStack.getFluid().builtInRegistryHolder().tags();
-        map.put("name", ForgeRegistries.FLUIDS.getKey(fluidStack.getFluid()).toString());
+        map.put("name", BuiltInRegistries.FLUID.getKey(fluidStack.getFluid()).toString());
         map.put("amount", fluidStack.getAmount());
         map.put("displayName", fluidStack.getDisplayName().getString());
         map.put("isCraftable", isFluidCraftable(network, fluidStack));

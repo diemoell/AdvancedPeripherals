@@ -14,7 +14,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.registries.RegistryObject;
 
 import java.util.function.Supplier;
 
@@ -28,10 +27,9 @@ public class Blocks {
     public static final DeferredHolder<Block, APBlockEntityBlock<?>> ENERGY_DETECTOR = register("energy_detector", () -> new APBlockEntityBlock<>(BlockEntityTypes.ENERGY_DETECTOR, true), () -> new APBlockItem(Blocks.ENERGY_DETECTOR.get(), APConfig.PERIPHERALS_CONFIG.enableEnergyDetector::get));
     public static final DeferredHolder<Block, BaseBlock> PERIPHERAL_CASING = register("peripheral_casing", BaseBlock::new, () -> new APBlockItem(Blocks.PERIPHERAL_CASING.get(), new Item.Properties().stacksTo(16), () -> true));
     public static final DeferredHolder<Block, APBlockEntityBlock<?>> INVENTORY_MANAGER = register("inventory_manager", () -> new APBlockEntityBlock<>(BlockEntityTypes.INVENTORY_MANAGER, false), () -> new APBlockItem(Blocks.INVENTORY_MANAGER.get(), APConfig.PERIPHERALS_CONFIG.enableInventoryManager::get));
-    public static final DeferredHolder<Block, APBlockEntityBlock<?>> REDSTONE_INTEGRATOR = register("redstone_integrator", RedstoneIntegratorBlock::new, () -> new APBlockItem(Blocks.REDSTONE_INTEGRATOR.get(), APConfig.PERIPHERALS_CONFIG.enableRedstoneIntegrator::get));
+    public static final DeferredHolder<Block, RedstoneIntegratorBlock> REDSTONE_INTEGRATOR = register("redstone_integrator", RedstoneIntegratorBlock::new, () -> new APBlockItem(Blocks.REDSTONE_INTEGRATOR.get(), APConfig.PERIPHERALS_CONFIG.enableRedstoneIntegrator::get));
     public static final DeferredHolder<Block, APBlockEntityBlock<?>> BLOCK_READER = register("block_reader", () -> new APBlockEntityBlock<>(BlockEntityTypes.BLOCK_READER, true), () -> new APBlockItem(Blocks.BLOCK_READER.get(), APConfig.PERIPHERALS_CONFIG.enableBlockReader::get));
     public static final DeferredHolder<Block, APBlockEntityBlock<?>> GEO_SCANNER = register("geo_scanner", () -> new APBlockEntityBlock<>(BlockEntityTypes.GEO_SCANNER, false), () -> new APBlockItem(Blocks.GEO_SCANNER.get(), APConfig.PERIPHERALS_CONFIG.enableGeoScanner::get));
-    public static final DeferredHolder<Block, APBlockEntityBlock<?>> COLONY_INTEGRATOR = register("colony_integrator", () -> new APBlockEntityBlock<>(ModList.get().isLoaded("minecolonies") ? BlockEntityTypes.COLONY_INTEGRATOR : null, false), () -> new APBlockItem(Blocks.COLONY_INTEGRATOR.get(), APConfig.PERIPHERALS_CONFIG.enableColonyIntegrator::get));
     public static final DeferredHolder<Block, APBlockEntityBlock<?>> NBT_STORAGE = register("nbt_storage", () -> new APBlockEntityBlock<>(BlockEntityTypes.NBT_STORAGE, false), () -> new APBlockItem(Blocks.NBT_STORAGE.get(), APConfig.PERIPHERALS_CONFIG.enableNBTStorage::get));
 
     public static void register() {

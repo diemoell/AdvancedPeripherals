@@ -1,7 +1,7 @@
 package de.srendi.advancedperipherals.common.util;
 
 import de.srendi.advancedperipherals.common.blocks.blockentities.EnergyDetectorEntity;
-import net.neoforged.energy.IEnergyStorage;
+import net.neoforged.neoforge.energy.IEnergyStorage;
 
 import java.util.Optional;
 

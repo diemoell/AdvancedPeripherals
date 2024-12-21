@@ -1,5 +1,7 @@
 package de.srendi.advancedperipherals.client;
 
+import dan200.computercraft.api.ComputerCraftAPI;
+import dan200.computercraft.api.client.turtle.RegisterTurtleModellersEvent;
 import dan200.computercraft.api.client.turtle.TurtleUpgradeModeller;
 import de.srendi.advancedperipherals.AdvancedPeripherals;
 import de.srendi.advancedperipherals.common.container.InventoryManagerScreen;
@@ -30,19 +32,22 @@ public class ClientRegistry {
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
         MenuScreens.register(ContainerTypes.INVENTORY_MANAGER_CONTAINER.get(), InventoryManagerScreen::new);
-
-        ComputerCraftAPIClient.registerTurtleUpgradeModeller(CCRegistration.CHUNKY_TURTLE.get(), TurtleUpgradeModeller.flatItem());
-        ComputerCraftAPIClient.registerTurtleUpgradeModeller(CCRegistration.COMPASS_TURTLE.get(), TurtleUpgradeModeller.flatItem());
-        ComputerCraftAPIClient.registerTurtleUpgradeModeller(CCRegistration.CHAT_BOX_TURTLE.get(), TurtleUpgradeModeller.sided(new ModelResourceLocation(AdvancedPeripherals.getRL("turtle_chat_box_upgrade_left"), "inventory"), new ModelResourceLocation(AdvancedPeripherals.getRL("turtle_chat_box_upgrade_right"), "inventory")));
-        ComputerCraftAPIClient.registerTurtleUpgradeModeller(CCRegistration.ENVIRONMENT_TURTLE.get(), TurtleUpgradeModeller.sided(new ModelResourceLocation(AdvancedPeripherals.getRL("turtle_environment_upgrade_left"), "inventory"), new ModelResourceLocation(AdvancedPeripherals.getRL("turtle_environment_upgrade_right"), "inventory")));
-        ComputerCraftAPIClient.registerTurtleUpgradeModeller(CCRegistration.GEO_SCANNER_TURTLE.get(), TurtleUpgradeModeller.sided(new ModelResourceLocation(AdvancedPeripherals.getRL("turtle_geoscanner_upgrade_left"), "inventory"), new ModelResourceLocation(AdvancedPeripherals.getRL("turtle_geoscanner_upgrade_right"), "inventory")));
-        ComputerCraftAPIClient.registerTurtleUpgradeModeller(CCRegistration.PLAYER_DETECTOR_TURTLE.get(), TurtleUpgradeModeller.sided(new ModelResourceLocation(AdvancedPeripherals.getRL("turtle_player_upgrade_left"), "inventory"), new ModelResourceLocation(AdvancedPeripherals.getRL("turtle_player_upgrade_right"), "inventory")));
-        ComputerCraftAPIClient.registerTurtleUpgradeModeller(CCRegistration.OP_END_TURTLE.get(), new MetaTurtleUpgradeModeller<>());
-        ComputerCraftAPIClient.registerTurtleUpgradeModeller(CCRegistration.OP_HUSBANDRY_TURTLE.get(), new MetaTurtleUpgradeModeller<>());
-        ComputerCraftAPIClient.registerTurtleUpgradeModeller(CCRegistration.OP_WEAK_TURTLE.get(), new MetaTurtleUpgradeModeller<>());
-        ComputerCraftAPIClient.registerTurtleUpgradeModeller(CCRegistration.HUSBANDRY_TURTLE.get(), new MetaTurtleUpgradeModeller<>());
-        ComputerCraftAPIClient.registerTurtleUpgradeModeller(CCRegistration.END_TURTLE.get(), new MetaTurtleUpgradeModeller<>());
-        ComputerCraftAPIClient.registerTurtleUpgradeModeller(CCRegistration.WEAK_TURTLE.get(), new MetaTurtleUpgradeModeller<>());
+    }
+    
+    @SubscribeEvent
+    public static void onUpgradeModeller(RegisterTurtleModellersEvent event) {
+        event.register(CCRegistration.CHUNKY_TURTLE.get(), TurtleUpgradeModeller.flatItem());
+        event.register(CCRegistration.COMPASS_TURTLE.get(), TurtleUpgradeModeller.flatItem());
+        event.register(CCRegistration.CHAT_BOX_TURTLE.get(), TurtleUpgradeModeller.sided(new ModelResourceLocation(AdvancedPeripherals.getRL("turtle_chat_box_upgrade_left"), "inventory"), new ModelResourceLocation(AdvancedPeripherals.getRL("turtle_chat_box_upgrade_right"), "inventory")));
+        event.register(CCRegistration.ENVIRONMENT_TURTLE.get(), TurtleUpgradeModeller.sided(new ModelResourceLocation(AdvancedPeripherals.getRL("turtle_environment_upgrade_left"), "inventory"), new ModelResourceLocation(AdvancedPeripherals.getRL("turtle_environment_upgrade_right"), "inventory")));
+        event.register(CCRegistration.GEO_SCANNER_TURTLE.get(), TurtleUpgradeModeller.sided(new ModelResourceLocation(AdvancedPeripherals.getRL("turtle_geoscanner_upgrade_left"), "inventory"), new ModelResourceLocation(AdvancedPeripherals.getRL("turtle_geoscanner_upgrade_right"), "inventory")));
+        event.register(CCRegistration.PLAYER_DETECTOR_TURTLE.get(), TurtleUpgradeModeller.sided(new ModelResourceLocation(AdvancedPeripherals.getRL("turtle_player_upgrade_left"), "inventory"), new ModelResourceLocation(AdvancedPeripherals.getRL("turtle_player_upgrade_right"), "inventory")));
+        event.register(CCRegistration.OP_END_TURTLE.get(), new MetaTurtleUpgradeModeller<>());
+        event.register(CCRegistration.OP_HUSBANDRY_TURTLE.get(), new MetaTurtleUpgradeModeller<>());
+        event.register(CCRegistration.OP_WEAK_TURTLE.get(), new MetaTurtleUpgradeModeller<>());
+        event.register(CCRegistration.HUSBANDRY_TURTLE.get(), new MetaTurtleUpgradeModeller<>());
+        event.register(CCRegistration.END_TURTLE.get(), new MetaTurtleUpgradeModeller<>());
+        event.register(CCRegistration.WEAK_TURTLE.get(), new MetaTurtleUpgradeModeller<>());    
     }
 
     @SubscribeEvent

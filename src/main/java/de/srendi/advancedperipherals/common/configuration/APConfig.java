@@ -34,15 +34,16 @@ public class APConfig extends ModConfig {
         modContainer.addConfig(new APConfig(WORLD_CONFIG, modContainer));
     }
 
-    @Override
+    /*@Override
     public ConfigFileTypeHandler getHandler() {
         return CONFIG_FILE_HANDLER;
-    }
+    }*/
 
     public static class ConfigFileHandler extends ConfigFileTypeHandler {
 
         public static Path getPath(Path path) {
-            if (path.endsWith("serverconfig")) return FMLPaths.CONFIGDIR.get();
+            if (path.endsWith("serverconfig"))
+                return FMLPaths.CONFIGDIR.get();
 
             return path;
         }
@@ -54,7 +55,7 @@ public class APConfig extends ModConfig {
 
         @Override
         public void unload(ModConfig config) {
-            super.unload(getPath(configBasePath), config);
+            super.unload(config);
         }
     }
 }

@@ -28,7 +28,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
-import net.neoforged.server.ServerLifecycleHooks;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -229,7 +229,7 @@ public class ChatBoxPeripheral extends BasePeripheral<IPeripheralOwner> {
 
             if (CoordUtil.isInRange(getPos(), getLevel(), player, range, maxRange)) {
                 ToastToClientPacket packet = new ToastToClientPacket(titleComponent, preparedMessage);
-                APNetworking.sendTo(packet, player);
+                //APNetworking.sendTo(packet, player);
             }
 
             return MethodResult.of(true);
@@ -292,7 +292,7 @@ public class ChatBoxPeripheral extends BasePeripheral<IPeripheralOwner> {
 
             if (CoordUtil.isInRange(getPos(), getLevel(), player, range, maxRange)) {
                 ToastToClientPacket packet = new ToastToClientPacket(Component.literal(title), preparedMessage);
-                APNetworking.sendTo(packet, player);
+                //APNetworking.sendTo(packet, player);
             }
             return MethodResult.of(true);
         });

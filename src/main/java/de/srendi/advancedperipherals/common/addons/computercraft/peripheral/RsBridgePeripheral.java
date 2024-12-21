@@ -21,9 +21,9 @@ import de.srendi.advancedperipherals.common.util.Pair;
 import de.srendi.advancedperipherals.common.util.inventory.*;
 import de.srendi.advancedperipherals.lib.peripherals.BasePeripheral;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.fluids.FluidStack;
-import net.neoforged.fluids.capability.IFluidHandler;
-import net.neoforged.items.IItemHandler;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

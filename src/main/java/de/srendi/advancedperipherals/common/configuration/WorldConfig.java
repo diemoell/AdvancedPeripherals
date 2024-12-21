@@ -1,20 +1,20 @@
 package de.srendi.advancedperipherals.common.configuration;
 
 import net.minecraft.FieldsAreNonnullByDefault;
-import net.neoforged.common.ForgeConfigSpec;
 import net.neoforged.fml.config.ModConfig;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 @FieldsAreNonnullByDefault
 public class WorldConfig implements IAPConfig {
 
-    public final ForgeConfigSpec.BooleanValue enableVillagerStructures;
-    public final ForgeConfigSpec.BooleanValue givePlayerBookOnJoin;
-    public final ForgeConfigSpec.IntValue villagerStructureWeight;
-    public final ForgeConfigSpec.BooleanValue enableWanderingTraderTrades;
-    private final ForgeConfigSpec configSpec;
+    public final ModConfigSpec.BooleanValue enableVillagerStructures;
+    public final ModConfigSpec.BooleanValue givePlayerBookOnJoin;
+    public final ModConfigSpec.IntValue villagerStructureWeight;
+    public final ModConfigSpec.BooleanValue enableWanderingTraderTrades;
+    private final ModConfigSpec configSpec;
 
     public WorldConfig() {
-        ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
+        ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
 
         builder.comment("Config to adjust world settings").push("World");
 
@@ -28,7 +28,7 @@ public class WorldConfig implements IAPConfig {
     }
 
     @Override
-    public ForgeConfigSpec getConfigSpec() {
+    public ModConfigSpec getConfigSpec() {
         return configSpec;
     }
 
