@@ -5,6 +5,7 @@ import dan200.computercraft.api.turtle.ITurtleUpgrade;
 import dan200.computercraft.api.turtle.TurtleSide;
 import dan200.computercraft.api.upgrades.UpgradeType;
 import de.srendi.advancedperipherals.AdvancedPeripherals;
+import de.srendi.advancedperipherals.client.ClientRegistry;
 import de.srendi.advancedperipherals.common.addons.computercraft.peripheral.ChatBoxPeripheral;
 import de.srendi.advancedperipherals.common.setup.CCRegistration;
 import de.srendi.advancedperipherals.lib.turtle.PeripheralTurtleUpgrade;
@@ -34,7 +35,7 @@ public class TurtleChatBoxUpgrade extends PeripheralTurtleUpgrade<ChatBoxPeriphe
 
     @Override
     public UpgradeType<? extends ITurtleUpgrade> getType() {
-        return CCRegistration.CHAT_BOX_TURTLE.get();
+        return ClientRegistry.CHAT_BOX_TURTLE.get();
     }
 
     @Override

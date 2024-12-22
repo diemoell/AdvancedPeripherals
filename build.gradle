@@ -214,7 +214,7 @@ dependencies {
     // Ae2
     compileOnly "appeng:appliedenergistics2:${appliedenergistics_version}"
     // Curios
-    compileOnly "top.theillusivec4.curios:curios-forge:${curios_version}:api"
+    // compileOnly "top.theillusivec4.curios:curios-forge:${curios_version}:api"
     // Minimal requirements end
 
     // Extended requirements
@@ -231,7 +231,7 @@ dependencies {
     implementation "curse.maven:applied-mekanistics-574300:${appliedmekanistics_version}"
 
     // Curios
-    runtimeOnly "top.theillusivec4.curios:curios-forge:${curios_version}"
+    // runtimeOnly "top.theillusivec4.curios:curios-forge:${curios_version}"
 
     // Refined Storage 1.21 not ready
     //implementation "com.refinedmods:refinedstorage:${refinedstorage_version}"

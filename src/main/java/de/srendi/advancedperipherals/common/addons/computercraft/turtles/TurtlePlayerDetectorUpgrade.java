@@ -5,6 +5,7 @@ import dan200.computercraft.api.turtle.ITurtleUpgrade;
 import dan200.computercraft.api.turtle.TurtleSide;
 import dan200.computercraft.api.upgrades.UpgradeType;
 import de.srendi.advancedperipherals.AdvancedPeripherals;
+import de.srendi.advancedperipherals.client.ClientRegistry;
 import de.srendi.advancedperipherals.common.addons.computercraft.peripheral.PlayerDetectorPeripheral;
 import de.srendi.advancedperipherals.common.setup.CCRegistration;
 import de.srendi.advancedperipherals.lib.turtle.PeripheralTurtleUpgrade;
@@ -35,6 +36,6 @@ public class TurtlePlayerDetectorUpgrade extends PeripheralTurtleUpgrade<PlayerD
 
     @Override
     public UpgradeType<? extends ITurtleUpgrade> getType() {
-        return CCRegistration.PLAYER_DETECTOR_TURTLE.get();
+        return ClientRegistry.PLAYER_DETECTOR_TURTLE.get();
     }
 }

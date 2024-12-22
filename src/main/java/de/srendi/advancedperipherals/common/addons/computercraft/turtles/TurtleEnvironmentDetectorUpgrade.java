@@ -5,6 +5,7 @@ import dan200.computercraft.api.turtle.ITurtleUpgrade;
 import dan200.computercraft.api.turtle.TurtleSide;
 import dan200.computercraft.api.upgrades.UpgradeType;
 import de.srendi.advancedperipherals.AdvancedPeripherals;
+import de.srendi.advancedperipherals.client.ClientRegistry;
 import de.srendi.advancedperipherals.common.addons.computercraft.peripheral.EnvironmentDetectorPeripheral;
 import de.srendi.advancedperipherals.common.setup.CCRegistration;
 import de.srendi.advancedperipherals.lib.turtle.PeripheralTurtleUpgrade;
@@ -35,6 +36,6 @@ public class TurtleEnvironmentDetectorUpgrade extends PeripheralTurtleUpgrade<En
 
     @Override
     public UpgradeType<? extends ITurtleUpgrade> getType() {
-        return CCRegistration.ENVIRONMENT_TURTLE.get();
+        return ClientRegistry.ENVIRONMENT_TURTLE.get();
     }
 }

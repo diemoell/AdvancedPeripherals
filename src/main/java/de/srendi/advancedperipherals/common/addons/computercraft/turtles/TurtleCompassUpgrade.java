@@ -4,6 +4,7 @@ import dan200.computercraft.api.turtle.ITurtleAccess;
 import dan200.computercraft.api.turtle.ITurtleUpgrade;
 import dan200.computercraft.api.turtle.TurtleSide;
 import dan200.computercraft.api.upgrades.UpgradeType;
+import de.srendi.advancedperipherals.client.ClientRegistry;
 import de.srendi.advancedperipherals.common.addons.computercraft.peripheral.CompassPeripheral;
 import de.srendi.advancedperipherals.common.setup.CCRegistration;
 import de.srendi.advancedperipherals.lib.turtle.PeripheralTurtleUpgrade;
@@ -34,6 +35,6 @@ public class TurtleCompassUpgrade extends PeripheralTurtleUpgrade<CompassPeriphe
 
     @Override
     public UpgradeType<? extends ITurtleUpgrade> getType() {
-        return CCRegistration.COMPASS_TURTLE.get();
+        return ClientRegistry.COMPASS_TURTLE.get();
     }
 }

@@ -3,6 +3,7 @@ package de.srendi.advancedperipherals.common.addons.computercraft.pocket;
 import dan200.computercraft.api.pocket.IPocketAccess;
 import dan200.computercraft.api.pocket.IPocketUpgrade;
 import dan200.computercraft.api.upgrades.UpgradeType;
+import de.srendi.advancedperipherals.client.ClientRegistry;
 import de.srendi.advancedperipherals.common.addons.computercraft.peripheral.EnvironmentDetectorPeripheral;
 import de.srendi.advancedperipherals.common.setup.CCRegistration;
 import de.srendi.advancedperipherals.lib.pocket.BasePocketUpgrade;
@@ -24,6 +25,6 @@ public class PocketEnvironmentUpgrade extends BasePocketUpgrade<EnvironmentDetec
 
     @Override
     public UpgradeType<? extends IPocketUpgrade> getType() {
-        return CCRegistration.ENVIRONMENT_POCKET.get();
+        return ClientRegistry.ENVIRONMENT_POCKET.get();
     }
 }

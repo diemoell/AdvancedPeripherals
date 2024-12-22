@@ -4,6 +4,7 @@ import dan200.computercraft.api.turtle.ITurtleAccess;
 import dan200.computercraft.api.turtle.ITurtleUpgrade;
 import dan200.computercraft.api.turtle.TurtleSide;
 import dan200.computercraft.api.upgrades.UpgradeType;
+import de.srendi.advancedperipherals.client.ClientRegistry;
 import de.srendi.advancedperipherals.common.addons.computercraft.peripheral.metaphysics.HusbandryAutomataCorePeripheral;
 import de.srendi.advancedperipherals.common.setup.CCRegistration;
 import de.srendi.advancedperipherals.lib.turtle.ClockwiseAnimatedTurtleUpgrade;
@@ -33,6 +34,6 @@ public class HusbandryAutomata extends ClockwiseAnimatedTurtleUpgrade<HusbandryA
 
     @Override
     public UpgradeType<? extends ITurtleUpgrade> getType() {
-        return CCRegistration.HUSBANDRY_TURTLE.get();
+        return ClientRegistry.HUSBANDRY_TURTLE.get();
     }
 }
