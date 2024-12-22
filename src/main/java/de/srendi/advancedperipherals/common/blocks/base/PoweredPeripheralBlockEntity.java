@@ -30,13 +30,15 @@ public abstract class PoweredPeripheralBlockEntity<T extends BasePeripheral<?>> 
     @Override
     public void saveAdditional(@NotNull CompoundTag compound) {
         super.saveAdditional(compound);
-        compound.putInt("energy", energyStorage.getEnergyStored());
+        if (energyStorage != null)
+            compound.putInt("energy", energyStorage.getEnergyStored());
     }
 
     @Override
     public void load(@NotNull CompoundTag compound) {
         super.load(compound);
-        energyStorage.receiveEnergy(compound.getInt("energy") - energyStorage.getEnergyStored(), false);
+        if (energyStorage != null)
+            energyStorage.receiveEnergy(compound.getInt("energy") - energyStorage.getEnergyStored(), false);
     }
 
     @Nullable
