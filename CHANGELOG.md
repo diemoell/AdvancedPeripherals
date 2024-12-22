@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+## [1.20.4-0.7.42a] - 2024-12-22
+
+### Fixed
+- Fixed ME Bridge not connecting to AE2 grids
+- Fixed some recipes
+- Every energy, item or fluid interacting block should now work like the energy detector or some ME/RS functions
+- Fixed that the inventory manager would not open the screen
+
 ## [1.20.1-0.7.41r] - 2024-10-21
 
 ### Added
