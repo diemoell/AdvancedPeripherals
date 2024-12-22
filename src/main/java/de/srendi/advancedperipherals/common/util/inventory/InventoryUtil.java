@@ -26,11 +26,6 @@ public class InventoryUtil {
     }
 
     public static IItemHandler extractHandler(@Nullable Object object) {
-        /*if (object instanceof ICapabilityProvider capabilityProvider) {
-            LazyOptional<IItemHandler> cap = capabilityProvider.getCapability(ForgeCapabilities.ITEM_HANDLER);
-            if (cap.isPresent())
-                return cap.orElseThrow(NullPointerException::new);
-        }*/
         if (object instanceof IItemHandler itemHandler)
             return itemHandler;
         if (object instanceof Container container)

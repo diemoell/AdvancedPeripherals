@@ -8,7 +8,9 @@ import appeng.api.networking.IManagedGridNode;
 import appeng.api.networking.crafting.ICraftingSimulationRequester;
 import appeng.api.networking.security.IActionHost;
 import appeng.api.networking.security.IActionSource;
+import appeng.api.orientation.BlockOrientation;
 import appeng.api.util.AECableType;
+import appeng.me.helpers.IGridConnectedBlockEntity;
 import de.srendi.advancedperipherals.common.addons.appliedenergistics.CraftJob;
 import de.srendi.advancedperipherals.common.addons.appliedenergistics.MeBridgeEntityListener;
 import de.srendi.advancedperipherals.common.addons.computercraft.peripheral.MeBridgePeripheral;
@@ -29,9 +31,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class MeBridgeEntity extends PeripheralBlockEntity<MeBridgePeripheral> implements IActionSource, IActionHost, IInWorldGridNodeHost, ICraftingSimulationRequester {
+public class MeBridgeEntity extends PeripheralBlockEntity<MeBridgePeripheral> implements IActionSource, IActionHost, IInWorldGridNodeHost, IGridConnectedBlockEntity, ICraftingSimulationRequester {
 
     private final List<CraftJob> jobs = new CopyOnWriteArrayList<>();
     private boolean initialized = false;
@@ -39,6 +42,7 @@ public class MeBridgeEntity extends PeripheralBlockEntity<MeBridgePeripheral> im
 
     public MeBridgeEntity(BlockPos pos, BlockState state) {
         super(BlockEntityTypes.ME_BRIDGE.get(), pos, state);
+        getMainNode().setExposedOnSides(getGridConnectableSides(null));
     }
 
     @NotNull
@@ -51,14 +55,12 @@ public class MeBridgeEntity extends PeripheralBlockEntity<MeBridgePeripheral> im
     public <T extends BlockEntity> void handleTick(Level level, BlockState state, BlockEntityType<T> type) {
         if (!this.level.isClientSide) {
             if (!initialized) {
-
                 mainNode.setFlags(GridFlags.REQUIRE_CHANNEL);
                 mainNode.setIdlePowerUsage(APConfig.PERIPHERALS_CONFIG.meConsumption.get());
                 mainNode.setVisualRepresentation(new ItemStack(Blocks.ME_BRIDGE.get()));
                 mainNode.setInWorldNode(true);
                 mainNode.create(level, getBlockPos());
-
-                //peripheral can be null if `getCapability` was not called before
+                //peripheral can be null if `createPeripheralCap` was not called before
                 if (peripheral == null)
                     peripheral = createPeripheral();
                 peripheral.setNode(mainNode);
@@ -109,10 +111,31 @@ public class MeBridgeEntity extends PeripheralBlockEntity<MeBridgePeripheral> im
         mainNode.destroy();
     }
 
+    @Override
+    public IManagedGridNode getMainNode() {
+        return mainNode;
+    }
+
+    @Override
+    public Set<Direction> getGridConnectableSides(BlockOrientation orientation) {
+        return IGridConnectedBlockEntity.super.getGridConnectableSides(orientation);
+    }
+
+    @Nullable
+    @Override
+    public IGridNode getGridNode() {
+        return IGridConnectedBlockEntity.super.getGridNode();
+    }
+
     @Nullable
     @Override
     public IGridNode getGridNode(@NotNull Direction dir) {
         return getActionableNode();
+    }
+
+    @Override
+    public void saveChanges() {
+
     }
 
     @NotNull
