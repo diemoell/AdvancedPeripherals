@@ -48,7 +48,7 @@ public abstract class BaseBlockEntityBlock extends BaseBlock implements EntityBl
         MenuProvider namedContainerProvider = this.getMenuProvider(state, levelIn, pos);
         if (namedContainerProvider != null) {
             if (!(player instanceof ServerPlayer serverPlayerEntity)) return InteractionResult.PASS;
-            //NetworkHooks.openScreen(serverPlayerEntity, namedContainerProvider, pos);
+            serverPlayerEntity.openMenu(namedContainerProvider, pos);
         }
         return InteractionResult.SUCCESS;
     }
