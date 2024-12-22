@@ -10,11 +10,13 @@ import net.neoforged.fml.event.lifecycle.InterModEnqueueEvent;
 @Mod.EventBusSubscriber(modid = AdvancedPeripherals.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class APAddons {
 
+    public static final String AE2_MODID = "ae2";
     public static final String CURIOS_MODID = "curios";
     public static final String REFINEDSTORAGE_MODID = "refinedstorage";
     public static final String APP_MEKANISTICS_MODID = "appmek";
     public static final String PATCHOULI_MODID = "patchouli";
 
+    public static boolean ae2Loaded;
     public static boolean curiosLoaded;
     public static boolean refinedStorageLoaded;
     public static boolean appMekLoaded;
@@ -25,6 +27,7 @@ public class APAddons {
 
     public static void commonSetup() {
         ModList modList = ModList.get();
+        ae2Loaded = modList.isLoaded(AE2_MODID);
         curiosLoaded = modList.isLoaded(CURIOS_MODID);
         refinedStorageLoaded = modList.isLoaded(REFINEDSTORAGE_MODID);
         appMekLoaded = modList.isLoaded(APP_MEKANISTICS_MODID);
