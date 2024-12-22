@@ -2,10 +2,8 @@ package de.srendi.advancedperipherals;
 
 import dan200.computercraft.api.peripheral.PeripheralCapability;
 import de.srendi.advancedperipherals.common.addons.APAddons;
-import de.srendi.advancedperipherals.common.blocks.base.PeripheralBlockEntity;
-import de.srendi.advancedperipherals.common.blocks.blockentities.EnergyDetectorEntity;
+import de.srendi.advancedperipherals.common.blocks.base.ICapabilityProvider;
 import de.srendi.advancedperipherals.common.configuration.APConfig;
-import de.srendi.advancedperipherals.common.setup.BlockEntityTypes;
 import de.srendi.advancedperipherals.common.setup.Registration;
 import de.srendi.advancedperipherals.network.APNetworking;
 import net.minecraft.resources.ResourceLocation;
@@ -61,23 +59,42 @@ public class AdvancedPeripherals {
 
     public void registerCapabilities(RegisterCapabilitiesEvent event) {
         Registration.BLOCK_ENTITIES.getEntries().forEach((entry) -> {
+
             event.registerBlockEntity(
                     PeripheralCapability.get(),
                     entry.get(),
-                    (blockEntity, side) -> ((PeripheralBlockEntity<?>) blockEntity).createCapPeripheral());
+                    (blockEntity, side) -> {
+                        if (blockEntity instanceof ICapabilityProvider provider)
+                            return provider.createPeripheralCap(side);
+                        return null;
+                    });
+
             event.registerBlockEntity(
                     Capabilities.ItemHandler.BLOCK,
                     entry.get(),
-                    (blockEntity, side) -> ((PeripheralBlockEntity<?>) blockEntity).createItemHandler());
+                    (blockEntity, side) -> {
+                        if (blockEntity instanceof ICapabilityProvider provider)
+                            return provider.createItemHandlerCap(side);
+                        return null;
+                    });
+
             event.registerBlockEntity(
                     Capabilities.FluidHandler.BLOCK,
                     entry.get(),
-                    (blockEntity, side) -> ((PeripheralBlockEntity<?>) blockEntity).createFluidHandler());
-        });
-        event.registerBlockEntity(
-                Capabilities.EnergyStorage.BLOCK,
-                BlockEntityTypes.ENERGY_DETECTOR.get(),
-                EnergyDetectorEntity::getEnergyStorage);
-    }
+                    (blockEntity, side) -> {
+                        if (blockEntity instanceof ICapabilityProvider provider)
+                            return provider.createFluidHandlerCap(side);
+                        return null;
+                    });
 
+            event.registerBlockEntity(
+                    Capabilities.EnergyStorage.BLOCK,
+                    entry.get(),
+                    (blockEntity, side) -> {
+                        if (blockEntity instanceof ICapabilityProvider provider)
+                            return provider.createEnergyStorageCap(side);
+                        return null;
+                    });
+        });
+    }
 }

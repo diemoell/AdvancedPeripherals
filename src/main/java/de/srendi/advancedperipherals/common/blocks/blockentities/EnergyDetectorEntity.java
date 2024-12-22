@@ -42,7 +42,9 @@ public class EnergyDetectorEntity extends PeripheralBlockEntity<EnergyDetectorPe
         return new EnergyDetectorPeripheral(this);
     }
 
-    public IEnergyStorage getEnergyStorage(@Nullable Direction direction) {
+    @Nullable
+    @Override
+    public IEnergyStorage createEnergyStorageCap(@Nullable Direction direction) {
         energyInDirection = getBlockState().getValue(JigsawBlock.ORIENTATION).front();
         energyOutDirection = getBlockState().getValue(JigsawBlock.ORIENTATION).front().getOpposite();
 

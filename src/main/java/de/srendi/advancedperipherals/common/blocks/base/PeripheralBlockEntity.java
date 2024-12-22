@@ -29,8 +29,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 
-public abstract class PeripheralBlockEntity<T extends BasePeripheral<?>> extends BaseContainerBlockEntity implements WorldlyContainer, MenuProvider, IPeripheralTileEntity {
-    // TODO: move inventory logic to another tile entity!
+public abstract class PeripheralBlockEntity<T extends BasePeripheral<?>> extends BaseContainerBlockEntity implements WorldlyContainer, MenuProvider, IPeripheralTileEntity, ICapabilityProvider {
+    // TODO: move inventory logic to another tile entity?
     private static final String PERIPHERAL_SETTINGS_KEY = "peripheralSettings";
     protected CompoundTag peripheralSettings;
     protected NonNullList<ItemStack> items;
@@ -49,7 +49,9 @@ public abstract class PeripheralBlockEntity<T extends BasePeripheral<?>> extends
         peripheralSettings = new CompoundTag();
     }
 
-    public IPeripheral createCapPeripheral() {
+    @Nullable
+    @Override
+    public IPeripheral createPeripheralCap(@Nullable Direction side) {
         if (peripheral == null)
             // Perform later peripheral creation, because creating peripheral
             // on init of tile entity cause some infinity loop, if peripheral
@@ -63,13 +65,17 @@ public abstract class PeripheralBlockEntity<T extends BasePeripheral<?>> extends
         return null;
     }
 
-    public IFluidHandler createFluidHandler() {
+    @Nullable
+    @Override
+    public IFluidHandler createFluidHandlerCap(@Nullable Direction side) {
         if (fluidHandler == null)
             fluidHandler = new FluidTank(0);
         return fluidHandler;
     }
 
-    public IItemHandler createItemHandler() {
+    @Nullable
+    @Override
+    public IItemHandler createItemHandlerCap(@Nullable Direction side) {
         if (itemHandler == null)
             itemHandler = new SidedInvWrapper(this, Direction.NORTH);
         return itemHandler;
