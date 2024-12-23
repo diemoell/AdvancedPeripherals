@@ -21,6 +21,7 @@ import de.srendi.advancedperipherals.common.util.CoordUtil;
 import de.srendi.advancedperipherals.common.util.StringUtil;
 import de.srendi.advancedperipherals.lib.peripherals.BasePeripheral;
 import de.srendi.advancedperipherals.lib.peripherals.IPeripheralFunction;
+import de.srendi.advancedperipherals.network.APNetworking;
 import de.srendi.advancedperipherals.network.toclient.ToastToClientPacket;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -228,7 +229,7 @@ public class ChatBoxPeripheral extends BasePeripheral<IPeripheralOwner> {
 
             if (CoordUtil.isInRange(getPos(), getLevel(), player, range, maxRange)) {
                 ToastToClientPacket packet = new ToastToClientPacket(titleComponent, preparedMessage);
-                //APNetworking.sendTo(packet, player);
+                APNetworking.sendTo(player, packet);
             }
 
             return MethodResult.of(true);
@@ -291,7 +292,7 @@ public class ChatBoxPeripheral extends BasePeripheral<IPeripheralOwner> {
 
             if (CoordUtil.isInRange(getPos(), getLevel(), player, range, maxRange)) {
                 ToastToClientPacket packet = new ToastToClientPacket(Component.literal(title), preparedMessage);
-                //APNetworking.sendTo(packet, player);
+                APNetworking.sendTo(player, packet);
             }
             return MethodResult.of(true);
         });

@@ -1,46 +1,39 @@
 package de.srendi.advancedperipherals.network;
 
+import de.srendi.advancedperipherals.AdvancedPeripherals;
+import de.srendi.advancedperipherals.network.toclient.ToastToClientPacket;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.common.util.FakePlayer;
+import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlerEvent;
+import net.neoforged.neoforge.network.registration.IPayloadRegistrar;
 
+@Mod.EventBusSubscriber(modid = AdvancedPeripherals.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class APNetworking {
     private static final String PROTOCOL_VERSION = ModLoadingContext.get().getActiveContainer().getModInfo().getVersion().toString();
-    private static int id = 0;
 
-    public static void init() {
-        //registerServerToClient(ToastToClientPacket.class, ToastToClientPacket::decode);
+    public static void init(IPayloadRegistrar registrar) {
+        registrar.common(ToastToClientPacket.ID, ToastToClientPacket::decode, handler -> handler.client(IAPPacket::handlePacket));
     }
 
     @SubscribeEvent
     public static void register(final RegisterPayloadHandlerEvent event) {
-        //final IPayloadRegistrar registrar = event.registrar(AdvancedPeripherals.MOD_ID)
-        //        .versioned(PROTOCOL_VERSION)
-        //      .common(AdvancedPeripherals.getRL("toasttoclient"), ToastToClientPacket::decode, IPacket::handlePacket)
-        //      .optional();
-
-
+        final IPayloadRegistrar registrar = event.registrar(AdvancedPeripherals.MOD_ID)
+                .versioned(PROTOCOL_VERSION);
+        init(registrar);
     }
 
-    /*public static void sendTo(Object msg, ServerPlayer player) {
+    public static void sendTo(ServerPlayer player, CustomPacketPayload message) {
         if (!(player instanceof FakePlayer)) {
-            NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), msg);
+            PacketDistributor.PLAYER.with(player).send(message);
         }
     }
 
-    public static void sendPacketToAll(Object packet) {
-        NETWORK_CHANNEL.send(PacketDistributor.ALL.noArg(), packet);
+    public static void sendToServer(CustomPacketPayload message) {
+        PacketDistributor.SERVER.noArg().send(message);
     }
-
-    public static ClientboundBlockEntityDataPacket createTEUpdatePacket(BlockEntity tile) {
-        return ClientboundBlockEntityDataPacket.create(tile);
-    }
-
-    public static void sendToAllAround(Object mes, ResourceKey<Level> dim, BlockPos pos, int radius) {
-        NETWORK_CHANNEL.send(PacketDistributor.NEAR.with(() -> new PacketDistributor.TargetPoint(pos.getX(), pos.getY(), pos.getZ(), radius, dim)), mes);
-    }
-
-    public static void sendToAllInWorld(Object mes, ServerLevel world) {
-        NETWORK_CHANNEL.send(PacketDistributor.DIMENSION.with(world::dimension), mes);
-    }*/
 }

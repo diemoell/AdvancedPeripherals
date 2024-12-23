@@ -56,7 +56,6 @@ public class AdvancedPeripherals {
 
     public void commonSetup(FMLCommonSetupEvent event) {
         APAddons.commonSetup();
-        APNetworking.init();
     }
 
     public void registerCapabilities(RegisterCapabilitiesEvent event) {
