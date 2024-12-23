@@ -1,8 +1,10 @@
 package de.srendi.advancedperipherals.common.items;
 
+import de.srendi.advancedperipherals.client.ClientUUIDCache;
 import de.srendi.advancedperipherals.common.configuration.APConfig;
 import de.srendi.advancedperipherals.common.items.base.BaseItem;
 import de.srendi.advancedperipherals.common.util.EnumColor;
+import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -30,9 +32,9 @@ public class MemoryCardItem extends BaseItem {
     public void appendHoverText(ItemStack stack, @Nullable Level levelIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, levelIn, tooltip, flagIn);
         CompoundTag data = stack.getOrCreateTag();
-        // TODO <0.8>: remove the owner name field
-        if (data.contains("ownerId") && data.contains("owner")) {
-            tooltip.add(EnumColor.buildTextComponent(Component.translatable("item.advancedperipherals.tooltip.memory_card.bound", data.getString("owner"))));
+        Minecraft minecraft = Minecraft.getInstance();
+        if (data.contains("owner")) {
+            tooltip.add(EnumColor.buildTextComponent(Component.translatable("item.advancedperipherals.tooltip.memory_card.bound", ClientUUIDCache.getUsername(data.getUUID("owner"), minecraft.player.getUUID()))));
         }
     }
 
@@ -41,15 +43,12 @@ public class MemoryCardItem extends BaseItem {
         if (!worldIn.isClientSide) {
             ItemStack stack = playerIn.getItemInHand(handIn);
             CompoundTag data = stack.getOrCreateTag();
-            // TODO <0.8>: remove the owner name field
-            if (data.contains("ownerId") || data.contains("owner")) {
+            if (data.contains("owner")) {
                 playerIn.displayClientMessage(Component.translatable("text.advancedperipherals.removed_player"), true);
-                data.remove("ownerId");
                 data.remove("owner");
             } else {
                 playerIn.displayClientMessage(Component.translatable("text.advancedperipherals.added_player"), true);
-                data.putUUID("ownerId", playerIn.getUUID());
-                data.putString("owner", playerIn.getName().getString());
+                data.putUUID("owner", playerIn.getUUID());
             }
         }
         return super.use(worldIn, playerIn, handIn);

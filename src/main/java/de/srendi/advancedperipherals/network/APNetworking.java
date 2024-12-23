@@ -2,6 +2,8 @@ package de.srendi.advancedperipherals.network;
 
 import de.srendi.advancedperipherals.AdvancedPeripherals;
 import de.srendi.advancedperipherals.network.toclient.ToastToClientPacket;
+import de.srendi.advancedperipherals.network.toclient.UsernameToCachePacket;
+import de.srendi.advancedperipherals.network.toserver.RetrieveUsernamePacket;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -18,6 +20,9 @@ public class APNetworking {
 
     public static void init(IPayloadRegistrar registrar) {
         registrar.common(ToastToClientPacket.ID, ToastToClientPacket::decode, handler -> handler.client(IAPPacket::handlePacket));
+        registrar.common(UsernameToCachePacket.ID, UsernameToCachePacket::decode, handler -> handler.client(IAPPacket::handlePacket));
+
+        registrar.common(RetrieveUsernamePacket.ID, RetrieveUsernamePacket::decode, handler -> handler.server(IAPPacket::handlePacket));
     }
 
     @SubscribeEvent
