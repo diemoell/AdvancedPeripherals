@@ -264,8 +264,6 @@ public class PlayerDetectorPeripheral extends BasePeripheral<IPeripheralOwner> {
             info.put("dimension", existingPlayer.level().dimension().location().toString());
             info.put("eyeHeight", existingPlayer.getEyeHeight());
             info.put("health", existingPlayer.getHealth());
-            // TODO: remove the next line in next major version
-            info.put("maxHeatlh", existingPlayer.getMaxHealth()); // keep this for backward compatibility
             info.put("maxHealth", existingPlayer.getMaxHealth());
             info.put("airSupply", existingPlayer.getAirSupply());
             info.put("respawnPosition", LuaConverter.posToObject(existingPlayer.getRespawnPosition()));

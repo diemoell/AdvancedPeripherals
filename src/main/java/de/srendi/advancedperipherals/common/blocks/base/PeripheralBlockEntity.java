@@ -30,7 +30,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collections;
 
 public abstract class PeripheralBlockEntity<T extends BasePeripheral<?>> extends BaseContainerBlockEntity implements WorldlyContainer, MenuProvider, IPeripheralTileEntity, ICapabilityProvider {
-    // TODO: move inventory logic to another tile entity?
     private static final String PERIPHERAL_SETTINGS_KEY = "peripheralSettings";
     protected CompoundTag peripheralSettings;
     protected NonNullList<ItemStack> items;
