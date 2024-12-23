@@ -23,6 +23,7 @@ import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.wrapper.PlayerArmorInvWrapper;
 import net.neoforged.neoforge.items.wrapper.PlayerInvWrapper;
 import net.neoforged.neoforge.items.wrapper.PlayerOffhandInvWrapper;
+import org.apache.logging.log4j.Level;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -249,7 +250,7 @@ public class InventoryManagerPeripheral extends BasePeripheral<BlockEntityPeriph
                     }
                 }
             }
-            AdvancedPeripherals.LOGGER.warn("Tried to get armor item slot for non armor item " + stack + ". Returning 0");
+            AdvancedPeripherals.debug("Tried to get armor item slot for non armor item " + stack + ". Returning 0", Level.WARN);
             return 0;
         }
 
