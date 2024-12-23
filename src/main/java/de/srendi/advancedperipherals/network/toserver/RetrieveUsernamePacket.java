@@ -33,7 +33,7 @@ public class RetrieveUsernamePacket implements IAPPacket {
 
     @Override
     public void handle(IPayloadContext context) {
-        Optional<GameProfile> gameProfile =  ServerLifecycleHooks.getCurrentServer().getProfileCache().get(uuid);
+        Optional<GameProfile> gameProfile = ServerLifecycleHooks.getCurrentServer().getProfileCache().get(uuid);
         ServerPlayer player = ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayer(requester);
 
         // The player left the server before the packet could be handled
