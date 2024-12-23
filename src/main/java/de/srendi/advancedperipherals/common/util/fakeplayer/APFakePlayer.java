@@ -41,6 +41,7 @@ import net.neoforged.bus.api.Event;
 import net.neoforged.neoforge.common.CommonHooks;
 import net.neoforged.neoforge.common.NeoForgeMod;
 import net.neoforged.neoforge.common.util.FakePlayer;
+import net.neoforged.neoforge.event.EventHooks;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -278,10 +279,9 @@ public class APFakePlayer extends FakePlayer {
 
             ItemStack copyBeforeUse = stack.copy();
             InteractionResult result = stack.useOn(new UseOnContext(level(), this, InteractionHand.MAIN_HAND, stack, blockHit));
-            //if (stack.isEmpty()) {
-            //TODO
-            //CommonHooks.onPlayerDestroyItem(this, copyBeforeUse, InteractionHand.MAIN_HAND);
-            //}
+            if (stack.isEmpty()) {
+                EventHooks.onPlayerDestroyItem(this, copyBeforeUse, InteractionHand.MAIN_HAND);
+            }
             return result;
         } else if (hit instanceof EntityHitResult entityHit) {
             return useOnSpecificEntity(entityHit.getEntity(), entityHit);
