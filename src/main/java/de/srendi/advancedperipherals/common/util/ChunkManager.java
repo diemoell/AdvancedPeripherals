@@ -11,6 +11,8 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.common.world.chunk.RegisterTicketControllersEvent;
+import net.neoforged.neoforge.common.world.chunk.TicketController;
 import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
@@ -32,6 +34,8 @@ public class ChunkManager extends SavedData {
     private final Map<UUID, LoadChunkRecord> forcedChunks = new HashMap<>();
     private boolean initialized = false;
 
+    private static final TicketController controller = new TicketController(AdvancedPeripherals.getRL("chunkcontroller"), null);
+
     public ChunkManager() {
         super();
     }
@@ -48,6 +52,11 @@ public class ChunkManager extends SavedData {
             manager.forcedChunks.put(UUID.fromString(key), LoadChunkRecord.deserialize(forcedData.getCompound(key)));
         }
         return manager;
+    }
+
+    @SubscribeEvent
+    public static void registerTicketController(RegisterTicketControllersEvent event) {
+        event.register(controller);
     }
 
     @SubscribeEvent
@@ -69,14 +78,12 @@ public class ChunkManager extends SavedData {
 
     private static boolean forceChunk(UUID owner, ServerLevel level, ChunkPos pos) {
         AdvancedPeripherals.debug("Forcing chunk " + pos, Level.WARN);
-        //return ChunkTicketManager.forceChunk(level, AdvancedPeripherals.MOD_ID, owner, pos.x, pos.z, true, true);#
-        return false;
+        return controller.forceChunk(level, owner, pos.x, pos.z, true, true);
     }
 
     private static boolean unforceChunk(UUID owner, ServerLevel level, ChunkPos pos) {
         AdvancedPeripherals.debug("Unforcing chunk " + pos, Level.WARN);
-        //return ForgeChunkManager.forceChunk(level, AdvancedPeripherals.MOD_ID, owner, pos.x, pos.z, false, true);
-        return false;
+        return controller.forceChunk(level, owner, pos.x, pos.z, false, true);
     }
 
     public synchronized boolean addForceChunk(ServerLevel level, UUID owner, ChunkPos pos) {
@@ -107,7 +114,6 @@ public class ChunkManager extends SavedData {
             forcedChunk.touch();
         }
     }
-
 
     public synchronized boolean removeForceChunk(ServerLevel level, UUID owner) {
         AdvancedPeripherals.debug("Attempting to unload forced chunk cluster " + owner, Level.WARN);
