@@ -18,6 +18,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.wrapper.PlayerArmorInvWrapper;
 import net.neoforged.neoforge.items.wrapper.PlayerInvWrapper;
@@ -57,22 +58,23 @@ public class InventoryManagerPeripheral extends BasePeripheral<BlockEntityPeriph
         if (filter.rightPresent())
             return MethodResult.of(0, filter.getRight());
 
-        return MethodResult.of(addItemCommon(invDirection, filter.getLeft()), null);
+        return addItemCommon(invDirection, filter.getLeft());
     }
 
-    private int addItemCommon(String invDirection, ItemFilter filter) throws LuaException {
+    private MethodResult addItemCommon(String invDirection, ItemFilter filter) throws LuaException {
         Direction direction = validateSide(invDirection);
 
-        BlockEntity targetEntity = owner.getLevel().getBlockEntity(owner.getPos().relative(direction));
-        IItemHandler inventoryFrom = null; // targetEntity != null ? targetEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, direction).resolve().orElse(null) : null;
         Pair<IItemHandler, Integer> inventoryTo = getHandlerFromSlot(filter.getToSlot());
+        IItemHandler inventoryFrom = getLevel().getCapability(Capabilities.ItemHandler.BLOCK, owner.getPos().relative(direction), direction.getOpposite());
+        if (inventoryFrom == null)
+            return MethodResult.of(0, "INVENTORY_FROM_INVALID");
 
         inventoryTo.ifRightPresent(slot -> filter.toSlot = slot);
 
         //if (invSlot >= inventoryTo.getSlots() || invSlot < 0)
         //  throw new LuaException("Inventory out of bounds " + invSlot + " (max: " + (inventoryTo.getSlots() - 1) + ")");
 
-        return InventoryUtil.moveItem(inventoryFrom, inventoryTo.getLeft(), filter);
+        return MethodResult.of(InventoryUtil.moveItem(inventoryFrom, inventoryTo.getLeft(), filter));
     }
 
     @LuaFunction(mainThread = true)
@@ -87,9 +89,8 @@ public class InventoryManagerPeripheral extends BasePeripheral<BlockEntityPeriph
     private MethodResult removeItemCommon(String invDirection, ItemFilter filter) throws LuaException {
         Direction direction = validateSide(invDirection);
 
-        BlockEntity targetEntity = owner.getLevel().getBlockEntity(owner.getPos().relative(direction));
         Pair<IItemHandler, Integer> inventoryFrom = getHandlerFromSlot(filter.getFromSlot());
-        IItemHandler inventoryTo = null; //targetEntity != null ? targetEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, direction).resolve().orElse(null) : null;
+        IItemHandler inventoryTo = getLevel().getCapability(Capabilities.ItemHandler.BLOCK, owner.getPos().relative(direction), direction.getOpposite());
 
         if (inventoryTo == null)
             return MethodResult.of(0, "INVENTORY_TO_INVALID");

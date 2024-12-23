@@ -1,6 +1,8 @@
 package de.srendi.advancedperipherals.common.container;
 
 import de.srendi.advancedperipherals.common.container.base.BaseContainer;
+import de.srendi.advancedperipherals.common.container.base.SlotCondition;
+import de.srendi.advancedperipherals.common.container.base.SlotInputHandler;
 import de.srendi.advancedperipherals.common.setup.ContainerTypes;
 import de.srendi.advancedperipherals.common.setup.Items;
 import net.minecraft.core.BlockPos;
@@ -16,12 +18,9 @@ public class InventoryManagerContainer extends BaseContainer {
     public InventoryManagerContainer(int id, Inventory inventory, BlockPos pos, Level level) {
         super(ContainerTypes.INVENTORY_MANAGER_CONTAINER.get(), id, inventory, pos, level);
         layoutPlayerInventorySlots(7, 84);
-        /*if (tileEntity != null) {
-            //TODO
-            tileEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(handler -> {
-                addSlot(new SlotInputHandler(handler, 0, 79, 29, new SlotCondition().setNeededItem(Items.MEMORY_CARD.get()))); //Input
-            });
-        }*/
+        if (tileEntity != null) {
+            addSlot(new SlotInputHandler(tileEntity.createItemHandlerCap(null), 0, 79, 29, new SlotCondition().setNeededItem(Items.MEMORY_CARD.get()))); //Input
+        }
     }
 
     @Override
