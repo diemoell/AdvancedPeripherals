@@ -19,6 +19,8 @@ import java.util.List;
 
 public class MemoryCardItem extends BaseItem {
 
+    public static final String OWNER_NBT_KEY = "owner";
+
     public MemoryCardItem() {
         super(new Properties().stacksTo(1));
     }
@@ -33,8 +35,8 @@ public class MemoryCardItem extends BaseItem {
         super.appendHoverText(stack, levelIn, tooltip, flagIn);
         CompoundTag data = stack.getOrCreateTag();
         Minecraft minecraft = Minecraft.getInstance();
-        if (data.contains("owner")) {
-            String username = ClientUUIDCache.getUsername(data.getUUID("owner"), minecraft.player.getUUID());
+        if (data.contains(OWNER_NBT_KEY)) {
+            String username = ClientUUIDCache.getUsername(data.getUUID(OWNER_NBT_KEY), minecraft.player.getUUID());
             if (username == null)
                 username = "unknown";
             tooltip.add(EnumColor.buildTextComponent(Component.translatable("item.advancedperipherals.tooltip.memory_card.bound", username)));
@@ -46,12 +48,12 @@ public class MemoryCardItem extends BaseItem {
         if (!worldIn.isClientSide) {
             ItemStack stack = playerIn.getItemInHand(handIn);
             CompoundTag data = stack.getOrCreateTag();
-            if (data.contains("owner")) {
+            if (data.contains(OWNER_NBT_KEY)) {
                 playerIn.displayClientMessage(Component.translatable("text.advancedperipherals.removed_player"), true);
-                data.remove("owner");
+                data.remove(OWNER_NBT_KEY);
             } else {
                 playerIn.displayClientMessage(Component.translatable("text.advancedperipherals.added_player"), true);
-                data.putUUID("owner", playerIn.getUUID());
+                data.putUUID(OWNER_NBT_KEY, playerIn.getUUID());
             }
         }
         return super.use(worldIn, playerIn, handIn);
