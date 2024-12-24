@@ -6,6 +6,7 @@ import de.srendi.advancedperipherals.network.toserver.RetrieveUsernamePacket;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
@@ -23,12 +24,13 @@ public class ClientUUIDCache {
 
     private ClientUUIDCache() { }
 
+    @Nullable
     public static String getUsername(UUID uuid, UUID requester) {
         if (CACHE.containsKey(uuid))
             return CACHE.get(uuid);
 
         APNetworking.sendToServer(new RetrieveUsernamePacket(uuid, requester));
-        return "Retrieving...";
+        return null;
     }
 
     public static void putUsername(UUID uuid, String username) {

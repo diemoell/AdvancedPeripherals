@@ -34,7 +34,10 @@ public class MemoryCardItem extends BaseItem {
         CompoundTag data = stack.getOrCreateTag();
         Minecraft minecraft = Minecraft.getInstance();
         if (data.contains("owner")) {
-            tooltip.add(EnumColor.buildTextComponent(Component.translatable("item.advancedperipherals.tooltip.memory_card.bound", ClientUUIDCache.getUsername(data.getUUID("owner"), minecraft.player.getUUID()))));
+            String username = ClientUUIDCache.getUsername(data.getUUID("owner"), minecraft.player.getUUID());
+            if (username == null)
+                username = "unknown";
+            tooltip.add(EnumColor.buildTextComponent(Component.translatable("item.advancedperipherals.tooltip.memory_card.bound", username)));
         }
     }
 
