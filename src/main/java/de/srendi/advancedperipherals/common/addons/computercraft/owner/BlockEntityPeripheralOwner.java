@@ -40,7 +40,7 @@ public class BlockEntityPeripheralOwner<T extends BlockEntity & IPeripheralTileE
                 return name.getString();
             }
         }
-        return "";
+        return null;
     }
 
     @NotNull
