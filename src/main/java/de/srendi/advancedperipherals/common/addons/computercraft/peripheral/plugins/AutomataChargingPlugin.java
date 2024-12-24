@@ -34,7 +34,6 @@ public class AutomataChargingPlugin extends AutomataCorePlugin {
         ItemStack stack = owner.getToolInMainHand();
         int fuel = arguments.optInt(0, -1);
 
-        AdvancedPeripherals.debug("chargeTurtle NOT IMPLEMENTED");
         IEnergyStorage energyStorage = stack.getCapability(Capabilities.EnergyStorage.ITEM);
         if (energyStorage != null) {
             int availableFuelSpace = fuelAbility.getFuelMaxCount() - fuelAbility.getFuelCount();
