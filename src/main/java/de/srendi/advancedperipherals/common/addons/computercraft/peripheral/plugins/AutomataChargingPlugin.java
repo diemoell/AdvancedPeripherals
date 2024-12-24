@@ -4,7 +4,6 @@ import dan200.computercraft.api.lua.IArguments;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.lua.LuaFunction;
 import dan200.computercraft.api.lua.MethodResult;
-import de.srendi.advancedperipherals.AdvancedPeripherals;
 import de.srendi.advancedperipherals.common.addons.computercraft.owner.FuelAbility;
 import de.srendi.advancedperipherals.common.addons.computercraft.owner.PeripheralOwnerAbility;
 import de.srendi.advancedperipherals.common.addons.computercraft.owner.TurtlePeripheralOwner;
