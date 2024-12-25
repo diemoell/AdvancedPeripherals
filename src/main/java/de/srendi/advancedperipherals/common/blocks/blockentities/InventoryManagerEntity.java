@@ -21,6 +21,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
+import static de.srendi.advancedperipherals.common.items.MemoryCardItem.OWNER_NBT_KEY;
+
 public class InventoryManagerEntity extends PeripheralBlockEntity<InventoryManagerPeripheral> implements IInventoryBlock<InventoryManagerContainer> {
 
     private UUID owner = null;
@@ -53,10 +55,9 @@ public class InventoryManagerEntity extends PeripheralBlockEntity<InventoryManag
     @Override
     public void setItem(int index, @NotNull ItemStack stack) {
         if (stack.getItem() instanceof MemoryCardItem) {
-            if (stack.hasTag() && stack.getTag().contains("ownerId")) {
-                this.owner = stack.getTag().getUUID("ownerId");
-                stack.getTag().remove("ownerId");
-                stack.getTag().remove("owner");
+            if (stack.hasTag() && stack.getTag().contains(OWNER_NBT_KEY)) {
+                this.owner = stack.getTag().getUUID(OWNER_NBT_KEY);
+                stack.getTag().remove(OWNER_NBT_KEY);
             } else if (stack != this.getItem(index)) {
                 // Only clear owner when the new card item is not the current item
                 this.owner = null;

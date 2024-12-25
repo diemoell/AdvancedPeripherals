@@ -43,7 +43,7 @@ public class TileEntityFuelAbility<T extends BlockEntity & IPeripheralTileEntity
     public int getFuelCount() {
         IEnergyStorage energyStorage = owner.getLevel().getCapability(Capabilities.EnergyStorage.BLOCK, owner.getPos(), null);
         if (energyStorage != null)
-            return owner.getLevel().getCapability(Capabilities.EnergyStorage.BLOCK, owner.getPos(), null).getEnergyStored() / APConfig.METAPHYSICS_CONFIG.energyToFuelRate.get();
+            return energyStorage.getEnergyStored() / APConfig.METAPHYSICS_CONFIG.energyToFuelRate.get();
         return 0;
     }
 
@@ -51,7 +51,7 @@ public class TileEntityFuelAbility<T extends BlockEntity & IPeripheralTileEntity
     public int getFuelMaxCount() {
         IEnergyStorage energyStorage = owner.getLevel().getCapability(Capabilities.EnergyStorage.BLOCK, owner.getPos(), null);
         if (energyStorage != null)
-            return owner.getLevel().getCapability(Capabilities.EnergyStorage.BLOCK, owner.getPos(), null).getEnergyStored() / APConfig.METAPHYSICS_CONFIG.energyToFuelRate.get();
+            return energyStorage.getEnergyStored() / APConfig.METAPHYSICS_CONFIG.energyToFuelRate.get();
         return 0;
     }
 
@@ -59,6 +59,6 @@ public class TileEntityFuelAbility<T extends BlockEntity & IPeripheralTileEntity
     public void addFuel(int count) {
         IEnergyStorage energyStorage = owner.getLevel().getCapability(Capabilities.EnergyStorage.BLOCK, owner.getPos(), null);
         if (energyStorage != null)
-            owner.getLevel().getCapability(Capabilities.EnergyStorage.BLOCK, owner.getPos(), null).receiveEnergy(count * APConfig.METAPHYSICS_CONFIG.energyToFuelRate.get(), false);
+            energyStorage.receiveEnergy(count * APConfig.METAPHYSICS_CONFIG.energyToFuelRate.get(), false);
     }
 }

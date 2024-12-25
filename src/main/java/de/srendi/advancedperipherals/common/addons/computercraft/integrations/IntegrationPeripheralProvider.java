@@ -16,7 +16,7 @@ import java.util.function.Predicate;
 
 public class IntegrationPeripheralProvider {
 
-    private static final String[] SUPPORTED_MODS = new String[]{"powah", "create", "mekanism", "botania"};
+    private static final String[] SUPPORTED_MODS = new String[]{"mekanism"};
 
     private static final PriorityQueue<IPeripheralIntegration> integrations = new PriorityQueue<>(Comparator.comparingInt(IPeripheralIntegration::getPriority));
 

@@ -55,7 +55,7 @@ public abstract class PeripheralBlockEntity<T extends BasePeripheral<?>> extends
             // Perform later peripheral creation, because creating peripheral
             // on init of tile entity cause some infinity loop, if peripheral
             // are depend on tile entity data
-            this.peripheral = createPeripheral();
+            this.peripheral = this.createPeripheral();
         if (peripheral.isEnabled()) {
             return peripheral;
         } else {
@@ -76,7 +76,7 @@ public abstract class PeripheralBlockEntity<T extends BasePeripheral<?>> extends
     @Override
     public IItemHandler createItemHandlerCap(@Nullable Direction side) {
         if (itemHandler == null)
-            itemHandler = new SidedInvWrapper(this, Direction.NORTH);
+            itemHandler = new SidedInvWrapper(this, null);
         return itemHandler;
     }
 
