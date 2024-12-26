@@ -19,7 +19,7 @@ import java.util.List;
 
 public class MemoryCardItem extends BaseItem {
 
-    public static final String OWNER_NBT_KEY = "owner";
+    public static final String OWNER_NBT_KEY = "ownerId";
 
     public MemoryCardItem() {
         super(new Properties().stacksTo(1));
@@ -38,7 +38,7 @@ public class MemoryCardItem extends BaseItem {
         if (data.contains(OWNER_NBT_KEY)) {
             String username = ClientUUIDCache.getUsername(data.getUUID(OWNER_NBT_KEY), minecraft.player.getUUID());
             if (username == null)
-                username = "unknown";
+                username = data.getUUID(OWNER_NBT_KEY).toString();
             tooltip.add(EnumColor.buildTextComponent(Component.translatable("item.advancedperipherals.tooltip.memory_card.bound", username)));
         }
     }

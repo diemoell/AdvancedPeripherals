@@ -54,7 +54,6 @@ public class ChunkManager extends SavedData {
         return manager;
     }
 
-    @SubscribeEvent
     public static void registerTicketController(RegisterTicketControllersEvent event) {
         event.register(controller);
     }

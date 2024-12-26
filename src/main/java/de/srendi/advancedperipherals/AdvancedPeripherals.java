@@ -7,6 +7,7 @@ import de.srendi.advancedperipherals.common.blocks.base.ICapabilityProvider;
 import de.srendi.advancedperipherals.common.configuration.APConfig;
 import de.srendi.advancedperipherals.common.setup.BlockEntityTypes;
 import de.srendi.advancedperipherals.common.setup.Registration;
+import de.srendi.advancedperipherals.common.util.ChunkManager;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModLoadingContext;
@@ -35,6 +36,7 @@ public class AdvancedPeripherals {
 
         modBus.addListener(this::commonSetup);
         modBus.addListener(this::registerCapabilities);
+        modBus.addListener(ChunkManager::registerTicketController);
 
         Registration.register(modBus);
     }
