@@ -209,8 +209,7 @@ dependencies {
 
     // Refined Storage
     compileOnly "curse.maven:refined-storage-243076:${refinedstorage_version}"
-    // Comment this when you want to run runServer since refined storage is just annoying just like its API
-    //runtimeOnly "curse.maven:refined-storage-243076:${refinedstorage_version}"
+    runtimeOnly "curse.maven:refined-storage-243076:${refinedstorage_version}"
 
     // AE2 Things
     //compileOnly "curse.maven:ae2things-609977:${ae2things_version}-sources"
