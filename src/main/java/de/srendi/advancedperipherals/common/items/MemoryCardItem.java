@@ -19,7 +19,7 @@ import java.util.List;
 
 public class MemoryCardItem extends BaseItem {
 
-    public static final String OWNER_NBT_KEY = "owner";
+    public static final String OWNER_NBT_KEY = "ownerId";
 
     public MemoryCardItem() {
         super(new Properties().stacksTo(1));
