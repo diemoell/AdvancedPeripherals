@@ -3,6 +3,7 @@ package de.srendi.advancedperipherals.common.util.fakeplayer;
 import com.mojang.authlib.GameProfile;
 import de.srendi.advancedperipherals.AdvancedPeripherals;
 import de.srendi.advancedperipherals.common.util.Pair;
+import de.srendi.advancedperipherals.common.util.StringUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.protocol.game.ServerboundPlayerActionPacket;
@@ -43,6 +44,7 @@ import net.neoforged.neoforge.common.NeoForgeMod;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.event.EventHooks;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -67,7 +69,7 @@ public class APFakePlayer extends FakePlayer {
     private float currentDamage = 0;
 
     public APFakePlayer(ServerLevel world, Entity owner, GameProfile profile) {
-        super(world, PROFILE);
+        super(world, profile != null && StringUtils.isNotBlank(profile.getName()) ?  profile : PROFILE);
         if (owner != null) {
             setCustomName(owner.getName());
             this.owner = new WeakReference<>(owner);
@@ -149,10 +151,6 @@ public class APFakePlayer extends FakePlayer {
         }
     }
 
-    @Deprecated(forRemoval = true)
-    public Pair<Boolean, String> digBlock(Direction direction) {
-        return doActionWithRot(direction.toYRot() - this.getYRot(), direction == Direction.DOWN ? 90 : direction == Direction.UP ? -90 : 0, APFakePlayer::digBlock);
-    }
 
     public Pair<Boolean, String> digBlock() {
         Level world = level();
