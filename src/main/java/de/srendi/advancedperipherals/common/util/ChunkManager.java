@@ -54,6 +54,7 @@ public class ChunkManager extends SavedData {
         return manager;
     }
 
+    // Registered using the mod bus in the main class
     public static void registerTicketController(RegisterTicketControllersEvent event) {
         event.register(controller);
     }
@@ -291,6 +292,7 @@ public class ChunkManager extends SavedData {
         public boolean isValid() {
             return lastTouch + APConfig.PERIPHERALS_CONFIG.chunkLoadValidTime.get() * 20 >= tickCounter;
         }
+
         public @NotNull CompoundTag serialize() {
             CompoundTag tag = new CompoundTag();
             tag.putString(DIMENSION_NAME_TAG, dimensionName);
