@@ -291,6 +291,7 @@ public class ChunkManager extends SavedData {
         public boolean isValid() {
             return lastTouch + APConfig.PERIPHERALS_CONFIG.chunkLoadValidTime.get() * 20 >= tickCounter;
         }
+
         public @NotNull CompoundTag serialize() {
             CompoundTag tag = new CompoundTag();
             tag.putString(DIMENSION_NAME_TAG, dimensionName);
