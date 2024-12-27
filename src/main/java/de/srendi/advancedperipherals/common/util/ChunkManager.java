@@ -54,6 +54,7 @@ public class ChunkManager extends SavedData {
         return manager;
     }
 
+    // Registered using the mod bus in the main class
     public static void registerTicketController(RegisterTicketControllersEvent event) {
         event.register(controller);
     }
