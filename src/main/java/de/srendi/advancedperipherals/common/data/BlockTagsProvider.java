@@ -3,14 +3,15 @@ package de.srendi.advancedperipherals.common.data;
 import de.srendi.advancedperipherals.AdvancedPeripherals;
 import de.srendi.advancedperipherals.common.blocks.base.IHarvestableBlock;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.TagsProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,18 +29,18 @@ public class BlockTagsProvider extends TagsProvider<Block> {
     private final PackOutput packOutput;
 
     protected BlockTagsProvider(@NotNull PackOutput packOutput, CompletableFuture<HolderLookup.Provider> future, @Nullable ExistingFileHelper existingFileHelper, DeferredRegister<Block> registry) {
-        super(packOutput, ForgeRegistries.BLOCKS.getRegistryKey(), future, AdvancedPeripherals.MOD_ID, existingFileHelper);
+        super(packOutput, Registries.BLOCK, future, AdvancedPeripherals.MOD_ID, existingFileHelper);
         this.packOutput = packOutput;
         this.blockRegistry = registry;
     }
 
     @Override
     protected void addTags(@NotNull HolderLookup.Provider provider) {
-        blockRegistry.getEntries().stream().map(RegistryObject::get).forEach(block -> {
+        blockRegistry.getEntries().stream().map(DeferredHolder::get).forEach(block -> {
             if (!(block instanceof IHarvestableBlock harvesterBlock))
                 throw new IllegalArgumentException("For any block you should define harvester logic!");
-            tag(harvesterBlock.getHarvestTag()).add(ForgeRegistries.BLOCKS.getResourceKey(block).get());
-            tag(harvesterBlock.getToolTag()).add(ForgeRegistries.BLOCKS.getResourceKey(block).get());
+            tag(harvesterBlock.getHarvestTag()).add(BuiltInRegistries.BLOCK.getResourceKey(block).get());
+            tag(harvesterBlock.getToolTag()).add(BuiltInRegistries.BLOCK.getResourceKey(block).get());
         });
     }
 

@@ -4,80 +4,113 @@ import de.srendi.advancedperipherals.common.addons.computercraft.operations.Simp
 import de.srendi.advancedperipherals.common.addons.computercraft.operations.SingleOperation;
 import de.srendi.advancedperipherals.common.addons.computercraft.operations.SphereOperation;
 import net.minecraft.FieldsAreNonnullByDefault;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.fml.config.ModConfig;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.neoforge.common.ModConfigSpec;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.function.Predicate;
+import java.util.regex.Pattern;
 
 @FieldsAreNonnullByDefault
 public class PeripheralsConfig implements IAPConfig {
 
-    //Player Detector
-    public final ForgeConfigSpec.IntValue playerDetMaxRange;
-    public final ForgeConfigSpec.BooleanValue playerSpy;
-    public final ForgeConfigSpec.BooleanValue morePlayerInformation;
-    public final ForgeConfigSpec.BooleanValue enablePlayerDetector;
-    public final ForgeConfigSpec.BooleanValue playerDetMultiDimensional;
-    public final ForgeConfigSpec.BooleanValue playerSpyRandError;
-    public final ForgeConfigSpec.IntValue playerSpyRandErrorAmount;
-    public final ForgeConfigSpec.IntValue playerSpyPreciseMaxRange;
+    // Player Detector
+    public final ModConfigSpec.IntValue playerDetMaxRange;
+    public final ModConfigSpec.BooleanValue playerSpy;
+    public final ModConfigSpec.BooleanValue morePlayerInformation;
+    public final ModConfigSpec.BooleanValue enablePlayerDetector;
+    public final ModConfigSpec.BooleanValue playerDetMultiDimensional;
+    public final ModConfigSpec.BooleanValue playerSpyRandError;
+    public final ModConfigSpec.IntValue playerSpyRandErrorAmount;
+    public final ModConfigSpec.IntValue playerSpyPreciseMaxRange;
 
-    //Energy Detector
-    public final ForgeConfigSpec.IntValue energyDetectorMaxFlow;
-    public final ForgeConfigSpec.BooleanValue enableEnergyDetector;
+    // Energy Detector
+    public final ModConfigSpec.IntValue energyDetectorMaxFlow;
+    public final ModConfigSpec.BooleanValue enableEnergyDetector;
 
-    //NBT Storage
-    public final ForgeConfigSpec.IntValue nbtStorageMaxSize;
-    public final ForgeConfigSpec.BooleanValue enableNBTStorage;
-    //Chunky turtle
-    public final ForgeConfigSpec.IntValue chunkLoadValidTime;
+    // NBT Storage
+    public final ModConfigSpec.IntValue nbtStorageMaxSize;
+    public final ModConfigSpec.BooleanValue enableNBTStorage;
 
-    public final ForgeConfigSpec.IntValue chunkyTurtleRadius;
-    public final ForgeConfigSpec.BooleanValue enableChunkyTurtle;
-    //Chat box
-    public final ForgeConfigSpec.BooleanValue enableChatBox;
-    public final ForgeConfigSpec.ConfigValue<String> defaultChatBoxPrefix;
-    public final ForgeConfigSpec.IntValue chatBoxMaxRange;
-    public final ForgeConfigSpec.BooleanValue chatBoxMultiDimensional;
+    // Chunky turtle
+    public final ModConfigSpec.IntValue chunkLoadValidTime;
+    public final ModConfigSpec.IntValue chunkyTurtleRadius;
+    public final ModConfigSpec.BooleanValue enableChunkyTurtle;
 
-    //ME Bridge
-    public final ForgeConfigSpec.BooleanValue enableMEBridge;
-    public final ForgeConfigSpec.IntValue meConsumption;
+    // Chat box
+    public final ModConfigSpec.BooleanValue enableChatBox;
+    public final ModConfigSpec.ConfigValue<String> defaultChatBoxPrefix;
+    public final ModConfigSpec.IntValue chatBoxMaxRange;
+    public final ModConfigSpec.BooleanValue chatBoxMultiDimensional;
+    public final ModConfigSpec.BooleanValue chatBoxPreventRunCommand;
+    public final ModConfigSpec.BooleanValue chatBoxWrapCommand;
+    public final ModConfigSpec.ConfigValue<List<? extends String>> chatBoxBannedCommands;
+    private List<Predicate<String>> chatBoxCommandFilters = null;
 
-    //Rs Bridge
-    public final ForgeConfigSpec.BooleanValue enableRSBridge;
-    public final ForgeConfigSpec.IntValue rsConsumption;
+    // ME Bridge
+    public final ModConfigSpec.BooleanValue enableMEBridge;
+    public final ModConfigSpec.IntValue meConsumption;
 
-    //Environment Detector
-    public final ForgeConfigSpec.BooleanValue enableEnvironmentDetector;
+    // Rs Bridge
+    public final ModConfigSpec.BooleanValue enableRSBridge;
+    public final ModConfigSpec.IntValue rsConsumption;
 
-    //AR Controller
-    public final ForgeConfigSpec.BooleanValue enableARGoggles;
+    // Environment Detector
+    public final ModConfigSpec.BooleanValue enableEnvironmentDetector;
 
-    //Inventory Manager
-    public final ForgeConfigSpec.BooleanValue enableInventoryManager;
+    // AR Controller
+    public final ModConfigSpec.BooleanValue enableARGoggles;
 
-    //Redstone Integrator
-    public final ForgeConfigSpec.BooleanValue enableRedstoneIntegrator;
+    // Inventory Manager
+    public final ModConfigSpec.BooleanValue enableInventoryManager;
 
-    //Block reader
-    public final ForgeConfigSpec.BooleanValue enableBlockReader;
+    // Redstone Integrator
+    public final ModConfigSpec.BooleanValue enableRedstoneIntegrator;
 
-    //Geo Scanner
-    public final ForgeConfigSpec.BooleanValue enableGeoScanner;
+    // Block reader
+    public final ModConfigSpec.BooleanValue enableBlockReader;
 
-    //Colony integrator
-    public final ForgeConfigSpec.BooleanValue enableColonyIntegrator;
+    // Geo Scanner
+    public final ModConfigSpec.BooleanValue enableGeoScanner;
 
-    //Compass turtle
-    public final ForgeConfigSpec.BooleanValue enableCompassTurtle;
+    // Colony integrator
+    public final ModConfigSpec.BooleanValue enableColonyIntegrator;
 
-    //Powered Peripherals
-    public final ForgeConfigSpec.BooleanValue enablePoweredPeripherals;
-    public final ForgeConfigSpec.BooleanValue disablePocketFuelConsumption;
-    public final ForgeConfigSpec.IntValue poweredPeripheralMaxEnergyStorage;
-    private final ForgeConfigSpec configSpec;
+    // Compass turtle
+    public final ModConfigSpec.BooleanValue enableCompassTurtle;
+    public final ModConfigSpec.IntValue compassAccurePlaceRadius;
+    public final ModConfigSpec.IntValue compassAccurePlaceFreeRadius;
+
+    // Powered Peripherals
+    public final ModConfigSpec.BooleanValue enablePoweredPeripherals;
+    public final ModConfigSpec.BooleanValue disablePocketFuelConsumption;
+    public final ModConfigSpec.IntValue poweredPeripheralMaxEnergyStorage;
+    private final ModConfigSpec configSpec;
+
+    private static final List<String> chatBoxDefaultBannedCommands = Arrays.asList(
+        "/execute",
+        "/op",
+        "/deop",
+        "/gamemode",
+        "/gamerule",
+        "/stop",
+
+        "/give",
+        "/fill",
+        "/setblock",
+        "/summon",
+
+        "/whitelist",
+        "^/ban-(?:ip)?\\s*",
+        "^/pardon-(?:ip)?\\s*",
+
+        "^/save-(?:on|off)\\s*"
+    );
 
     public PeripheralsConfig() {
-        ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
+        ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
 
         builder.comment("Peripherals config").push("Peripherals");
 
@@ -114,6 +147,9 @@ public class PeripheralsConfig implements IAPConfig {
         defaultChatBoxPrefix = builder.comment("Defines default chatbox prefix").define("defaultChatBoxPrefix", "AP");
         chatBoxMaxRange = builder.comment("Defines the maximal range of the chat box in blocks. -1 for infinite. If the range is not -1, players in other dimensions won't able to receive messages").defineInRange("chatBoxMaxRange", -1, -1, 30000000);
         chatBoxMultiDimensional = builder.comment("If true, the chat box is able to send messages to other dimensions than its own").define("chatBoxMultiDimensional", true);
+        chatBoxPreventRunCommand = builder.comment("If true, the chat box cannot use 'run_command' action").define("chatBoxPreventRunCommand", false);
+        chatBoxWrapCommand = builder.comment("If true, the chat box will wrap and execute 'run_command' or 'suggest_command' action with zero permission, in order to prevent operators accidently run dangerous commands.").define("chatBoxWrapCommand", true);
+        chatBoxBannedCommands = builder.comment("These commands below will not be able to send by 'run_command' or 'suggest_command' action. It will match as prefix if starts with '/', other wise use regex pattern").defineList("chatBoxBannedCommands", chatBoxDefaultBannedCommands, (o) -> o instanceof String value && value.length() > 0);
 
         pop("ME_Bridge", builder);
 
@@ -155,6 +191,8 @@ public class PeripheralsConfig implements IAPConfig {
         pop("Compass_Turtle", builder);
 
         enableCompassTurtle = builder.comment("Enable the compass turtle or not.").define("enableCompassTurtle", true);
+        compassAccurePlaceRadius = builder.comment("The maximum distance the compass can locate accurately with in each axis.").defineInRange("compassAccurePlaceRadius", 3, 0, 8);
+        compassAccurePlaceFreeRadius = builder.comment("The free distance the compass can locate accurately with in each axis.").defineInRange("compassAccurePlaceFreeRadius", 1, 0, 4);
 
         pop("Powered_Peripherals", builder);
 
@@ -177,7 +215,7 @@ public class PeripheralsConfig implements IAPConfig {
     }
 
     @Override
-    public ForgeConfigSpec getConfigSpec() {
+    public ModConfigSpec getConfigSpec() {
         return configSpec;
     }
 
@@ -189,5 +227,30 @@ public class PeripheralsConfig implements IAPConfig {
     @Override
     public ModConfig.Type getType() {
         return ModConfig.Type.COMMON;
+    }
+
+    private List<Predicate<String>> parseChatBoxCommandFilters() {
+        List<Predicate<String>> filters = new ArrayList<>();
+        for (final String s : chatBoxBannedCommands.get()) {
+            String p = s;
+            if (p.charAt(0) == '/') {
+                p = p.replaceAll("\\s+", "\\\\s+");
+                if (p.equals(s)) {
+                    final String prefix = s;
+                    filters.add((v) -> v.startsWith(prefix) && (v.length() == prefix.length() || " \t".indexOf(v.charAt(prefix.length())) != -1));
+                    continue;
+                }
+                p = "^" + p + "\\s*";
+            }
+            filters.add(Pattern.compile(p).asPredicate());
+        }
+        return filters;
+    }
+
+    public List<Predicate<String>> getChatBoxCommandFilters() {
+        if (chatBoxCommandFilters == null) {
+            chatBoxCommandFilters = parseChatBoxCommandFilters();
+        }
+        return chatBoxCommandFilters;
     }
 }

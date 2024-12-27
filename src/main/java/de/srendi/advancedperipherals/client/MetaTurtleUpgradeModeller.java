@@ -9,6 +9,7 @@ import dan200.computercraft.api.turtle.ITurtleAccess;
 import dan200.computercraft.api.turtle.TurtleSide;
 import de.srendi.advancedperipherals.common.util.DataStorageUtil;
 import de.srendi.advancedperipherals.lib.turtle.ClockwiseAnimatedTurtleUpgrade;
+import net.minecraft.nbt.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -16,7 +17,7 @@ public class MetaTurtleUpgradeModeller<T extends ClockwiseAnimatedTurtleUpgrade<
 
     @NotNull
     @Override
-    public TransformedModel getModel(T upgrade, @Nullable ITurtleAccess turtle, @NotNull TurtleSide side) {
+    public TransformedModel getModel(T upgrade, @Nullable ITurtleAccess turtle, @NotNull TurtleSide side, CompoundTag compoundTag) {
         if (upgrade.getLeftModel() == null) {
             PoseStack stack = new PoseStack();
             stack.pushPose();

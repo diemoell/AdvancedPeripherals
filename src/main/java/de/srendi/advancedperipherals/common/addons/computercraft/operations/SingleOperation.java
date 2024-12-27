@@ -1,7 +1,7 @@
 package de.srendi.advancedperipherals.common.addons.computercraft.operations;
 
 import de.srendi.advancedperipherals.lib.peripherals.IPeripheralOperation;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,7 +13,8 @@ public enum SingleOperation implements IPeripheralOperation<SingleOperationConte
     SUCK(1000, 1),
     USE_ON_ANIMAL(2500, 10),
     CAPTURE_ANIMAL(50_000, 100),
-    WARP(1000, DistancePolicy.IGNORED, CountPolicy.MULTIPLY, 1, DistancePolicy.SQRT, CountPolicy.MULTIPLY);
+    WARP(1000, DistancePolicy.IGNORED, CountPolicy.MULTIPLY, 1, DistancePolicy.SQRT, CountPolicy.MULTIPLY),
+    ACCURE_PLACE(1000, DistancePolicy.IGNORED, CountPolicy.MULTIPLY, 1, DistancePolicy.LINEAR, CountPolicy.MULTIPLY);
 
     private final int defaultCooldown;
     private final DistancePolicy distanceCooldownPolicy;
@@ -21,8 +22,8 @@ public enum SingleOperation implements IPeripheralOperation<SingleOperationConte
     private final int defaultCost;
     private final DistancePolicy distanceCostPolicy;
     private final CountPolicy countCostPolicy;
-    private ForgeConfigSpec.IntValue cooldown;
-    private ForgeConfigSpec.IntValue cost;
+    private ModConfigSpec.IntValue cooldown;
+    private ModConfigSpec.IntValue cost;
 
     SingleOperation(int defaultCooldown, DistancePolicy distanceCooldownPolicy, CountPolicy countCooldownPolicy, int defaultCost, DistancePolicy distanceCostPolicy, CountPolicy countCostPolicy) {
         this.defaultCooldown = defaultCooldown;
@@ -67,13 +68,14 @@ public enum SingleOperation implements IPeripheralOperation<SingleOperationConte
     }
 
     @Override
-    public void addToConfig(ForgeConfigSpec.Builder builder) {
-        cooldown = builder.defineInRange(settingsName() + "Cooldown", defaultCooldown, 1_000, Integer.MAX_VALUE);
+    public void addToConfig(ModConfigSpec.Builder builder) {
+        cooldown = builder.defineInRange(settingsName() + "Cooldown", defaultCooldown, 0, Integer.MAX_VALUE);
         cost = builder.defineInRange(settingsName() + "Cost", defaultCost, 0, Integer.MAX_VALUE);
     }
 
     public enum DistancePolicy {
         IGNORED(d -> 1),
+        LINEAR(d -> d),
         SQRT(d -> (int) Math.sqrt(d));
 
         private final Function<Integer, Integer> factorFunction;

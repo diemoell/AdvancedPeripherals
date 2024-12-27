@@ -1,7 +1,18 @@
 package de.srendi.advancedperipherals.common.commands;
 
+import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.brigadier.tree.LiteralCommandNode;
+import dan200.computercraft.core.computer.ComputerSide;
+import dan200.computercraft.core.computer.Environment;
+import dan200.computercraft.shared.ModRegistry;
+import dan200.computercraft.shared.command.text.ChatHelpers;
+import dan200.computercraft.shared.command.text.TableBuilder;
+import dan200.computercraft.shared.computer.core.ServerComputer;
+import dan200.computercraft.shared.computer.core.ServerContext;
 import de.srendi.advancedperipherals.AdvancedPeripherals;
+import de.srendi.advancedperipherals.common.addons.computercraft.peripheral.ChunkyPeripheral;
 import de.srendi.advancedperipherals.common.util.inventory.ItemUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
@@ -11,16 +22,42 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.event.RegisterCommandsEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.event.RegisterCommandsEvent;
+
+import java.util.Comparator;
+
 
 @Mod.EventBusSubscriber(modid = AdvancedPeripherals.MOD_ID)
 public class APCommands {
+    public static final String ROOT_LITERAL = "advancedperipherals";
+    public static final String FORCELOAD_LITERAL = "forceload";
+    static final String FORCELOAD_HELP =
+        "/" + ROOT_LITERAL + " " + FORCELOAD_LITERAL + " help" + " - show this help message\n" +
+        "/" + ROOT_LITERAL + " " + FORCELOAD_LITERAL + " dump" + " - show all chunky turtles\n";
+    public static final String EXEC_LITERAL = "safe-exec";
+    public static final String ROOT_SAFE_EXEC_LITERAL = "ap-safe-exec";
 
     @SubscribeEvent
     public static void register(RegisterCommandsEvent event) {
-        event.getDispatcher().register(Commands.literal("advancedperipherals").then(Commands.literal("getHashItem").executes(context -> getHashItem(context.getSource()))));
+        LiteralCommandNode<CommandSourceStack> safeExecNode = Commands.literal(EXEC_LITERAL)
+            .then(Commands.argument("command", StringArgumentType.greedyString())
+                .executes(APCommands::safeExecute))
+            .build();
+        event.getDispatcher().register(Commands.literal(ROOT_LITERAL)
+            .then(Commands.literal("getHashItem").executes(context -> getHashItem(context.getSource())))
+            .then(Commands.literal(FORCELOAD_LITERAL)
+                .executes(context -> forceloadHelp(context.getSource()))
+                .then(Commands.literal("help")
+                    .executes(context -> forceloadHelp(context.getSource())))
+                .then(Commands.literal("dump")
+                    .requires(ModRegistry.Permissions.PERMISSION_DUMP)
+                    .executes(context -> forceloadDump(context.getSource())))
+            )
+            .then(safeExecNode)
+        );
+        event.getDispatcher().register(Commands.literal(ROOT_SAFE_EXEC_LITERAL).redirect(safeExecNode));
     }
 
     private static int getHashItem(CommandSourceStack source) throws CommandSyntaxException {
@@ -41,5 +78,63 @@ public class APCommands {
                                 .withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, fingerprint))
                                 .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("Copy"))))), true);
         return 1;
+    }
+
+    private static int forceloadHelp(CommandSourceStack source) throws CommandSyntaxException {
+        source.sendSuccess(() -> Component.literal(FORCELOAD_HELP), true);
+        return 1;
+    }
+
+    private static int forceloadDump(CommandSourceStack source) throws CommandSyntaxException {
+        TableBuilder table = new TableBuilder("ChunkyTurtles", "Computer", "Position");
+
+        ServerComputer[] computers = ServerContext.get(source.getServer()).registry().getComputers().stream().filter((computer) -> {
+            Environment env = computer.getComputer().getEnvironment();
+            for (ComputerSide side : ComputerSide.values()) {
+                if (env.getPeripheral(side) instanceof ChunkyPeripheral) {
+                    return true;
+                }
+            }
+            return false;
+        }).sorted(Comparator.comparingInt(ServerComputer::getID)).toArray(ServerComputer[]::new);
+
+        for (ServerComputer computer : computers) {
+            table.row(
+                makeComputerDumpCommand(computer),
+                makeComputerPosCommand(computer)
+            );
+        }
+
+        table.display(source);
+        return computers.length;
+    }
+
+    private static int safeExecute(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        CommandSourceStack source = context.getSource().withPermission(0);
+        String command = StringArgumentType.getString(context, "command");
+        try {
+            source.getServer().getCommands().performPrefixedCommand(source, command);
+            return 1;
+        } catch (RuntimeException e) {
+            source.sendFailure(Component.literal(e.getMessage()));
+            return 0;
+        }
+    }
+
+
+    private static Component makeComputerDumpCommand(ServerComputer computer) {
+        return ChatHelpers.link(
+            Component.literal("#" + computer.getID()),
+            "/computercraft dump " + computer.getInstanceUUID(),
+            Component.translatable("commands.computercraft.dump.action")
+        );
+    }
+
+    private static Component makeComputerPosCommand(ServerComputer computer) {
+        return ChatHelpers.link(
+            ChatHelpers.position(computer.getPosition()),
+            "/computercraft tp " + computer.getInstanceUUID(),
+            Component.translatable("commands.computercraft.tp.action")
+        );
     }
 }

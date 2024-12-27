@@ -5,12 +5,16 @@ import de.srendi.advancedperipherals.common.blocks.base.BaseBlock;
 import de.srendi.advancedperipherals.common.setup.Blocks;
 import net.minecraft.core.Direction;
 import net.minecraft.core.FrontAndTop;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.client.model.generators.*;
-import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.client.model.generators.BlockModelBuilder;
+import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
+import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
+import net.neoforged.neoforge.client.model.generators.ModelFile;
+import net.neoforged.neoforge.client.model.generators.ModelProvider;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
 public class BlockStatesAndModelsProvider extends BlockStateProvider {
 
@@ -31,10 +35,6 @@ public class BlockStatesAndModelsProvider extends BlockStateProvider {
         peripheralBlock(Blocks.REDSTONE_INTEGRATOR.get(), "front");
         peripheralBlock(Blocks.BLOCK_READER.get(), generateModel(Blocks.BLOCK_READER.get(), false, "north", "south", "east", "west", "up", "down"));
         peripheralBlock(Blocks.GEO_SCANNER.get(), "front");
-        peripheralBlock(Blocks.COLONY_INTEGRATOR.get(), generateModel(Blocks.COLONY_INTEGRATOR.get())
-                .texture("particle", blockTexture(Blocks.COLONY_INTEGRATOR.get()))
-                .texture("up", blockTexture(net.minecraft.world.level.block.Blocks.OAK_LOG, "top"))
-                .texture("down", blockTexture(net.minecraft.world.level.block.Blocks.OAK_LOG, "top")));
         peripheralBlock(Blocks.NBT_STORAGE.get(), "front");
     }
 
@@ -99,7 +99,7 @@ public class BlockStatesAndModelsProvider extends BlockStateProvider {
     }
 
     private ResourceLocation key(Block block) {
-        return ForgeRegistries.BLOCKS.getKey(block);
+        return BuiltInRegistries.BLOCK.getKey(block);
     }
 
     private String name(Block block) {

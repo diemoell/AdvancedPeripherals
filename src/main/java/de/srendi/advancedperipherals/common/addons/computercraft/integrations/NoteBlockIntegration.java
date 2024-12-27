@@ -7,6 +7,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.NoteBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
+import net.neoforged.neoforge.common.CommonHooks;
 import org.jetbrains.annotations.NotNull;
 
 public class NoteBlockIntegration extends BlockIntegrationPeripheral<NoteBlock> {
@@ -24,7 +26,7 @@ public class NoteBlockIntegration extends BlockIntegrationPeripheral<NoteBlock> 
     @LuaFunction(mainThread = true)
     public final int changeNote() {
         BlockState state = world.getBlockState(pos);
-        int newNote = net.minecraftforge.common.ForgeHooks.onNoteChange(world, pos, state, state.getValue(NoteBlock.NOTE), state.cycle(NoteBlock.NOTE).getValue(NoteBlock.NOTE));
+        int newNote = CommonHooks.onNoteChange(world, pos, state, state.getValue(NoteBlock.NOTE), state.cycle(NoteBlock.NOTE).getValue(NoteBlock.NOTE));
         if (newNote == -1) return -1;
         state = state.setValue(NoteBlock.NOTE, newNote);
         world.setBlock(pos, state, 3);
@@ -50,6 +52,7 @@ public class NoteBlockIntegration extends BlockIntegrationPeripheral<NoteBlock> 
     public final void playNote() {
         if (world.isEmptyBlock(pos.above())) {
             world.blockEvent(pos, getBlock(), 0, 0);
+            world.gameEvent(null, GameEvent.NOTE_BLOCK_PLAY, pos);
         }
     }
 }

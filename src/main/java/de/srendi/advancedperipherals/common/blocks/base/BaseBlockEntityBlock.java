@@ -4,7 +4,11 @@ import de.srendi.advancedperipherals.lib.peripherals.IPeripheralTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.world.*;
+import net.minecraft.world.Container;
+import net.minecraft.world.Containers;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
@@ -13,12 +17,12 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -44,7 +48,7 @@ public abstract class BaseBlockEntityBlock extends BaseBlock implements EntityBl
         MenuProvider namedContainerProvider = this.getMenuProvider(state, levelIn, pos);
         if (namedContainerProvider != null) {
             if (!(player instanceof ServerPlayer serverPlayerEntity)) return InteractionResult.PASS;
-            NetworkHooks.openScreen(serverPlayerEntity, namedContainerProvider, pos);
+            serverPlayerEntity.openMenu(namedContainerProvider, pos);
         }
         return InteractionResult.SUCCESS;
     }
@@ -64,7 +68,9 @@ public abstract class BaseBlockEntityBlock extends BaseBlock implements EntityBl
         if (worldIn.getBlockEntity(pos) == null)
             return;
         //Used for the lua function getName()
-        worldIn.getBlockEntity(pos).getPersistentData().putString("CustomName", stack.getDisplayName().getString());
+        if (stack.hasCustomHoverName() && worldIn.getBlockEntity(pos) instanceof BaseContainerBlockEntity blockEntity) {
+            blockEntity.setCustomName(stack.getHoverName());
+        }
     }
 
     @Nullable

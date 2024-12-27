@@ -5,6 +5,7 @@ import dan200.computercraft.core.apis.TableHelper;
 import de.srendi.advancedperipherals.AdvancedPeripherals;
 import de.srendi.advancedperipherals.common.util.NBTUtil;
 import de.srendi.advancedperipherals.common.util.Pair;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -12,8 +13,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.Map;
 
@@ -38,7 +38,7 @@ public class FluidFilter {
                 String name = TableHelper.getStringField(item, "name");
                 if (name.startsWith("#")) {
                     fluidFilter.tag = TagKey.create(Registries.FLUID, new ResourceLocation(name.substring(1)));
-                } else if ((fluidFilter.fluid = ItemUtil.getRegistryEntry(name, ForgeRegistries.FLUIDS)) == null) {
+                } else if ((fluidFilter.fluid = ItemUtil.getRegistryEntry(name, BuiltInRegistries.FLUID)) == null) {
                     return Pair.of(null, "FLUID_NOT_FOUND");
                 }
             } catch (LuaException luaException) {
@@ -103,16 +103,15 @@ public class FluidFilter {
             return fingerprint.equals(testFingerprint);
         }
 
-        // If the filter does not have nbt values, a tag or a fingerprint, just test if the items are the same
-        if (fluid != Fluids.EMPTY) {
-            if (tag == null && nbt == null && fingerprint.isEmpty())
-                return stack.getFluid().isSame(fluid);
+        if (fluid != Fluids.EMPTY && !stack.getFluid().isSame(fluid)) {
+            return false;
         }
-        if (tag != null && !stack.getFluid().is(tag))
+        if (tag != null && !stack.getFluid().is(tag)) {
             return false;
-        if (nbt != null && !stack.getOrCreateTag().equals(nbt) && (fluid == Fluids.EMPTY || stack.getFluid().isSame(fluid)))
+        }
+        if (nbt != null && !stack.getOrCreateTag().equals(nbt)) {
             return false;
-
+        }
         return true;
     }
 

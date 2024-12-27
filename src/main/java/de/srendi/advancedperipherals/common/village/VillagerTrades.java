@@ -2,15 +2,16 @@ package de.srendi.advancedperipherals.common.village;
 
 import dan200.computercraft.shared.ModRegistry;
 import de.srendi.advancedperipherals.AdvancedPeripherals;
+import de.srendi.advancedperipherals.common.configuration.APConfig;
 import de.srendi.advancedperipherals.common.setup.Blocks;
 import de.srendi.advancedperipherals.common.setup.CCRegistration;
 import de.srendi.advancedperipherals.common.setup.Items;
 import de.srendi.advancedperipherals.common.setup.Villagers;
 import de.srendi.advancedperipherals.common.util.inventory.ItemUtil;
-import net.minecraftforge.event.village.VillagerTradesEvent;
-import net.minecraftforge.event.village.WandererTradesEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.event.village.VillagerTradesEvent;
+import net.neoforged.neoforge.event.village.WandererTradesEvent;
 
 import static de.srendi.advancedperipherals.common.village.VillagerTrade.TradeBuilder;
 
@@ -19,12 +20,14 @@ public class VillagerTrades {
 
     @SubscribeEvent
     public static void registerWanderingTrade(WandererTradesEvent event) {
-        TradeBuilder.createTrade(event, Blocks.PERIPHERAL_CASING.get(), VillagerTrade.Type.ITEM_FOR_EMERALD, 1, 1)
-                .setMaxUses(8)
-                .build();
-        TradeBuilder.createTrade(event, ModRegistry.Blocks.TURTLE_ADVANCED.get(), VillagerTrade.Type.ITEM_FOR_EMERALD, 2, 1)
-                .setMaxUses(8)
-                .build();
+        if (APConfig.WORLD_CONFIG.enableWanderingTraderTrades.get()) {
+            TradeBuilder.createTrade(event, Blocks.PERIPHERAL_CASING.get(), VillagerTrade.Type.ITEM_FOR_EMERALD, 1, 1)
+                    .setMaxUses(8)
+                    .build();
+            TradeBuilder.createTrade(event, ModRegistry.Blocks.TURTLE_ADVANCED.get(), VillagerTrade.Type.ITEM_FOR_EMERALD, 2, 1)
+                    .setMaxUses(8)
+                    .build();
+        }
     }
 
     @SubscribeEvent

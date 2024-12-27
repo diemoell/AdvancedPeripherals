@@ -8,16 +8,13 @@ import de.srendi.advancedperipherals.common.addons.computercraft.owner.IPeripher
 import de.srendi.advancedperipherals.common.util.CoordUtil;
 import de.srendi.advancedperipherals.common.util.StringUtil;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,11 +33,11 @@ public class FluidUtil {
         if (object instanceof IFluidHandler fluidHandler)
             return fluidHandler;
 
-        if (object instanceof ICapabilityProvider capabilityProvider) {
+        /*if (object instanceof ICapabilityProvider capabilityProvider) {
             LazyOptional<IFluidHandler> cap = capabilityProvider.getCapability(ForgeCapabilities.FLUID_HANDLER);
             if (cap.isPresent())
                 return cap.orElseThrow(NullPointerException::new);
-        }
+        }*/
         return null;
     }
 
@@ -89,10 +86,10 @@ public class FluidUtil {
     }
 
     public static ResourceLocation getRegistryKey(Fluid fluid) {
-        return ForgeRegistries.FLUIDS.getKey(fluid);
+        return BuiltInRegistries.FLUID.getKey(fluid);
     }
 
     public static ResourceLocation getRegistryKey(FluidStack fluid) {
-        return ForgeRegistries.FLUIDS.getKey(fluid.copy().getFluid());
+        return BuiltInRegistries.FLUID.getKey(fluid.copy().getFluid());
     }
 }

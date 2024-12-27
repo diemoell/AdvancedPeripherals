@@ -6,6 +6,56 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+## [1.20.4-0.7.42a] - 2024-12-22
+
+### Fixed
+- Fixed ME Bridge not connecting to AE2 grids
+- Fixed some recipes
+- Every energy, item or fluid interacting block should now work like the energy detector or some ME/RS functions
+- Fixed that the inventory manager would not open the screen
+
+## [1.20.1-0.7.41r] - 2024-10-21
+
+### Added
+- Wandering Trader config
+
+### Changed
+- Save the owner of the memory card to the inventory manager after a player places the card into the manager and clear the card after. Resolves a security issue where players could eventually steal memory cards from other players
+
+### Fixed
+- [#660] Fixed that the inventory manager's `getItemInHand` function adds a blank nbt tag to the item
+- [#636] Fixed that the automata's `useOnBlock` function will return PASS in some specific case
+- [#645] Fixed that the inventory functions for the powah integration would always return nil
+- Fixed that some entity operations don't have enough range
+- [#642] Fixed that some powah integrations clashes with the generic energy peripheral from CC which disables some functions
+- [#640] Fixed null pointer exception when invoking `getName`
+- [#662] Use tick time instead of epoch time for our chunk manager, fixes an issue where chunks unload if some ticks are skipped (lag)
+
+## [1.20.1-0.7.40r] - 2024-06-11
+
+### Added
+- [Features/#43] Up/down versions of automata block functions using pitch and yaw - Thanks to @zyxkad
+- [Features/#9] Added shift sneaking version of `useOnBlock` - Thanks to @zyxkad
+
+### Fixed
+- [#582] Reworked the chunky turtle logic to fix several issues with them - Thanks to @zyxkad
+- Fixed a crash with the ME Bridge while trying to iterate through storage busses without a connected storage block
+- Fixed `isOnEnchantedSoil()` for the mana flower integration
+- [#419] Fixed that the automata `digBlock` function does not use breaking directions the right way. Fixes several issues with hammers or other AOE tools. - Thanks to @zyxkad
+- [#629] Fixed that placed blocks do not retain their custom block name when destroyed - Thanks to @WiggleWizzard
+- [#621] Fixed that the `listCells` function for the ME Bridge does not search in third party drives - Thanks to @michele-grifa
+- [#632] Fixed that the chat box allows sending chat messages with negative range - Thanks to @zyxkad
+- [#619] Fixed that the chat box can spoof people to click message to run danger commands - Thanks to @zyxkad
+- [#617] Fixed that sending invalid nbt data for some mod items through the chat box can cause a client crash - Thanks to @zyxkad
+- [#603] Fixed that the note block integration does not trigger allays - Thanks to @zyxkad
+- [#599] Fixed that turtle upgrades can't be equipped with custom NBT values - Thanks to @zyxkad
+- [#595] Fixed that `scanEntities` does not include living entity fields - Thanks to @zyxkad
+- [#581] Fixed concurrency issues with our server worker, fixes a crash when CC is set to use multiple threads - Thanks to @zyxkad
+
+### Changed
+- [#588] Changed the misspelled `maxHealth` parameter in the player detector, the misspelled attribute is still included in the table for backwards compatibility - Thanks to @zyxkad
+- [#613] Clamp analog output of the `setAnalogOutput` function between 0-15 - Thanks to @zyxkad
+
 ## [1.20.1-0.7.39r] - 2024-04-12
 ### Fixed
 - [#578] Re-Added botania integration with a few new functions

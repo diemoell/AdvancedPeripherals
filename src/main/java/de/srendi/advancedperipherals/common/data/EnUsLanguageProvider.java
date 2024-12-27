@@ -7,13 +7,13 @@ import de.srendi.advancedperipherals.common.setup.CCRegistration;
 import de.srendi.advancedperipherals.common.setup.Items;
 import de.srendi.advancedperipherals.common.setup.Villagers;
 import net.minecraft.client.KeyMapping;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.common.data.LanguageProvider;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.common.data.LanguageProvider;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
@@ -54,7 +54,6 @@ public class EnUsLanguageProvider extends LanguageProvider {
     private void addBlocks() {
         addBlock(Blocks.BLOCK_READER, "Block Reader");
         addBlock(Blocks.CHAT_BOX, "Chat Box");
-        addBlock(Blocks.COLONY_INTEGRATOR, "Colony Integrator");
         addBlock(Blocks.ENERGY_DETECTOR, "Energy Detector");
         addBlock(Blocks.ENVIRONMENT_DETECTOR, "Environment Detector");
         addBlock(Blocks.GEO_SCANNER, "Geo Scanner");
@@ -119,7 +118,6 @@ public class EnUsLanguageProvider extends LanguageProvider {
         addTooltip(Blocks.REDSTONE_INTEGRATOR.get(), "&7This block is able to interact with redstone. Works exactly like the redstone api of an computer.");
         addTooltip(Blocks.BLOCK_READER.get(), "&7Reads nbt data of blocks to interact with blocks which do not have computer support.");
         addTooltip(Blocks.GEO_SCANNER.get(), "&7Scans the area around it to find some shiny ores.");
-        addTooltip(Blocks.COLONY_INTEGRATOR.get(), "&7Interacts with Minecolonies to read data about your colony and citizens.");
         addTooltip(Blocks.NBT_STORAGE.get(), "&7Acts like a storage disk. Can store nbt based data.");
         addTooltip(Items.WEAK_AUTOMATA_CORE.get(), "&7Upgrade for turtles, which makes turtles more useful.");
         addTooltip(Items.OVERPOWERED_WEAK_AUTOMATA_CORE.get(), "&7Improved version of the weak automata core, that provides some overpowered uses! Be careful, the upgrade is very fragile.");
@@ -158,11 +156,11 @@ public class EnUsLanguageProvider extends LanguageProvider {
     }
 
     private void addTooltip(Item item, String name) {
-        addTooltip(ForgeRegistries.ITEMS.getKey(item).getPath(), name);
+        addTooltip(BuiltInRegistries.ITEM.getKey(item).getPath(), name);
     }
 
     private void addTooltip(Block block, String name) {
-        addTooltip(ForgeRegistries.BLOCKS.getKey(block).getPath(), name);
+        addTooltip(BuiltInRegistries.BLOCK.getKey(block).getPath(), name);
     }
 
     private void addTooltip(String tooltip, String name) {

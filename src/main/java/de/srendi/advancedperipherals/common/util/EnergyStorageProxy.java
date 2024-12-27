@@ -1,15 +1,13 @@
 package de.srendi.advancedperipherals.common.util;
 
 import de.srendi.advancedperipherals.common.blocks.blockentities.EnergyDetectorEntity;
-import net.minecraftforge.energy.IEnergyStorage;
-
-import java.util.Optional;
+import net.neoforged.neoforge.energy.IEnergyStorage;
 
 public class EnergyStorageProxy implements IEnergyStorage {
 
     private final EnergyDetectorEntity energyDetectorTE;
     private int maxTransferRate;
-    private int transferedInThisTick = 0;
+    private int transferredInThisTick = 0;
 
     public EnergyStorageProxy(EnergyDetectorEntity energyDetectorTE, int maxTransferRate) {
         this.energyDetectorTE = energyDetectorTE;
@@ -23,26 +21,30 @@ public class EnergyStorageProxy implements IEnergyStorage {
 
     @Override
     public int receiveEnergy(int maxReceive, boolean simulate) {
-        Optional<IEnergyStorage> out = energyDetectorTE.getOutputStorage();
-        return out.map(outStorage -> {
-            int transferred = outStorage.receiveEnergy(Math.min(maxReceive, maxTransferRate), simulate);
-            if (!simulate) {
-                transferedInThisTick += transferred;
-            }
-            return transferred;
-        }).orElse(0);
+        IEnergyStorage out = energyDetectorTE.getOutputStorage();
+        if (out == null)
+            return 0;
+        int transferred = out.receiveEnergy(Math.min(maxReceive, maxTransferRate), simulate);
+        if (!simulate) {
+            transferredInThisTick += transferred;
+        }
+        return transferred;
     }
 
     @Override
     public int getEnergyStored() {
-        Optional<IEnergyStorage> out = energyDetectorTE.getOutputStorage();
-        return out.map(IEnergyStorage::getEnergyStored).orElse(0);
+        IEnergyStorage out = energyDetectorTE.getOutputStorage();
+        if (out == null)
+            return 0;
+        return out.getEnergyStored();
     }
 
     @Override
     public int getMaxEnergyStored() {
-        Optional<IEnergyStorage> out = energyDetectorTE.getOutputStorage();
-        return out.map(IEnergyStorage::getMaxEnergyStored).orElse(0);
+        IEnergyStorage out = energyDetectorTE.getOutputStorage();
+        if (out == null)
+            return 0;
+        return out.getMaxEnergyStored();
     }
 
     @Override
@@ -67,10 +69,10 @@ public class EnergyStorageProxy implements IEnergyStorage {
      * should be called on every tick
      */
     public void resetTransferedInThisTick() {
-        transferedInThisTick = 0;
+        transferredInThisTick = 0;
     }
 
-    public int getTransferedInThisTick() {
-        return transferedInThisTick;
+    public int getTransferredInThisTick() {
+        return transferredInThisTick;
     }
 }

@@ -5,6 +5,7 @@ import dan200.computercraft.core.apis.TableHelper;
 import de.srendi.advancedperipherals.AdvancedPeripherals;
 import de.srendi.advancedperipherals.common.util.NBTUtil;
 import de.srendi.advancedperipherals.common.util.Pair;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -13,7 +14,6 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Map;
 
@@ -40,7 +40,7 @@ public class ItemFilter {
                 String name = TableHelper.getStringField(item, "name");
                 if (name.startsWith("#")) {
                     itemFilter.tag = TagKey.create(Registries.ITEM, new ResourceLocation(name.substring(1)));
-                } else if ((itemFilter.item = ItemUtil.getRegistryEntry(name, ForgeRegistries.ITEMS)) == null) {
+                } else if ((itemFilter.item = ItemUtil.getRegistryEntry(name, BuiltInRegistries.ITEM)) == null) {
                     return Pair.of(null, "ITEM_NOT_FOUND");
                 }
             } catch (LuaException luaException) {
@@ -118,16 +118,15 @@ public class ItemFilter {
             return fingerprint.equals(testFingerprint);
         }
 
-        // If the filter does not have nbt values, a tag or a fingerprint, just test if the items are the same
-        if (item != Items.AIR) {
-            if (tag == null && nbt == null && fingerprint.isEmpty())
-                return stack.is(item);
+        if (item != Items.AIR && !stack.is(item)) {
+            return false;
         }
-        if (tag != null && !stack.is(tag))
+        if (tag != null && !stack.is(tag)) {
             return false;
-        if (nbt != null && !stack.getOrCreateTag().equals(nbt) && (item == Items.AIR || stack.is(item)))
+        }
+        if (nbt != null && !stack.getOrCreateTag().equals(nbt)) {
             return false;
-
+        }
         return true;
     }
 

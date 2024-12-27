@@ -16,13 +16,35 @@ import java.util.Locale;
 
 public class CoordUtil {
 
+    /**
+     * isInRange checks if the player is in the range
+     *
+     * @param pos the position to start check
+     * @param world the world to start check
+     * @param player the player going to be check
+     * @param range the range that user want to reach, must be -1, 0, or a positive number
+     * @param maxRange the maximum range the user can reach, must be -1, 0, or a positive number
+     *
+     * @return If the player is in the {@code range} as well as in the {@code maxRange}, or {@code range} and {@code maxRange} are -1
+     */
     public static boolean isInRange(@Nullable BlockPos pos, @Nullable Level world, @Nullable Player player, int range, int maxRange) {
         // There are rare cases where these are null. For example if a player detector pocket computer runs while not in a player inventory
         // Fixes https://github.com/SirEndii/AdvancedPeripherals/issues/356
-        if (pos == null || world == null || player == null)
+        if (pos == null || world == null || player == null) {
             return false;
+        }
 
-        range = maxRange == -1 ? range : Math.min(Math.abs(range), maxRange);
+        if (range == 0 || maxRange == 0) {
+            return false;
+        }
+        if (range < 0) {
+            if (maxRange < 0) {
+                return true;
+            }
+            range = maxRange;
+        } else if (maxRange > 0 && range > maxRange) {
+            range = maxRange;
+        }
         return isPlayerInBlockRange(pos, world, player, (double) range);
     }
 
@@ -79,7 +101,7 @@ public class CoordUtil {
         // Use manhattan distance, not euclidean distance to keep same behavior than other `isInRange` functions
         if (i + j > (maxRange != -1 ? maxRange : Integer.MAX_VALUE))
             return false;
-        return world.getNearbyPlayers(TargetingConditions.forNonCombat(), null, new AABB(firstPos, secondPos)).contains(player);
+        return world.getNearbyPlayers(TargetingConditions.forNonCombat(), null, new AABB(firstPos.getX(), firstPos.getY(), firstPos.getZ(), secondPos.getX(), secondPos.getY(), secondPos.getZ())).contains(player);
     }
 
     public static Direction getDirection(FrontAndTop orientation, String computerSide) throws LuaException {
@@ -100,26 +122,24 @@ public class CoordUtil {
         }
 
         if (front.getAxis() == Direction.Axis.Y) {
-            switch (side) {
-                case FRONT: return front;
-                case BACK: return front.getOpposite();
-                case TOP: return top;
-                case BOTTOM: return top.getOpposite();
-                case RIGHT: return top.getClockWise();
-                case LEFT: return top.getCounterClockWise();
-            }
+            return switch (side) {
+                case FRONT -> front;
+                case BACK -> front.getOpposite();
+                case TOP -> top;
+                case BOTTOM -> top.getOpposite();
+                case RIGHT -> top.getClockWise();
+                case LEFT -> top.getCounterClockWise();
+            };
         } else {
-            switch (side) {
-                case FRONT: return front;
-                case BACK: return front.getOpposite();
-                case TOP: return Direction.UP;
-                case BOTTOM: return Direction.DOWN;
-                case RIGHT: return front.getCounterClockWise();
-                case LEFT: return front.getClockWise();
-            }
+            return switch (side) {
+                case FRONT -> front;
+                case BACK -> front.getOpposite();
+                case TOP -> Direction.UP;
+                case BOTTOM -> Direction.DOWN;
+                case RIGHT -> front.getCounterClockWise();
+                case LEFT -> front.getClockWise();
+            };
         }
-
-        throw new LuaException(computerSide + " is not a expected side");
     }
 
 }

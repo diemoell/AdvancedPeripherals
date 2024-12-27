@@ -21,9 +21,13 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.server.ServerLifecycleHooks;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class PlayerDetectorPeripheral extends BasePeripheral<IPeripheralOwner> {
 
@@ -97,7 +101,7 @@ public class PlayerDetectorPeripheral extends BasePeripheral<IPeripheralOwner> {
         for (ServerPlayer player : getPlayers()) {
             if (!isAllowedMultiDimensional() && player.level().dimension() != dimension)
                 continue;
-            if (range == -1 || CoordUtil.isInRange(getPos(), getLevel(), player, range, MAX_RANGE))
+            if (CoordUtil.isInRange(getPos(), getLevel(), player, range, MAX_RANGE))
                 playersName.add(player.getName().getString());
         }
         return playersName;
@@ -142,7 +146,7 @@ public class PlayerDetectorPeripheral extends BasePeripheral<IPeripheralOwner> {
         for (ServerPlayer player : getPlayers()) {
             if (!isAllowedMultiDimensional() && player.level().dimension() != dimension)
                 continue;
-            if (range == -1 || CoordUtil.isInRange(getPos(), getLevel(), player, range, MAX_RANGE)) return true;
+            if (CoordUtil.isInRange(getPos(), getLevel(), player, range, MAX_RANGE)) return true;
         }
         return false;
     }
@@ -185,7 +189,7 @@ public class PlayerDetectorPeripheral extends BasePeripheral<IPeripheralOwner> {
         for (Player player : getPlayers()) {
             if (!isAllowedMultiDimensional() && player.level().dimension() != dimension)
                 continue;
-            if (range == -1 || CoordUtil.isInRange(getPos(), getLevel(), player, range, MAX_RANGE)) {
+            if (CoordUtil.isInRange(getPos(), getLevel(), player, range, MAX_RANGE)) {
                 if(player.getName().getString().equals(username))
                     return true;
             }
@@ -250,16 +254,17 @@ public class PlayerDetectorPeripheral extends BasePeripheral<IPeripheralOwner> {
 
         int decimals = Math.min(arguments.optInt(1, 0), 4);
 
-        info.put("x", Math.floor(x * Math.pow(10, decimals)) / Math.pow(10, decimals));
-        info.put("y", Math.floor(y * Math.pow(10, decimals)) / Math.pow(10, decimals));
-        info.put("z", Math.floor(z * Math.pow(10, decimals)) / Math.pow(10, decimals));
+        final double unit = Math.pow(10, decimals);
+        info.put("x", Math.floor(x * unit) / unit);
+        info.put("y", Math.floor(y * unit) / unit);
+        info.put("z", Math.floor(z * unit) / unit);
         if (APConfig.PERIPHERALS_CONFIG.morePlayerInformation.get()) {
             info.put("yaw", existingPlayer.yRotO);
             info.put("pitch", existingPlayer.xRotO);
             info.put("dimension", existingPlayer.level().dimension().location().toString());
             info.put("eyeHeight", existingPlayer.getEyeHeight());
             info.put("health", existingPlayer.getHealth());
-            info.put("maxHeatlh", existingPlayer.getMaxHealth());
+            info.put("maxHealth", existingPlayer.getMaxHealth());
             info.put("airSupply", existingPlayer.getAirSupply());
             info.put("respawnPosition", LuaConverter.posToObject(existingPlayer.getRespawnPosition()));
             info.put("respawnDimension", existingPlayer.getRespawnDimension().location().toString());

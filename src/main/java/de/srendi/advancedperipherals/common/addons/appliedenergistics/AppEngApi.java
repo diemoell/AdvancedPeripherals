@@ -6,15 +6,18 @@ import appeng.api.networking.crafting.CraftingJobStatus;
 import appeng.api.networking.crafting.ICraftingCPU;
 import appeng.api.networking.crafting.ICraftingService;
 import appeng.api.networking.storage.IStorageService;
-import appeng.api.stacks.*;
+import appeng.api.stacks.AEFluidKey;
+import appeng.api.stacks.AEItemKey;
+import appeng.api.stacks.AEKey;
+import appeng.api.stacks.AEKeyType;
+import appeng.api.stacks.GenericStack;
+import appeng.api.stacks.KeyCounter;
 import appeng.api.storage.AEKeyFilter;
 import appeng.api.storage.IStorageProvider;
 import appeng.api.storage.MEStorage;
 import appeng.api.storage.cells.IBasicCellItem;
 import appeng.blockentity.storage.DriveBlockEntity;
 import appeng.parts.storagebus.StorageBusPart;
-import com.the9grounds.aeadditions.item.storage.StorageCell;
-import com.the9grounds.aeadditions.item.storage.SuperStorageCell;
 import dan200.computercraft.shared.util.NBTUtil;
 import de.srendi.advancedperipherals.AdvancedPeripherals;
 import de.srendi.advancedperipherals.common.addons.APAddons;
@@ -23,23 +26,25 @@ import de.srendi.advancedperipherals.common.util.Pair;
 import de.srendi.advancedperipherals.common.util.inventory.FluidFilter;
 import de.srendi.advancedperipherals.common.util.inventory.ItemFilter;
 import de.srendi.advancedperipherals.common.util.inventory.ItemUtil;
-import io.github.projectet.ae2things.item.DISKDrive;
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import me.ramidzkh.mekae2.ae2.MekanismKey;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.items.IItemHandler;
 import org.apache.logging.log4j.Level;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class AppEngApi {
 
@@ -173,7 +178,7 @@ public class AppEngApi {
     private static Map<String, Object> getObjectFromFluidStack(Pair<Long, AEFluidKey> stack, @Nullable ICraftingService craftingService) {
         Map<String, Object> map = new HashMap<>();
         long amount = stack.getLeft();
-        map.put("name", ForgeRegistries.FLUIDS.getKey(stack.getRight().getFluid()).toString());
+        map.put("name", stack.getRight().getFluid().builtInRegistryHolder().key().registry().toString());
         map.put("amount", amount);
         map.put("displayName", stack.getRight().getDisplayName().getString());
         map.put("tags", LuaConverter.tagsToList(() -> stack.getRight().getFluid().builtInRegistryHolder().tags()));
@@ -330,20 +335,6 @@ public class AppEngApi {
                     if (cell.getKeyType().getClass().isAssignableFrom(AEKeyType.items().getClass())) {
                         total += cell.getBytes(null);
                     }
-                } else if (APAddons.aeThingsLoaded && stack.getItem() instanceof DISKDrive disk) {
-                    if (disk.getKeyType().toString().equals("ae2:i")) {
-                        total += disk.getBytes(null);
-                    }
-                } else if (APAddons.aeAdditionsLoaded && (stack.getItem() instanceof SuperStorageCell superStorageCell)) {
-                    total += superStorageCell.getKiloBytes() * 1024L;
-                } else if (APAddons.aeAdditionsLoaded && (stack.getItem() instanceof StorageCell storageCell)) {
-                    if (storageCell.getKeyType() != AEKeyType.items())
-                        continue;
-                    total += storageCell.getKiloBytes() * 1024L;
-                } else if (APAddons.aeAdditionsLoaded && (stack.getItem() instanceof StorageCell storageCell)) {
-                    if (storageCell.getKeyType() != AEKeyType.items())
-                        continue;
-                    total += storageCell.getKiloBytes() * 1024;
                 }
             }
         }
@@ -354,13 +345,11 @@ public class AppEngApi {
             StorageBusPart bus = (StorageBusPart) iterator.next().getService(IStorageProvider.class);
             net.minecraft.world.level.Level level = bus.getLevel();
             BlockPos connectedInventoryPos = bus.getHost().getBlockEntity().getBlockPos().relative(bus.getSide());
-            BlockEntity connectedInventoryEntity = level.getBlockEntity(connectedInventoryPos);
 
-            LazyOptional<IItemHandler> itemHandler = connectedInventoryEntity.getCapability(ForgeCapabilities.ITEM_HANDLER);
-            if (itemHandler.isPresent()) {
-                IItemHandler handler = itemHandler.orElse(null);
-                for (int i = 0; i < handler.getSlots(); i++) {
-                    total += handler.getSlotLimit(i);
+            IItemHandler itemHandler = level.getCapability(Capabilities.ItemHandler.BLOCK, connectedInventoryPos, bus.getSide());
+            if (itemHandler != null) {
+                for (int i = 0; i < itemHandler.getSlots(); i++) {
+                    total += itemHandler.getSlotLimit(i);
                 }
             }
         }
@@ -389,16 +378,6 @@ public class AppEngApi {
                     if (cell.getKeyType().getClass().isAssignableFrom(AEKeyType.fluids().getClass())) {
                         total += cell.getBytes(null);
                     }
-                } else if (APAddons.aeAdditionsLoaded && stack.getItem() instanceof SuperStorageCell superStorageCell) {
-                    total += superStorageCell.getKiloBytes() * 1024L;
-                } else if (APAddons.aeAdditionsLoaded && (stack.getItem() instanceof StorageCell storageCell)) {
-                    if (storageCell.getKeyType() != AEKeyType.fluids())
-                        continue;
-                    total += storageCell.getKiloBytes() * 1024L;
-                } else if (APAddons.aeAdditionsLoaded && (stack.getItem() instanceof StorageCell storageCell)) {
-                    if (storageCell.getKeyType() != AEKeyType.fluids())
-                        continue;
-                    total += storageCell.getKiloBytes() * 1024;
                 }
             }
         }
@@ -409,13 +388,11 @@ public class AppEngApi {
             StorageBusPart bus = (StorageBusPart) iterator.next().getService(IStorageProvider.class);
             net.minecraft.world.level.Level level = bus.getLevel();
             BlockPos connectedInventoryPos = bus.getHost().getBlockEntity().getBlockPos().relative(bus.getSide());
-            BlockEntity connectedInventoryEntity = level.getBlockEntity(connectedInventoryPos);
 
-            LazyOptional<IFluidHandler> fluidHandler = connectedInventoryEntity.getCapability(ForgeCapabilities.FLUID_HANDLER);
-            if (fluidHandler.isPresent()) {
-                IFluidHandler handler = fluidHandler.orElse(null);
-                for (int i = 0; i < handler.getTanks(); i++) {
-                    total += handler.getTankCapacity(i);
+            IFluidHandler fluidHandler = level.getCapability(Capabilities.FluidHandler.BLOCK, connectedInventoryPos, bus.getSide());
+            if (fluidHandler != null) {
+                for (int i = 0; i < fluidHandler.getTanks(); i++) {
+                    total += fluidHandler.getTankCapacity(i);
                 }
             }
         }
@@ -451,27 +428,6 @@ public class AppEngApi {
 
                         used += ((int) Math.ceil(((double) numItemsInCell) / 8)) + ((long) bytesPerType * numOfType);
                     }
-                } else if (APAddons.aeThingsLoaded && stack.getItem() instanceof DISKDrive disk) {
-                    if (disk.getKeyType().toString().equals("ae2:i")) {
-                        if (stack.getTag() == null)
-                            continue;
-                        long numBytesInCell = stack.getTag().getLong("ic");
-                        used += numBytesInCell;
-                    }
-                } else if (APAddons.aeAdditionsLoaded && stack.getItem() instanceof SuperStorageCell) {
-                    if (stack.getTag() == null)
-                        continue;
-                    long numItemsInCell = stack.getTag().getLong("ic");
-
-                    used += numItemsInCell;
-                } else if (APAddons.aeAdditionsLoaded && stack.getItem() instanceof StorageCell storageCell) {
-                    if (storageCell.getKeyType() != AEKeyType.items())
-                        continue;
-                    if (stack.getTag() == null)
-                        continue;
-                    long numItemsInCell = stack.getTag().getLong("ic");
-
-                    used += numItemsInCell;
                 }
             }
         }
@@ -517,20 +473,6 @@ public class AppEngApi {
 
                         used += ((int) Math.ceil(((double) numBucketsInCell) / 8)) + ((long) bytesPerType * numOfType);
                     }
-                } else if (APAddons.aeAdditionsLoaded && stack.getItem() instanceof SuperStorageCell) {
-                    if (stack.getTag() == null)
-                        continue;
-                    long numItemsInCell = stack.getTag().getLong("ic");
-
-                    used += numItemsInCell;
-                } else if (APAddons.aeAdditionsLoaded && stack.getItem() instanceof StorageCell storageCell) {
-                    if (storageCell.getKeyType() != AEKeyType.fluids())
-                        continue;
-                    if (stack.getTag() == null)
-                        continue;
-                    long numItemsInCell = stack.getTag().getLong("ic");
-
-                    used += numItemsInCell;
                 }
             }
         }
@@ -542,7 +484,7 @@ public class AppEngApi {
             KeyCounter keyCounter = bus.getInternalHandler().getAvailableStacks();
 
             for (Object2LongMap.Entry<AEKey> aeKey : keyCounter) {
-                if (aeKey.getKey() instanceof AEFluidKey fluidKey) {
+                if (aeKey.getKey() instanceof AEFluidKey) {
                     used += aeKey.getLongValue();
                 }
             }
@@ -562,15 +504,15 @@ public class AppEngApi {
     public static List<Object> listCells(IGridNode node) {
         List<Object> items = new ArrayList<>();
 
-        Iterator<IGridNode> iterator = node.getGrid().getMachineNodes(DriveBlockEntity.class).iterator();
+        Iterator<IGridNode> iterator = node.getGrid().getNodes().iterator();
 
         if (!iterator.hasNext()) return items;
         while (iterator.hasNext()) {
-            DriveBlockEntity entity = (DriveBlockEntity) iterator.next().getService(IStorageProvider.class);
-            if (entity == null)
+            IStorageProvider entity = iterator.next().getService(IStorageProvider.class);
+            if (!(entity instanceof DriveBlockEntity driveEntity))
                 continue;
 
-            InternalInventory inventory = entity.getInternalInventory();
+            InternalInventory inventory = driveEntity.getInternalInventory();
 
             for (int i = 0; i < inventory.size(); i++) {
                 ItemStack stack = inventory.getStackInSlot(i);
@@ -580,10 +522,6 @@ public class AppEngApi {
 
                 if (stack.getItem() instanceof IBasicCellItem cell) {
                     items.add(getObjectFromCell(cell, stack));
-                } else if (APAddons.aeThingsLoaded && stack.getItem() instanceof DISKDrive disk) {
-                    items.add(getObjectFromDisk(disk, stack));
-                } else if (APAddons.aeAdditionsLoaded && stack.getItem() instanceof SuperStorageCell superStorageCell) {
-                    items.add(getObjectFromSuperCell(superStorageCell, stack));
                 }
             }
         }
@@ -611,35 +549,4 @@ public class AppEngApi {
         return map;
     }
 
-    private static Map<String, Object> getObjectFromDisk(DISKDrive drive, ItemStack stack) {
-        Map<String, Object> map = new HashMap<>();
-
-        map.put("item", stack.getItem().toString());
-
-        String cellType = "";
-
-        if (drive.getKeyType().toString().equals("ae2:i")) {
-            cellType = "item";
-        } else if (drive.getKeyType().toString().equals("ae2:f")) {
-            cellType = "fluid";
-        }
-
-        map.put("cellType", cellType);
-        map.put("totalBytes", drive.getBytes(null));
-
-        return map;
-    }
-
-    private static Map<String, Object> getObjectFromSuperCell(SuperStorageCell cell, ItemStack stack) {
-        Map<String, Object> map = new HashMap<>();
-
-        map.put("item", stack.getItem().toString());
-
-        String cellType = "all";
-
-        map.put("cellType", cellType);
-        map.put("totalBytes", cell.getBytes(stack));
-
-        return map;
-    }
 }

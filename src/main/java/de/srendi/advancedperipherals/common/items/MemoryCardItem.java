@@ -1,8 +1,11 @@
 package de.srendi.advancedperipherals.common.items;
 
+import de.srendi.advancedperipherals.client.ClientUUIDCache;
 import de.srendi.advancedperipherals.common.configuration.APConfig;
 import de.srendi.advancedperipherals.common.items.base.BaseItem;
 import de.srendi.advancedperipherals.common.util.EnumColor;
+import net.minecraft.client.Minecraft;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -16,6 +19,8 @@ import java.util.List;
 
 public class MemoryCardItem extends BaseItem {
 
+    public static final String OWNER_NBT_KEY = "ownerId";
+
     public MemoryCardItem() {
         super(new Properties().stacksTo(1));
     }
@@ -28,21 +33,27 @@ public class MemoryCardItem extends BaseItem {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level levelIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, levelIn, tooltip, flagIn);
-        if (stack.getOrCreateTag().contains("owner"))
-            tooltip.add(EnumColor.buildTextComponent(Component.translatable("item.advancedperipherals.tooltip.memory_card.bound", stack.getOrCreateTag().getString("owner"))));
-
+        CompoundTag data = stack.getOrCreateTag();
+        Minecraft minecraft = Minecraft.getInstance();
+        if (data.contains(OWNER_NBT_KEY)) {
+            String username = ClientUUIDCache.getUsername(data.getUUID(OWNER_NBT_KEY), minecraft.player.getUUID());
+            if (username == null)
+                username = data.getUUID(OWNER_NBT_KEY).toString();
+            tooltip.add(EnumColor.buildTextComponent(Component.translatable("item.advancedperipherals.tooltip.memory_card.bound", username)));
+        }
     }
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
         if (!worldIn.isClientSide) {
             ItemStack stack = playerIn.getItemInHand(handIn);
-            if (stack.getOrCreateTag().contains("owner")) {
+            CompoundTag data = stack.getOrCreateTag();
+            if (data.contains(OWNER_NBT_KEY)) {
                 playerIn.displayClientMessage(Component.translatable("text.advancedperipherals.removed_player"), true);
-                stack.getOrCreateTag().remove("owner");
+                data.remove(OWNER_NBT_KEY);
             } else {
                 playerIn.displayClientMessage(Component.translatable("text.advancedperipherals.added_player"), true);
-                stack.getOrCreateTag().putString("owner", playerIn.getName().getString());
+                data.putUUID(OWNER_NBT_KEY, playerIn.getUUID());
             }
         }
         return super.use(worldIn, playerIn, handIn);

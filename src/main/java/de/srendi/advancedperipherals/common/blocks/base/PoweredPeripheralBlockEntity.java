@@ -7,24 +7,21 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.EnergyStorage;
-import net.minecraftforge.energy.IEnergyStorage;
+import net.neoforged.neoforge.energy.EnergyStorage;
+import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class PoweredPeripheralBlockEntity<T extends BasePeripheral<?>> extends PeripheralBlockEntity<T> {
 
-    private final LazyOptional<IEnergyStorage> lazyEnergyStorage;
+    private final IEnergyStorage energyStorage;
 
     public PoweredPeripheralBlockEntity(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
         super(tileEntityTypeIn, pos, state);
         if (APConfig.PERIPHERALS_CONFIG.enablePoweredPeripherals.get()) {
-            lazyEnergyStorage = LazyOptional.of(() -> new EnergyStorage(this.getMaxEnergyStored()));
+            energyStorage = new EnergyStorage(this.getMaxEnergyStored());
         } else {
-            lazyEnergyStorage = LazyOptional.empty();
+            energyStorage = null;
         }
     }
 
@@ -33,27 +30,21 @@ public abstract class PoweredPeripheralBlockEntity<T extends BasePeripheral<?>> 
     @Override
     public void saveAdditional(@NotNull CompoundTag compound) {
         super.saveAdditional(compound);
-        lazyEnergyStorage.ifPresent(iEnergyStorage -> compound.putInt("energy", iEnergyStorage.getEnergyStored()));
+        if (energyStorage != null)
+            compound.putInt("energy", energyStorage.getEnergyStored());
     }
 
     @Override
     public void load(@NotNull CompoundTag compound) {
         super.load(compound);
-        lazyEnergyStorage.ifPresent(iEnergyStorage -> iEnergyStorage.receiveEnergy(compound.getInt("energy") - iEnergyStorage.getEnergyStored(), false));
+        if (energyStorage != null)
+            energyStorage.receiveEnergy(compound.getInt("energy") - energyStorage.getEnergyStored(), false);
     }
 
+    @Nullable
     @Override
-    public <T1> @NotNull LazyOptional<T1> getCapability(@NotNull Capability<T1> cap, @Nullable Direction direction) {
-        if (cap == ForgeCapabilities.ENERGY && lazyEnergyStorage.isPresent()) {
-            return lazyEnergyStorage.cast();
-        }
-        return super.getCapability(cap, direction);
-    }
-
-    @Override
-    public void invalidateCaps() {
-        super.invalidateCaps();
-        this.lazyEnergyStorage.invalidate();
+    public IEnergyStorage createEnergyStorageCap(@Nullable Direction side) {
+        return energyStorage;
     }
 
 }

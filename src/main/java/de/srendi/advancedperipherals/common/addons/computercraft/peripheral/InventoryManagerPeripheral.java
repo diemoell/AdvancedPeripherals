@@ -18,11 +18,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.wrapper.PlayerArmorInvWrapper;
-import net.minecraftforge.items.wrapper.PlayerInvWrapper;
-import net.minecraftforge.items.wrapper.PlayerOffhandInvWrapper;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.wrapper.PlayerArmorInvWrapper;
+import net.neoforged.neoforge.items.wrapper.PlayerInvWrapper;
+import net.neoforged.neoforge.items.wrapper.PlayerOffhandInvWrapper;
+import org.apache.logging.log4j.Level;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -58,22 +59,23 @@ public class InventoryManagerPeripheral extends BasePeripheral<BlockEntityPeriph
         if (filter.rightPresent())
             return MethodResult.of(0, filter.getRight());
 
-        return MethodResult.of(addItemCommon(invDirection, filter.getLeft()), null);
+        return addItemCommon(invDirection, filter.getLeft());
     }
 
-    private int addItemCommon(String invDirection, ItemFilter filter) throws LuaException {
+    private MethodResult addItemCommon(String invDirection, ItemFilter filter) throws LuaException {
         Direction direction = validateSide(invDirection);
 
-        BlockEntity targetEntity = owner.getLevel().getBlockEntity(owner.getPos().relative(direction));
-        IItemHandler inventoryFrom = targetEntity != null ? targetEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, direction).resolve().orElse(null) : null;
         Pair<IItemHandler, Integer> inventoryTo = getHandlerFromSlot(filter.getToSlot());
+        IItemHandler inventoryFrom = getLevel().getCapability(Capabilities.ItemHandler.BLOCK, owner.getPos().relative(direction), direction.getOpposite());
+        if (inventoryFrom == null)
+            return MethodResult.of(0, "INVENTORY_FROM_INVALID");
 
         inventoryTo.ifRightPresent(slot -> filter.toSlot = slot);
 
         //if (invSlot >= inventoryTo.getSlots() || invSlot < 0)
         //  throw new LuaException("Inventory out of bounds " + invSlot + " (max: " + (inventoryTo.getSlots() - 1) + ")");
 
-        return InventoryUtil.moveItem(inventoryFrom, inventoryTo.getLeft(), filter);
+        return MethodResult.of(InventoryUtil.moveItem(inventoryFrom, inventoryTo.getLeft(), filter));
     }
 
     @LuaFunction(mainThread = true)
@@ -88,9 +90,8 @@ public class InventoryManagerPeripheral extends BasePeripheral<BlockEntityPeriph
     private MethodResult removeItemCommon(String invDirection, ItemFilter filter) throws LuaException {
         Direction direction = validateSide(invDirection);
 
-        BlockEntity targetEntity = owner.getLevel().getBlockEntity(owner.getPos().relative(direction));
         Pair<IItemHandler, Integer> inventoryFrom = getHandlerFromSlot(filter.getFromSlot());
-        IItemHandler inventoryTo = targetEntity != null ? targetEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, direction).resolve().orElse(null) : null;
+        IItemHandler inventoryTo = getLevel().getCapability(Capabilities.ItemHandler.BLOCK, owner.getPos().relative(direction), direction.getOpposite());
 
         if (inventoryTo == null)
             return MethodResult.of(0, "INVENTORY_TO_INVALID");
@@ -119,7 +120,7 @@ public class InventoryManagerPeripheral extends BasePeripheral<BlockEntityPeriph
         Direction direction = validateSide(target);
 
         BlockEntity targetEntity = owner.getLevel().getBlockEntity(owner.getPos().relative(direction));
-        IItemHandler inventoryTo = targetEntity != null ? targetEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, direction).resolve().orElse(null) : null;
+        IItemHandler inventoryTo = null; //targetEntity != null ? targetEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, direction).resolve().orElse(null) : null;
 
         if (inventoryTo == null)
             return MethodResult.of(null, "INVENTORY_TO_INVALID");
@@ -189,12 +190,12 @@ public class InventoryManagerPeripheral extends BasePeripheral<BlockEntityPeriph
 
     @LuaFunction(mainThread = true)
     public final Map<String, Object> getItemInHand() throws LuaException {
-        return LuaConverter.stackToObject(getOwnerPlayer().getMainHandItem());
+        return LuaConverter.stackToObject(getOwnerPlayer().getMainHandItem().copy());
     }
 
     @LuaFunction(mainThread = true)
     public final Map<String, Object> getItemInOffHand() throws LuaException {
-        return LuaConverter.stackToObject(getOwnerPlayer().getOffhandItem());
+        return LuaConverter.stackToObject(getOwnerPlayer().getOffhandItem().copy());
     }
 
     private Player getOwnerPlayer() throws LuaException {
@@ -249,7 +250,7 @@ public class InventoryManagerPeripheral extends BasePeripheral<BlockEntityPeriph
                     }
                 }
             }
-            AdvancedPeripherals.LOGGER.warn("Tried to get armor item slot for non armor item " + stack + ". Returning 0");
+            AdvancedPeripherals.debug("Tried to get armor item slot for non armor item " + stack + ". Returning 0", Level.WARN);
             return 0;
         }
 
