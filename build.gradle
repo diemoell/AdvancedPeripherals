@@ -381,12 +381,12 @@ githubRelease {
     tagName = "${minecraft_version}-${version}"
     releaseName = "${minecraft_version}-${version}"
     targetCommitish = "release/${minecraft_version}"
-    generateReleaseNotes = true
+    generateReleaseNotes = false
     try {
-        //body = "${project.changelog.get("${minecraft_version}-${version}").withHeader(false).toText()}"
+        body = "${project.changelog.get("${minecraft_version}-${version}").withHeader(false).toText()}"
     } catch (err) {
         System.out.println(err)
-        //body = ""
+        body = ""
     }
     draft = false
     prerelease = !release_type.equalsIgnoreCase("release")

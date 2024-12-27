@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+## [1.20.4-0.7.43a] - 2024-12-27
+
+First official Advanced Peripherals 1.20.4 alpha release. Please report any bug to github!
+
 ## [1.20.4-0.7.42a] - 2024-12-22
 
 ### Fixed
