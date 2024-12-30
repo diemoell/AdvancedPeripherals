@@ -10,6 +10,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.world.chunk.RegisterTicketControllersEvent;
 import net.neoforged.neoforge.common.world.chunk.TicketController;
@@ -25,7 +26,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-@Mod.EventBusSubscriber(modid = AdvancedPeripherals.MOD_ID)
+@EventBusSubscriber(modid = AdvancedPeripherals.MOD_ID)
 public class ChunkManager extends SavedData {
 
     private static final String DATA_NAME = AdvancedPeripherals.MOD_ID + "_ForcedChunks";
