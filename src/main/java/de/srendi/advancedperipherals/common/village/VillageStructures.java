@@ -56,13 +56,13 @@ public class VillageStructures {
             return;
 
         Holder<StructureProcessorList> emptyProcessor = event.getServer().registryAccess().registryOrThrow(Registries.PROCESSOR_LIST)
-                .getHolderOrThrow(ResourceKey.create(Registries.PROCESSOR_LIST, new ResourceLocation("minecraft:empty")));
+                .getHolderOrThrow(ResourceKey.create(Registries.PROCESSOR_LIST, ResourceLocation.parse("minecraft:empty")));
 
         Registry<StructureTemplatePool> templatePoolRegistry = event.getServer().registryAccess().registryOrThrow(Registries.TEMPLATE_POOL);
 
         for (String biome : new String[]{"desert", "snowy", "plains", "savanna", "taiga"}) {
             AdvancedPeripherals.debug("Register generating scientist_" + biome + " village house");
-            addPieceToPool(templatePoolRegistry, emptyProcessor, new ResourceLocation("village/" + biome + "/houses"), AdvancedPeripherals.MOD_ID + ":villages/scientist_" + biome, StructureTemplatePool.Projection.RIGID, APConfig.WORLD_CONFIG.villagerStructureWeight.get());
+            addPieceToPool(templatePoolRegistry, emptyProcessor, ResourceLocation.parse("village/" + biome + "/houses"), AdvancedPeripherals.MOD_ID + ":villages/scientist_" + biome, StructureTemplatePool.Projection.RIGID, APConfig.WORLD_CONFIG.villagerStructureWeight.get());
         }
     }
 }

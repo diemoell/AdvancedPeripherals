@@ -242,7 +242,7 @@ public class ChunkManager extends SavedData {
     }
 
     private static ServerLevel getServerLevel(String name) {
-        ResourceKey<net.minecraft.world.level.Level> key = ResourceKey.create(Registries.DIMENSION, new ResourceLocation(name));
+        ResourceKey<net.minecraft.world.level.Level> key = ResourceKey.create(Registries.DIMENSION, ResourceLocation.parse(name));
         return ServerLifecycleHooks.getCurrentServer().getLevel(key);
     }
 
