@@ -10,7 +10,6 @@ import java.util.Map;
 
 public class APConfig {
 
-    // public static final ConfigFileHandler CONFIG_FILE_HANDLER = new ConfigFileHandler();
     private static final Map<IConfigSpec, IAPConfig> KNOWN_CONFIGS = new HashMap<>();
 
     public static final GeneralConfig GENERAL_CONFIG = new GeneralConfig();
@@ -41,29 +40,5 @@ public class APConfig {
             modContainer.registerConfig(config.getType(), config.getConfigSpec(), APConfigHelper.getAPConfigFilePath(config));
             knownConfigs.put(config.getConfigSpec(), config);
         }
-
-    /*@Override
-    public ConfigFileTypeHandler getHandler() {
-        return CONFIG_FILE_HANDLER;
-    }*/
-
-    /*public static class ConfigFileHandler extends ConfigFileTypeHandler {
-
-        public static Path getPath(Path path) {
-            if (path.endsWith("serverconfig"))
-                return FMLPaths.CONFIGDIR.get();
-
-            return path;
-        }
-
-        @Override
-        public Function<ModConfig, CommentedFileConfig> reader(Path configBasePath) {
-            return super.reader(getPath(configBasePath));
-        }
-
-        @Override
-        public void unload(ModConfig config) {
-            super.unload(config);
-        }*/
     }
 }
