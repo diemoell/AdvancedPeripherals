@@ -1,6 +1,7 @@
 package de.srendi.advancedperipherals.client;
 
 import dan200.computercraft.api.client.turtle.RegisterTurtleModellersEvent;
+import dan200.computercraft.api.client.turtle.RegisterTurtleUpgradeModeller;
 import dan200.computercraft.api.client.turtle.TurtleUpgradeModeller;
 import de.srendi.advancedperipherals.AdvancedPeripherals;
 import de.srendi.advancedperipherals.common.container.InventoryManagerScreen;
@@ -26,7 +27,7 @@ public class ClientRegistry {
     @SubscribeEvent
     public static void registerModels(ModelEvent.RegisterAdditional event) {
         for (String model : TURTLE_MODELS) {
-            event.register(new ModelResourceLocation(ResourceLocation.fromNamespaceAndPath(AdvancedPeripherals.MOD_ID, model), "inventory"));
+            event.register(new ModelResourceLocation(AdvancedPeripherals.getRL(model), "inventory"));
         }
     }
 
